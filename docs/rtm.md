@@ -19,7 +19,7 @@
 | [NFR-003](requirements.md) | CAP-04 | D02,D18 | [NFR-003](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-004](requirements.md) | CAP-04 | D02 | [NFR-004](requirements.md) | AGENTS.md GOV-033 | pyproject.toml tool.uv.exclude-newer | TOML parsing; lock checks pending | Configured; lock verification PENDING |
 | [NFR-005](requirements.md) | CAP-04 | D06,D19 | [NFR-005](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
-| [NFR-006](requirements.md) | CAP-05 | D04,D05,D08,D09,D10 | [NFR-006](requirements.md) | AGENTS.md | AGENTS.md; docs/index.md; docs/decisions.md; docs/requirements.md; docs/rtm.md; docs/research.md | Document review | DRAFT; human approval pending |
+| [NFR-006](requirements.md) | CAP-05 | D04,D05,D08,D09,D10,DEC-016 | [NFR-006](requirements.md) | AGENTS.md | AGENTS.md; docs/index.md; docs/decisions.md; docs/requirements.md; docs/rtm.md; docs/research.md | Document review | DRAFT; human approval pending |
 | [NFR-007](requirements.md) | CAP-05 | D07 | [NFR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-008](requirements.md) | CAP-04 | Human privacy instruction | [NFR-008](requirements.md) | AGENTS.md GOV-007 | Initial planning documents | Staged artifact review | PENDING release checks |
 | [NFR-009](requirements.md) | CAP-02 | D15 | [NFR-009](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
