@@ -1,10 +1,10 @@
 # History remediation plan
 
-Revision: 1 (2026-11-16). Status: DRAFT; approval pending. This document MUST NOT record the private identity, matching search terms, or local checkout path.
+Revision: 1 (2026-11-16). Status: APPROVED for this bounded maintenance operation. This document MUST NOT record the private identity, matching search terms, or local checkout path.
 
 ## Requirements and acceptance
 
-This maintenance task MUST support CAP-04/NFR-008 and CAP-05/NFR-006. The human requested removal of identifying context from history and permitted general federal requirements, existing ownership, and contributor metadata. This instruction MUST NOT imply approval of this draft procedure.
+This maintenance task MUST support CAP-04/NFR-008 and CAP-05/NFR-006. The human requested removal of identifying context from history and permitted general federal requirements, existing ownership, and contributor metadata. Approval of this procedure is recorded below; it MUST NOT imply approval of the product requirements baseline.
 
 - The rewrite MUST remove research table rows S04 and S05, paragraph RES-006, and paragraph RES-011 from every historical version of docs/research.md. These identifiers MUST remain retired and MUST NOT be reused. RES-011 is included because its source link names an agency.
 - General federal requirements and standards references MUST remain. Ownership, contributor metadata, unrelated content, commit messages, and commit ordering MUST remain unchanged unless a specific additional disclosure is found and its removal is approved.
@@ -29,7 +29,7 @@ This maintenance task MUST support CAP-04/NFR-008 and CAP-05/NFR-006. The human 
 6. The agent MUST make a fresh clone, scan all fetched history, validate documentation, and inspect GitHub pull-request refs and old commit access. The agent MUST prepare any required GitHub Support request; the human MAY need to submit it with owner authority. The task MUST remain pending while accessible server-side copies require removal.
 7. Once remote verification succeeds, the agent MUST replace stale local history, expire obsolete reflogs and unreachable objects in this checkout and temporary audit copies, and verify the resulting object inventory. Other clone holders MUST replace stale clones rather than merge or push old history. Recovery-copy disposal MUST follow verification, not precede it.
 
-## Proposed completion-process exception
+## Approved completion-process exception
 
 Explicit human approval MUST authorize direct history replacement instead of a PR merge for this maintenance operation and MUST exempt this task from release and released-artifact verification. Publishing another source copy would conflict with the remediation purpose. This exception MUST NOT authorize software release, waive customer-context exclusion, relax normal future protections, or count as server-side purge evidence.
 
@@ -43,6 +43,8 @@ Explicit human approval MUST authorize direct history replacement instead of a P
 
 ## Approval and stage record
 
-Requirements: PENDING. Architecture: PENDING. Implementation plan: PENDING. One-time history-update authorization: PENDING. Completion-process exception: PENDING. Candidate: PENDING. Remote update: PENDING. Protection restoration: PENDING. Server retention review: PENDING. Local cleanup: PENDING.
+Requirements: APPROVED. Architecture: APPROVED. Implementation plan: APPROVED. One-time history-update authorization: APPROVED. Completion-process exception: APPROVED. Candidate: PENDING. Remote update: PENDING. Protection restoration: PENDING. Server retention review: PENDING. Local cleanup: PENDING.
+
+Human approval recorded 2026-11-16: the human replied "Approved" to the request covering revision 1 requirements, architecture, procedure, one-time force-push, and completion-process exception. This approval MUST remain limited to this remediation.
 
 Observed baseline on 2026-11-16: main f0d2aabf08dab8e3d9995ae0a5a1c5846fc0514c; one GitHub pull request; no tags or releases; Protect main ruleset 27396943 active. Evidence commands: `git ls-remote origin` and read-only GitHub repository/ruleset API inspection. Approval MUST identify this document revision or its commit and MUST NOT be inferred from these observations.
