@@ -57,6 +57,8 @@ This evidence MUST NOT be treated as a remote update or server-side purge. Packa
 
 ## Remote verification and accepted retention
 
+On 2026-11-16 the human explicitly requested a standing exclusion of customer identity and context from future work, including intended users, operational purpose, and agency information. The corresponding AGENTS.md rule MUST support CAP-04/NFR-008. This directly requested governance change MUST NOT expand product scope or authorize a release; its wording MUST receive document and private-context checks with this closeout.
+
 On 2026-11-16 the agent updated remote main to 2ccc7a73456f3329100946a061c9580fcd47b4ff using an explicit expected-old-head lease. A fresh GitHub clone of that revision passed scans across 16 commits and 128 objects, document file links and anchors, and all 28 requirement mappings. Repository visibility remained private. Evidence: `git ls-remote origin`, fresh `git clone`, and local object/document verification tooling.
 
 On 2026-11-16 the human confirmed protection restoration and declined the prepared Support escalation after being told old commits and the original pull-request head remained accessible. Read-only GitHub API inspection confirmed ruleset 27396943 active, deletion and non-fast-forward blocks, linear history, rebase-only pull requests, resolved conversations, and zero required approvals.
