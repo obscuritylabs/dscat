@@ -54,4 +54,4 @@ Requirements and acceptance criteria are APPROVED under [DEC-039](decisions.md#d
 
 - DEC-033 positive/negative boundary and business-rule testing MUST trace to CAP-02/NFR-002, CAP-04/NFR-003/NFR-005, and CAP-05/NFR-007. Durable guidance MUST reside in AGENTS.md and the delivery-plan.md positive/negative verification section; the boundary/rule inventory, tests, failure evidence, and manual walkthrough MUST remain PENDING until their respective phases.
 
-The [current planning gates](planning-gates.md) and [documentation QA/QC procedure](documentation-qa.md) MUST trace to CAP-05/NFR-006/NFR-007 through DEC-037/038/039/040. Their artifact-level mappings MUST remain in the NFR-006 row. Requirement headings MUST provide stable acceptance anchors; unperformed checks MUST remain PENDING.
+The [current planning gates](planning-gates.md) and [documentation QA/QC procedure](documentation-qa.md) MUST trace to CAP-05/NFR-006/NFR-007 through DEC-037/038/039/040/041. Their artifact-level mappings MUST remain in the NFR-006 row. Requirement headings MUST provide stable acceptance anchors; unperformed checks MUST remain PENDING.

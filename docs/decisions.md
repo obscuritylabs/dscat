@@ -17,7 +17,7 @@ The dated entries below preserve human instructions and agent proposals at the t
 
 DEC-039 supersedes earlier statements that the consolidated requirements baseline remains unapproved. Their historical approval boundaries MUST remain preserved; architecture, implementation-plan, and release gates MUST remain pending.
 
-DEC-040 supersedes earlier pending RTM-review statements. Decision-log review MUST remain pending.
+DEC-040 supersedes earlier pending RTM-review statements. DEC-041 supersedes earlier pending decision-log-review statements only for its exact approved baseline.
 
 ## Chronological entries
 
@@ -208,3 +208,7 @@ The proposed policy MUST require pull requests, resolved conversations, linear h
 ### DEC-040
 
 [FACT; HUMAN_DERIVED; 2026-11-16] The human explicitly approved docs/rtm.md at commit `110b441b60c3404f70ddf1ffde44243f7b934d33` while stating that the individual mappings were not personally verified and relying on agent verification. Agents MUST record approval of the RTM baseline separately from verification evidence; this approval MUST NOT be represented as human verification of the links or mappings. Agents MUST maintain and check traceability under NFR-006 and the documentation QA/QC procedure. Draft designs and unperformed implementation, tests, and acceptance verification MUST retain their existing status. Decision-log review, architecture approval, implementation-plan approval, and release authorization MUST remain pending. This decision MUST supersede prior pending RTM-review statements without changing approved requirements or approving other document proposals.
+
+### DEC-041
+
+[FACT; HUMAN_DERIVED; 2026-11-16] The human explicitly approved docs/decisions.md and clarified that approval covers its committed baseline from [PR #15](https://github.com/obscuritylabs/dscat/pull/15) at commit `0b7b82459a7136922bdc2d8439839553114b6905`, excluding subsequent uncommitted changes. Agents MUST record approval of that decision-log baseline separately from verification evidence. Existing proposal and assumption classifications and historical supersession MUST remain intact; baseline approval MUST NOT convert proposals or assumptions into accepted technical decisions or reactivate superseded instructions. This decision MUST supersede prior pending decision-log-review statements only within that scope. Architecture approval, implementation-plan approval, and release authorization MUST remain PENDING; approval MUST NOT extend to other document proposals or authorize dependent product implementation.
