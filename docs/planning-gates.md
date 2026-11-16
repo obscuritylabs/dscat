@@ -2,12 +2,13 @@
 
 ## Authority and status
 
-This is the consolidated navigation for approval status, derived from the decision record. The complete requirements baseline is APPROVED under DEC-039 and ready for architecture planning. Full architecture, implementation plan, and product release authorization remain PENDING. RTM baseline APPROVED under DEC-040; decision-log review remains PENDING. Accepted directions MUST NOT be described as approval of those remaining gates. The reconciliation instruction in DEC-038 authorizes documentation corrections, not dependent product implementation.
+This is the consolidated navigation for approval status, derived from the decision record. The complete requirements baseline is APPROVED under DEC-039 and ready for architecture planning. Full architecture, implementation plan, and product release authorization remain PENDING. RTM baseline APPROVED under DEC-040; decision-log baseline APPROVED under DEC-041. Accepted directions MUST NOT be described as approval of those remaining gates. The reconciliation instruction in DEC-038 authorizes documentation corrections, not dependent product implementation.
 
 | Subject | Recorded authority | Status and boundary |
 | --- | --- | --- |
 | Complete requirements baseline | [DEC-039](decisions.md#dec-039); docs/requirements.md at `00c3535236028197805c0199401321631c709cd0`; human instruction 2026-11-16 | APPROVED: SPEC-001–SPEC-007, all 30 FR/NFR requirements and acceptance criteria; ready for architecture planning. |
 | RTM baseline | [DEC-040](decisions.md#dec-040); docs/rtm.md at `110b441b60c3404f70ddf1ffde44243f7b934d33`; human instruction 2026-11-16 | APPROVED; individual mappings were not human-verified. Agent traceability checks MUST remain separately evidenced; later-phase PENDING entries remain pending. |
+| Decision-log baseline | [DEC-041](decisions.md#dec-041); docs/decisions.md at `0b7b82459a7136922bdc2d8439839553114b6905` (PR #15); human instruction 2026-11-16 | APPROVED for the committed baseline only; subsequent uncommitted changes excluded. Proposal/assumption classifications and historical supersession remain intact; no architecture, implementation-plan, or release approval. |
 | Required intake core and capacity direction | DEC-023/024 | Accepted direction; encodings and field-level rules pending architecture. |
 | Discovery, snapshots, replacement, determinism, duplicates | DEC-025 | Accepted behavior; normalization and publication design pending architecture. |
 | ODCS 3.2.0 and shared export configuration | DEC-027 | Accepted target and capability; exact schema closure and mappings pending architecture. |
