@@ -63,7 +63,7 @@
 - Workbooks MUST prioritize participation through a small required core and optional detail fields. Capacity metadata MUST support current size, average and peak daily ingestion, retention, and measurement date, with explicit Unknown allowed. Unknown MUST NOT become zero. Version 0.1.0 MUST NOT implement forecasts.
 - Installed runtime operations MUST work offline. Network-dependent dependency/security checks MAY run during development or release preparation; authoritative schema validation MUST NOT require runtime downloads.
 - Releases MUST include a dependency SBOM. Known High or Critical vulnerabilities MUST block release unless evidence establishes non-applicability; VEX MAY document non-applicability supported by execution-path analysis. Severity assessment, affected artifacts, and supporting evidence MUST be recorded; scanner absence or missing severity MUST NOT silently establish safety.
-- Workbook schema compatibility MUST be explicitly versioned, tested, and tracked as the principal compatibility surface. A CLI-launched catalog web viewer MUST be planned for 0.2.0 and MUST NOT enter 0.1.0 without approved scope changes.
+- Workbook schema compatibility MUST be explicitly versioned, tested, and tracked as the principal compatibility surface.
 - The project MUST be proprietary to Obscurity Labs. LICENSE and Python project metadata MUST express the proprietary license and CLI help MUST display a matching notice. Agents MUST NOT substitute an open-source license or publish proprietary artifacts without release authorization.
 
 ## Main branch protection

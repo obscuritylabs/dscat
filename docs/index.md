@@ -20,4 +20,4 @@
 
 - IDX-003 [FACT; LLM_INFERENCE] Agents MUST create the pending artifacts as the interview resolves scope, and MUST record explicit approvals against document commits before dependent work.
 
-- IDX-004 [FACT; HUMAN_DERIVED] Readers MUST treat 0.1.0 as metadata intake plus DCAT-US 3.0/ODCS export, with Excel currently selected subject to SPEC-001/SPEC-007; the CLI-launched catalog web viewer MUST be scheduled for 0.2.0. All requirements, architecture, planning, and release approval gates MUST remain in force.
+- IDX-004 [FACT; HUMAN_DERIVED] Readers MUST treat 0.1.0 as metadata intake plus DCAT-US 3.0/ODCS export, with Excel currently selected subject to SPEC-001/SPEC-007. All requirements, architecture, planning, and release approval gates MUST remain in force.
