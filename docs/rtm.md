@@ -29,7 +29,7 @@
 | [NFR-011](requirements.md) | CAP-04 | D19 | [NFR-011](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-012](requirements.md) | CAP-04 | D19 | [NFR-012](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-013](requirements.md) | CAP-01 | D20 | [NFR-013](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
-| [NFR-014](requirements.md) | CAP-05 | D22,DEC-015 | [NFR-014](requirements.md) | [Licensing policy](../AGENTS.md#catalog-behavior-and-licensing) | LICENSE; pyproject.toml | Metadata parsing; built-artifact/help tests PENDING | Source notices added; conventional license text reviewed; CLI pending |
+| [NFR-014](requirements.md) | CAP-05 | D22,DEC-015,DEC-035 | [NFR-014](requirements.md) | [Licensing policy](../AGENTS.md#catalog-behavior-and-licensing) | LICENSE; pyproject.toml | Metadata parsing; built-artifact/help tests PENDING | Source notices added; conventional license text reviewed; CLI pending |
 | [NFR-015](requirements.md) | CAP-05 | DEC-010,D26 | [NFR-015](requirements.md) | [Repository policy](repository-policy.md) | [Branch policy](../AGENTS.md#main-branch-protection); active GitHub ruleset 27396943 | [Remote/local verification](repository-policy.md) REPO-012 | ACTIVE; import artifact deleted and untracked |
 | [NFR-016](requirements.md) | CAP-04 | DEC-018 | [NFR-016](requirements.md) | [Delivery draft](delivery-plan.md) | AGENTS.md local verification policy; workflows PENDING | Local verification reports PENDING | DRAFT; CI not implemented |
 | [NFR-017](requirements.md) | CAP-05 | DEC-018,DEC-019,DEC-028 | [NFR-017](requirements.md) | [Delivery draft](delivery-plan.md) | Release artifacts and installer documentation PENDING | Clean-install/release verification PENDING | DRAFT; no release authorized |
