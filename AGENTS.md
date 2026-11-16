@@ -55,6 +55,8 @@
 
 ## Catalog behavior and licensing
 
+- Intake capabilities MUST remain technology-neutral where practical. Excel SHOULD be the initial intake technology; workbook-specific obligations in these instructions and planning documents MUST apply only while Excel is selected. A replacement decision MUST revise or retire technology-specific requirements and acceptance criteria through affected planning approvals, preserve applicable intake capabilities, and address compatibility. Workbook-specific MUST clauses MUST NOT make Excel selection mandatory.
+
 - Workbooks MUST be intake artifacts; a Pydantic-backed canonical JSON catalog MUST be the persisted source of truth, with DCAT-US and ODCS derived from it. Canonical data MUST be kept in organized flat files for now. The architecture MUST treat the canonical schema as a migration boundary and keep persistence separate from the catalog model to allow a future database adapter without coupling exporters to file paths. DSCat MUST accept individual workbooks or a directory and MUST rebuild deterministically and idempotently from unchanged inputs without requiring an application database.
 - Validation MUST examine all readable inputs and collect all discoverable failures before returning failure; catalog exports MUST be blocked by default on any failure. Fatal unreadable files MUST be reported while validation continues on other inputs; agents MUST NOT claim to validate unreadable content.
 - Workbooks MUST prioritize participation through a small required core and optional detail fields. Capacity metadata MUST support current size, average and peak daily ingestion, retention, and measurement date, with explicit Unknown allowed. Unknown MUST NOT become zero. Version 0.1.0 MUST NOT implement forecasts.
