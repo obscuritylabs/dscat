@@ -2,10 +2,11 @@
 
 ## Approved direction
 
-The following direction is a human-derived fact from DEC-020. Detailed fields, filenames, schema versions, and migration behavior MUST still pass the requirements, architecture, and implementation-plan gates.
+The following direction is a human-derived fact from DEC-020 and DEC-021. Detailed fields, filenames, schema versions, and migration behavior MUST still pass the requirements, architecture, and implementation-plan gates.
 
 - Workbook intake MUST validate into a Pydantic canonical catalog model, which MUST serialize to organized JSON flat files as the catalog source of truth.
 - DCAT-US and ODCS MUST be derived from that model; their target schemas MUST NOT force loss of capacity measurements or other supported optional catalog metadata.
+- Any RDF export MUST use JSON-LD. Canonical JSON MUST remain distinct from standards-specific RDF projections.
 - The canonical model MUST be treated as the likely migration boundary as stored data evolves. Architecture MUST preserve the option of moving this layer into a database in the future; a database MUST NOT be required now.
 
 ## Proposed organization
@@ -27,3 +28,10 @@ These safeguards are LLM proposals and MUST receive architecture approval before
 - Migration tests SHOULD use representative saved canonical fixtures, verify semantic preservation and deterministic results, and regenerate standard exports. Re-running a migration on the target version SHOULD have explicitly defined no-op or refusal behavior; it MUST NOT transform the data twice.
 - Initial verification MUST cover workbook-to-model conversion, canonical JSON save/load, preservation of capacity and optional fields, cross-record validation, version handling, deterministic export from saved JSON, and independence from the original intake files.
 - Migration support MUST be planned when an actual stored-schema change requires it. Initial schema-version metadata and compatibility tests SHOULD establish the foundation without implementing hypothetical transforms.
+
+## Proposed RDF verification
+
+These implementation details are LLM proposals and MUST pass architecture review before implementation.
+
+- JSON-LD serializers SHOULD use pinned, locally available contexts or embedded context definitions. Processing MUST NOT require remote context fetches, including indirectly referenced contexts; unavailable contexts MUST produce diagnostics rather than trigger network requests.
+- Verification MUST assess JSON syntax, JSON-LD processing, intended IRIs/types/relationships, and target-profile conformance. Schema validation alone MUST NOT establish RDF semantic correctness. The serializer design MUST reconcile JSON-LD context handling with the selected DCAT-US schema/profile rather than assume arbitrary context fields are accepted.
