@@ -1,7 +1,7 @@
-# Approved requirements
+# Requirements: proposed research revision
 
 - SPEC-001 [FACT; HUMAN_DERIVED] DSCat MUST enable distribution of dataset metadata intake materials, receipt of completed submissions, validation of metadata, and generation of standards-based exports. Excel workbooks SHOULD provide the initial intake mechanism; Excel MUST NOT be a permanent product constraint. A replacement intake mechanism MAY be selected through the affected requirements, architecture, and implementation-plan approvals if workbook completion becomes too burdensome.
-- SPEC-002 The approved requirements revision is `00c3535236028197805c0199401321631c709cd0` (2026-11-16, [DEC-039](decisions.md#dec-039)), covering SPEC-001–SPEC-007 and all 30 FR/NFR requirements and acceptance criteria. Current authority and remaining gates MUST follow [planning gates](planning-gates.md); editorial maintenance MUST NOT approve new technical choices.
+- SPEC-002 The approved baseline remains docs/requirements.md at `00c3535236028197805c0199401321631c709cd0` (2026-11-16, [DEC-039](decisions.md#dec-039)), covering SPEC-001–SPEC-007 and its original 30 FR/NFR requirements. This consolidated research revision is PROPOSED under [DEC-042](decisions.md#dec-042), pending renewed human requirements approval. Unchanged requirements retain their original authority only within that exact baseline scope. New and refined acceptance MUST NOT authorize dependent implementation. Current authority MUST follow [planning gates](planning-gates.md).
 - SPEC-003 [FACT; HUMAN_DERIVED] The project MUST use the following capabilities.
 
 | Capability | Name |
@@ -15,7 +15,7 @@
 
 ## Requirements and acceptance criteria
 
-Source: consolidated human instructions in [decisions.md](decisions.md), with reconciliation authorized by DEC-038. Approval status MUST be interpreted under SPEC-002, separately from provenance.
+Source: consolidated human instructions in [decisions.md](decisions.md); proposed additions and refinements follow DEC-042 and the [research impact package](research-additions.md). Approval status MUST be interpreted under SPEC-002, separately from provenance.
 
 ### FR-001
 
@@ -59,7 +59,7 @@ Builds MUST represent exactly the selected inputs; omitted datasets MUST be abse
 
 ### FR-012
 
-Version 0.1.0 MUST support OPTIONAL manually supplied dataset-and-processing-step lineage through an OPTIONAL lineage section without enlarging the required intake core (DEC-029). Records MUST support upstream and derived dataset references, multiple-input derivation, processing software/tool and version, transformation descriptions, input/output dataset IDs, responsible teams/owners and handoffs, and OPTIONAL timestamps, process references, and supporting documentation. Canonical JSON MUST preserve supported lineage metadata and standards exports MUST include supported mappings. Acceptance MUST demonstrate a synthetic multi-input derivation and multi-step handoff, canonical save/load preservation, applicable export mappings, and validation of malformed references under the architecture-approved reference policy. Automatic lineage discovery MUST remain outside 0.1.0 scope.
+Version 0.1.0 MUST support OPTIONAL manually supplied dataset-and-processing-step lineage through an OPTIONAL lineage section without enlarging the required intake core (DEC-029). Records MUST support upstream and derived dataset references, multiple-input derivation, processing software/tool and version, transformation descriptions, input/output dataset IDs, responsible teams/owners and handoffs, and OPTIONAL timestamps, process references, and supporting documentation. Canonical JSON MUST preserve supported lineage metadata and standards exports MUST include supported mappings. Acceptance MUST demonstrate a synthetic multi-input derivation and multi-step handoff, canonical save/load preservation, applicable export mappings, and validation of malformed references under the architecture-approved reference policy. Automatic lineage discovery MUST remain outside 0.1.0 scope. Proposed refinement: manually supplied lineage MUST distinguish dataset entities, processing activities, and responsible agents using PROV-informed meanings, and MUST distinguish DCAT datasets, distributions, and data services in mappings. Acceptance MUST preserve those distinctions through round trips and exports, document unmapped relationships, and MUST NOT claim complete PROV conformance.
 
 ### NFR-001
 
@@ -103,11 +103,11 @@ Installed runtime functions MUST work offline with PyPI-sourced dependencies; in
 
 ### NFR-011
 
-Each release MUST include a machine-readable dependency SBOM identifying the released artifact; format, transitive coverage, and provenance MUST be verified in the release plan.
+Each release MUST include a machine-readable dependency SBOM identifying the released artifact; format, transitive coverage, and provenance MUST be verified in the release plan. Proposed refinement: the release plan MUST select a public machine-readable SBOM standard and version, validate the SBOM, cover resolved transitive runtime dependencies, bind it to wheel/sdist hashes and source revision, identify generator/version and dependency relationships, separate build/development components, and disclose missing/unknown identity, license or provenance fields. Acceptance MUST check completeness against the lock and installed artifact rather than equate generator success with coverage.
 
 ### NFR-012
 
-Known High or Critical vulnerabilities MUST block release unless evidence establishes non-applicability; applicable findings MUST be fixed and non-applicability MAY be documented in VEX with execution-path evidence. Medium/Low findings MUST be tracked.
+Known High or Critical vulnerabilities MUST block release unless evidence establishes non-applicability; applicable findings MUST be fixed and non-applicability MAY be documented in VEX with execution-path evidence. Medium/Low findings MUST be tracked. Proposed refinement: known exploitation MUST independently block release at any severity unless artifact-specific applicability evidence establishes non-applicability. Release evidence MUST record advisory provenance/freshness, affected versions, assessment, remediation or execution-path non-applicability, and revisit conditions. Unknown status MUST NOT count as a clean assessment. These checks MUST occur during engineering/release preparation; installed runtime MUST NOT require live feeds.
 
 ### NFR-013
 
@@ -139,7 +139,48 @@ Any RDF export MUST use JSON-LD serialization. Acceptance MUST verify valid JSON
 
 - SPEC-004 Requirements and acceptance criteria approval alone MUST NOT authorize implementation; model fields, command names, canonical file layout and schema version policy, exact schema pins, compatibility surface, and security verification procedures MUST be settled through subsequent planning.
 
-- SPEC-005 [FACT; HUMAN_DERIVED] Version 0.1.0 scope MUST include FR-001 through FR-008, FR-010 through FR-012, and supporting NFRs. Optional DCAT-US 1.1 support MUST NOT postpone completion of mandatory initial features.
+- SPEC-005 Version 0.1.0 scope, as expanded by the pending DEC-042 proposal, MUST include FR-001 through FR-008, FR-010 through FR-018, and supporting NFRs, including proposed NFR-020 through NFR-022. New scope remains pending under SPEC-002. Optional DCAT-US 1.1 support MUST NOT postpone completion of mandatory initial features.
 - SPEC-006 [FACT; HUMAN_DERIVED] DEC-023/024 MUST govern the required intake core and capacity policy. Stable IDs MUST be supplied by submitters. DEC-027 MUST govern validated shared export metadata configuration; defaults MUST NOT invent facts or data-use commitments.
 
 - SPEC-007 [FACT; HUMAN_DERIVED] Per DEC-031/032, Excel SHOULD be the initial intake technology. Requirements describing intake capabilities MUST remain technology-neutral where practical. Technology-specific MUST clauses MUST apply only while that technology is selected and MUST NOT make its selection mandatory. A technology replacement MUST revise or retire its specific clauses and acceptance criteria, preserve applicable technology-neutral obligations, and resolve compatibility impacts through affected planning approvals. This clarification MUST NOT select or authorize another technology now.
+
+
+## Proposed research additions
+
+The following requirements and the explicitly marked refinements above are pending renewed requirements approval under SPEC-002. Optional metadata MUST NOT enlarge the FR-006 core. Acceptance applies to version 0.1.0 after approval; detailed encodings and controls MUST pass architecture and planning gates.
+
+### FR-013
+
+DSCat MUST distinguish valid intake, inventory completeness, and readiness for each export target. A four-field submission MUST remain valid without optional details; absent export-required facts MUST block only readiness for the affected target without fabricating values. Inventory completeness MUST be assessed against explicitly selected criteria and supplied evidence, not inferred from parser success. Acceptance MUST independently demonstrate valid-but-incomplete, valid-but-target-unready, ready, and invalid submissions, including sufficient shared configuration.
+
+### FR-014
+
+Records MUST separately represent data access/use restrictions, metadata disclosure restrictions, and metadata publication approval. Optional supplied determinations MUST distinguish unknown, partially restricted, fully restricted, and unrestricted, with authority/reference, rationale, determination date, and review status; missing decisions MUST remain unknown. Publication approval MUST NOT imply access authorization or a legal determination. Public projections MUST fail closed: only explicitly approved records and allowlisted fields/values MAY be emitted; unknown approval MUST prevent public projection. Acceptance MUST test nested lineage, contacts, locations, URLs, free text, and extension fields for leakage, including new unknown fields, and distinguish safe schema-valid output from approval to publish it. Local export MUST NOT itself publish or grant access.
+
+### FR-015
+
+Optional records-management metadata MUST support disposition authority/reference, retention trigger, duration or instruction, and legal-hold/review status independently of FR-007 capacity retention. Conflicting or unknown instructions MUST remain explicit. Acceptance MUST round-trip separate capacity and records-retention values, unknowns, and holds without deriving destruction dates from capacity estimates. DSCat MUST NOT authorize disposition or automatically delete datasets or records.
+
+### FR-016
+
+Optional metadata MUST support inventory-added date, metadata-review date, dataset-modified date, update frequency, accountable owner, steward, and contact/maintainer as distinct roles; domain identifiers MAY be supplied. Dataset-modified dates MUST NOT be substituted for metadata review or inventory addition dates. The four-field contact/owner core MUST remain valid without inventing unsupplied accountability assignments. Acceptance MUST round-trip distinct supplied roles/dates, preserve absent values, validate dates and role references, and demonstrate no inferred ownership from a contact label.
+
+### FR-017
+
+Optional consumer documentation MUST support intended uses, limitations, field meanings, access instructions, semantic definition references, and explicitly supplied quality/service commitments. Empty commitment fields MUST NOT become guarantees; an ODCS document MUST NOT imply agreement, provisioned access, or live enforcement. Semantic references MUST be preserved offline without dereferencing. Local machine-readable governance checks MUST report conformity to declared metadata rules and unperformed checks, without claiming organizational policy enforcement. Acceptance MUST preserve references and consumer detail, reject malformed supplied values, distinguish absent commitments from invalid supplied commitment metadata, and demonstrate offline checking without contacting referenced services.
+
+### FR-018
+
+Dataset, contract, and data-product identities MUST remain distinct; an optional product reference MUST NOT imply that a dataset is a complete data product. Application, intake schema, canonical schema, contract, and dataset versions MUST have independent meanings and MUST NOT be substituted for one another or for the ODCS specification version. Each mandatory target mapping MUST specify canonical-to-target field meaning, cardinality, requiredness, transformations, and loss/omission behavior. Acceptance MUST demonstrate distinct identity/version values, supported/unsupported schema versions, canonical preservation of unmappable metadata, and positive/negative mapping fixtures against complete pinned offline schemas. ODCS MUST remain 3.2.0 under FR-004.
+
+### NFR-020
+
+Metadata collection and diagnostics MUST minimize personal and sensitive information. Intake guidance MUST prefer role-based contacts; submissions MUST NOT contain data samples, credentials, secrets, or unnecessary personal details. Public projection under FR-014 and operational diagnostics MUST use explicit safe fields; errors MUST identify actionable locations without echoing arbitrary submitted contents or secret/private paths. Acceptance MUST use synthetic nested sensitive strings, formula-like values, role contacts, and hostile error inputs to verify safe output and redaction without claiming perfect detection of arbitrary secrets.
+
+### NFR-021
+
+Intake materials, CLI output, and user documentation MUST provide testable accessibility: instructions, labels, logical reading/navigation order, textual error identification, and no reliance on color alone. Workbook controls and validation feedback MUST be operable and understandable using keyboard navigation in the selected supported completion application. CLI output MUST remain understandable without color; documentation MUST use meaningful headings and links. Acceptance MUST include automated applicable checks and a manual keyboard/assistive-technology walkthrough in identified selected application/version and terminal/document reader environments, recording limitations and unresolved defects. Architecture MUST select applicable accessibility criteria and verification arrangements before implementation; a general legal conformance claim MUST NOT substitute for observed verification.
+
+### NFR-022
+
+Secure development planning MUST map the selected final NIST SP 800-218 SSDF 1.1 practices to concrete project controls/evidence or justified nonapplicability, without claiming certification. The release plan MUST define a vulnerability reporting channel, triage/remediation and coordinated disclosure process, supported versions/support period, and end-of-support communication. Acceptance MUST review the practice mapping, exercise a synthetic vulnerability report through documented triage, and verify published support/reporting instructions in released artifacts. Later drafts MUST NOT silently replace the selected final baseline.

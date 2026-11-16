@@ -12,6 +12,7 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then use the [phase routing ma
 | Maintaining planning or delivery records | [Governance](governance.md): authority conventions, traceability, versioning and completion obligations |
 | Designing intake | [Intake proposals](intake-proposals.md): unresolved detailed policies and minimum-export demonstration |
 | Designing persistence, lineage or parsing | [Canonical model](canonical-model.md): storage, migration, RDF, lineage and security proposals |
+| Assessing proposed research scope | [Research additions](research-additions.md): consolidated impact and explicit exclusions; [current research task](tasks/research-additions.md): candidate handoff and stage evidence |
 | Selecting standards/tools | [Research](research.md): upstream observations, revisions and hashes; not final runtime pins |
 | Reviewing documentation | [Documentation QA/QC](documentation-qa.md): distributed coverage, semantic matrix and structural checks |
 | Integrating changes | [Repository policy](repository-policy.md): active protection and PR/rebase procedure |

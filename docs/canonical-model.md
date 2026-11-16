@@ -2,7 +2,7 @@
 
 ## Approved direction
 
-The following direction is a human-derived fact from DEC-020 and DEC-021. Detailed fields, filenames, schema versions, and migration behavior MUST conform to the DEC-039 approved requirements and still pass the architecture and implementation-plan gates.
+The following direction is a human-derived fact from DEC-020 and DEC-021. Detailed fields, filenames, schema versions, and migration behavior MUST respect the exact DEC-039 baseline; proposed research changes MUST pass renewed requirements approval, followed by the architecture and implementation-plan gates.
 
 - Workbook intake MUST validate into a Pydantic canonical catalog model, which MUST serialize to organized JSON flat files as the catalog source of truth.
 - DCAT-US and ODCS MUST be derived from that model. Canonical persistence MUST preserve all supported capacity and optional metadata; a target projection MAY omit metadata its standard cannot represent, with omissions documented in the approved mapping. Projection limitations MUST NOT cause loss from canonical storage or unsupported conformance claims.
@@ -16,7 +16,7 @@ The following details are LLM design proposals, not approved architecture. They 
 - Each catalog SHOULD have a root manifest and a datasets directory containing one JSON record per stable dataset ID. Generated DCAT-US and ODCS projections SHOULD live in a separate exports directory. Exact names and ID-to-filename encoding MUST be settled in architecture; record identifiers MUST NOT become unchecked filesystem paths.
 - The manifest SHOULD identify the canonical schema version and dataset files. References SHOULD be relative and portable. The loader MUST validate all records and catalog-wide constraints before exporting; missing records, duplicate IDs, inconsistent versions, and unsafe paths MUST produce diagnostics.
 - Shared metadata SHOULD have one authoritative location. Projection files MUST NOT be treated as independently editable catalog state. Real catalog data SHOULD live in a user-selected data directory outside this source repository; repository examples and fixtures MUST remain synthetic.
-- Catalog schema versions SHOULD be independent of application versions, workbook versions, and the DCAT-US/ODCS specification versions. These version domains MUST NOT be assumed to change together.
+- Catalog schema versions SHOULD be independent of application versions, workbook versions, contract versions, dataset versions, and the DCAT-US/ODCS specification versions; the proposed normative version/identity boundary is FR-018. These version domains MUST NOT be assumed to change together.
 - Core validation, export mapping, and business identifiers SHOULD operate on the canonical model. Storage SHOULD expose a small load/save boundary; a future database adapter SHOULD implement that boundary rather than change exporter semantics. Agents MUST NOT build an unused database framework or speculative migrations.
 
 ## Proposed migration and verification policy
@@ -59,3 +59,8 @@ The following agent proposals support NFR-005/010 and FR-002/010/011. They MUST 
 - Formula cells in intake data fields MUST be rejected, never evaluated or accepted through cached values. Generated feedback formulas MAY exist only in designated non-input cells and MUST NOT supply imported metadata. Macros, external links/connections, embedded executable content, and network resolution MUST be rejected or disabled according to the approved parser matrix. Formula-like user strings in generated text cells MUST be written as inert strings and verified as such.
 - Source discovery MUST define symlink handling and reject unsafe input/output overlap. Canonical manifests MUST reject absolute/traversal paths and unsupported versions. Publication MUST stage validated outputs separately and preserve prior snapshots on validation, serialization, permission, disk-space, interrupted-write, and replacement failures. The platform-specific atomicity and recovery contract MUST be demonstrated before implementation-plan approval; an incomplete multi-file write MUST NOT become a valid published snapshot.
 - Runtime schema/JSON-LD processing MUST use only the approved local resource registry, including transitive references. Unknown references MUST fail offline. Diagnostics MUST identify failure locations without echoing secrets, arbitrary workbook contents, or private paths into repository evidence. Logs and structured diagnostics MUST follow the approved Pydantic boundary and privacy policy.
+
+
+## Research revision dependencies
+
+Proposed [FR-013–FR-018 and NFR-020–NFR-022](research-additions.md) add requirements decisions, not an approved schema. Architecture MUST resolve optional field encodings, independent review/readiness states, publication allowlists and nested projection rules, retention-role separation, accountable roles, semantic-reference storage, identity/version domains, and explicit target loss mappings after renewed requirements approval. Manual lineage SHOULD use PROV entities/activities/agents as design guidance; this MUST NOT promise full PROV-O conformance or automatic lineage. Dataset/distribution/data-service distinctions MUST be represented accurately in the approved target mapping. No remote reference dereferencing or product platform implementation is authorized.
