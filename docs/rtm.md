@@ -6,14 +6,16 @@
 | Requirement | Capability | Source | Acceptance | Design | Implementation | Tests | Evidence/status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [FR-001](requirements.md) | CAP-01 | D01,D12,D17,DEC-023 | [FR-001](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
-| [FR-002](requirements.md) | CAP-02 | D01,D16,D24 | [FR-002](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
+| [FR-002](requirements.md) | CAP-02 | D01,D16,D24,DEC-025 | [FR-002](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [FR-003](requirements.md) | CAP-03 | D03,D11 | [FR-003](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [FR-004](requirements.md) | CAP-03 | D03,D11 | [FR-004](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
-| [FR-005](requirements.md) | CAP-01 | D15 | [FR-005](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
+| [FR-005](requirements.md) | CAP-01 | D15,DEC-025 | [FR-005](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-006](requirements.md) | CAP-01 | D12,DEC-023 | [FR-006](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-007](requirements.md) | CAP-06 | D13,D25,DEC-024 | [FR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-008](requirements.md) | CAP-03 | D14,DEC-020 | [FR-008](requirements.md) | [Canonical model notes](canonical-model.md) | PENDING | PENDING | Direction approved; implementation PENDING |
 | [FR-009](requirements.md) | CAP-07 | D21 | [FR-009](requirements.md) | PENDING | PENDING | PENDING | DEFERRED; 0.2.0 |
+| [FR-010](requirements.md) | CAP-01 | DEC-026 | [FR-010](requirements.md) | PENDING; INTAKE-019 | PENDING | PENDING | Interview decision accepted; baseline approval PENDING |
+| [FR-011](requirements.md) | CAP-02 | DEC-025 | [FR-011](requirements.md) | PENDING; INTAKE-010 | PENDING | PENDING | Interview decision accepted; baseline approval PENDING |
 | [NFR-001](requirements.md) | CAP-04 | D02 | [NFR-001](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-002](requirements.md) | CAP-02 | D02 | [NFR-002](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-003](requirements.md) | CAP-04 | D02,D18 | [NFR-003](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
@@ -22,7 +24,7 @@
 | [NFR-006](requirements.md) | CAP-05 | D04,D05,D08,D09,D10,DEC-016,DEC-017,DEC-019,DEC-022 | [NFR-006](requirements.md) | AGENTS.md | AGENTS.md; docs/index.md; docs/decisions.md; docs/requirements.md; docs/rtm.md; docs/research.md | Document review | DRAFT; human approval pending |
 | [NFR-007](requirements.md) | CAP-05 | D07 | [NFR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-008](requirements.md) | CAP-04 | Human privacy instruction | [NFR-008](requirements.md) | [Privacy policy](../AGENTS.md#authority-and-statement-conventions) | Initial planning documents | Staged artifact review | PENDING release checks |
-| [NFR-009](requirements.md) | CAP-02 | D15 | [NFR-009](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
+| [NFR-009](requirements.md) | CAP-02 | D15,DEC-025 | [NFR-009](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-010](requirements.md) | CAP-04 | D17 | [NFR-010](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-011](requirements.md) | CAP-04 | D19 | [NFR-011](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-012](requirements.md) | CAP-04 | D19 | [NFR-012](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
