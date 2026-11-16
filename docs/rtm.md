@@ -1,7 +1,7 @@
 # Requirements traceability matrix
 
 - RTM-001 [FACT; LLM_INFERENCE] Each row MUST trace the requirement in [requirements.md](requirements.md) to a capability and artifacts; PENDING MUST indicate work not performed, never a pass. Requirement classifications MUST be inherited from the referenced requirement.
-- RTM-002 [FACT; LLM_INFERENCE] Requirement sources MUST reference DEC-001 or DEC-006 and their D-numbers in [decisions.md](decisions.md). Design, code, tests, and evidence MUST be added before a row can become verified.
+- RTM-002 [FACT; LLM_INFERENCE] Requirement sources MUST reference DEC-001, DEC-006, or DEC-010 and their D-numbers in [decisions.md](decisions.md). Design, code, tests, and evidence MUST be added before a row can become verified.
 
 | Requirement | Capability | Source | Acceptance | Design | Implementation | Tests | Evidence/status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -28,5 +28,6 @@
 | [NFR-012](requirements.md) | CAP-04 | D19 | [NFR-012](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-013](requirements.md) | CAP-01 | D20 | [NFR-013](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-014](requirements.md) | CAP-05 | D22 | [NFR-014](requirements.md) | AGENTS.md GOV-056 | LICENSE; pyproject.toml | Metadata parsing; built-artifact/help tests PENDING | Source notices added; CLI pending |
+| [NFR-015](requirements.md) | CAP-05 | DEC-010 | [NFR-015](requirements.md) | [Repository policy](repository-policy.md) | AGENTS.md GOV-060–062; local untracked JSON | [Local verification](repository-policy.md) REPO-010/011 | Local configuration prepared; remote activation PENDING |
 
 - RTM-003 [FACT; LLM_INFERENCE] [intake proposals](intake-proposals.md) MUST be treated as unapproved field and behavior proposals supporting FR-001, FR-002, FR-005, FR-006, FR-007, FR-008, and NFR-009/NFR-013. They MUST NOT supersede approved requirements.

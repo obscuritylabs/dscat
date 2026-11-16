@@ -39,6 +39,7 @@
 | NFR-012 | FACT; HUMAN_DERIVED | Known High or Critical vulnerabilities MUST block release unless evidence establishes non-applicability; applicable findings MUST be fixed and non-applicability MAY be documented in VEX with execution-path evidence. Medium/Low findings MUST be tracked. |
 | NFR-013 | FACT; HUMAN_DERIVED | Workbook schemas MUST be versioned and supported-version compatibility MUST be tested; unsupported versions MUST produce actionable errors. The approved compatibility policy MUST prioritize old workbook readability. |
 | NFR-014 | FACT; HUMAN_DERIVED | DSCat MUST be proprietary to Obscurity Labs; LICENSE, built Python package metadata, and CLI help MUST carry matching notices. Verification MUST inspect source, built wheel/sdist license metadata, and CLI help output. |
+| NFR-015 | FACT; HUMAN_DERIVED | Main MUST have a locally prepared, untracked branch protection import JSON and matching agent instructions; the file MUST target main and MUST remain absent from the Git index. Selected rules MUST follow docs/repository-policy.md; remote activation MUST remain a separate human action. |
 
 - SPEC-004 [FACT; LLM_INFERENCE] Capability and acceptance criteria drafts MUST NOT authorize implementation; model fields, command names, canonical export representation, exact schema pins, compatibility surface, and security verification procedures MUST be settled through subsequent planning.
 
