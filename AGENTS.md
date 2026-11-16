@@ -65,6 +65,13 @@
 
 - Agents MUST follow the active ruleset documented in docs/repository-policy.md. The human deleted local/github/main.ruleset.json after activation; agents MUST NOT recreate it without a new request and MUST keep the path excluded from Git. Remote protection changes MUST require explicit human instructions.
 - Main MUST accept changes through pull requests with resolved review conversations and rebase merges preserving atomic Conventional Commits. Agents MUST NOT directly push, force-push, delete, or bypass protections on main. The one-time bootstrap has been consumed and MUST NOT be used again.
-- Required GitHub approval count MUST be zero in the single-contributor workflow; human planning and release approval gates MUST remain mandatory. CI checks MUST be run and recorded before merge, and required-check rules MUST be added once stable CI check names exist.
+- Required GitHub approval count MUST be zero in the single-contributor workflow; human planning and release approval gates MUST remain mandatory. Full applicable local verification MUST be run and recorded before merge. Any configured minimal CI checks MUST also pass; required-check rules MUST be limited to the selected small CI workflow once stable check names exist.
 
 - Identical dataset records sharing an ID MUST deduplicate; conflicting records sharing an ID MUST block export with both source locations. Neither duplicate handling nor canonical storage proposals MUST bypass complete validation or the human architecture gate.
+
+## Local verification and distribution
+
+- Local verification MUST be the primary quality gate. Agents MUST run the applicable lint, formatting, typing, test/coverage, schema interoperability, security, and package installation checks locally and MUST record evidence against the exact source revision and artifact hashes. Reduced GitHub Actions usage MUST NOT reduce verification requirements.
+- GitHub Actions MUST remain minimal. Agents SHOULD use at most one small pull-request verification job initially, without broad platform matrices, scheduled full-suite runs, or redundant release builds. Any expansion MUST have a documented need and human agreement. Local commands SHOULD be reusable by the selected CI job.
+- GitHub Releases MUST distribute the approved software as installable Python artifacts. Release preparation MUST build and verify a wheel and source distribution locally, include checksums and an SBOM (plus VEX where applicable), and provide authenticated download/install instructions for the private repository.
+- Agents MUST obtain human release authorization for the exact candidate before creating a release tag or publishing release assets. Passing CI or pushing a tag MUST NOT automatically publish a release. Public PyPI publication MUST NOT be assumed; runtime dependencies MAY be installed from PyPI under the approved dependency policy.

@@ -11,6 +11,7 @@
 | [Standards research](research.md) | Neutral public-source evidence and recommendations | Research; selection pending |
 | [Intake proposals](intake-proposals.md) | Minimum fields, capacity, conflicts, canonical exports | DRAFT; interview choices pending |
 | [Repository policy](repository-policy.md) | Main protections and local import instructions | ACTIVE; API verified; local import JSON deleted |
+| [Delivery draft](delivery-plan.md) | Local verification, minimal CI, GitHub Release artifacts | DRAFT; implementation/release gates pending |
 | Architecture | Boundaries, models, schema mappings, security design | PENDING requirements interview |
 | Implementation plan | Ordered increments and checks | PENDING architecture |
 | Verification plan and reports | Automated tests, manual walkthrough, evidence | PENDING detailed scope |
