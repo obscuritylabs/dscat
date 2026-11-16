@@ -1,22 +1,22 @@
-# Planning index
+# Documentation index
 
-The consolidated 0.1.0 requirements baseline is APPROVED under DEC-039 and ready for architecture planning. The RTM baseline is APPROVED under DEC-040; decision-log baseline is APPROVED under DEC-041. Accepted directions and individually approved wording MUST retain their separate status in the [current planning gates](planning-gates.md). No product implementation or release approval MUST be inferred from document integration. Excel remains the initial intake selection subject to SPEC-001/SPEC-007.
+Agents MUST start with [AGENTS.md](../AGENTS.md), then use the [phase routing manifest](workflow.md#phase-routing). This index is navigation, not a requirement to load every linked document. [Planning gates](planning-gates.md) are authoritative for current approval status.
 
-| Artifact | Purpose | Gate/status |
-| --- | --- | --- |
-| [Decision log](decisions.md) | Historical instructions, explicit supersession, current decisions | Committed baseline APPROVED (DEC-041); accepted decisions and agent proposals distinguished |
-| [Current planning gates](planning-gates.md) | Approval boundaries and required gate deliverables | Requirements APPROVED; architecture, implementation plan, release authorization PENDING |
-| [Requirements](requirements.md) | Capabilities and anchored acceptance criteria | Complete baseline and acceptance criteria APPROVED (DEC-039) |
-| [RTM](rtm.md) | Requirement, artifact, and evidence traceability | RTM baseline APPROVED (DEC-040); requirements APPROVED; implementation/testing PENDING except explicit governance/configuration work |
-| [Standards research](research.md) | Public-source observations and immutable evidence | DCAT-US 3.0 and ODCS 3.2.0 selected; complete runtime resource pins/mappings PENDING architecture |
-| [Intake proposals](intake-proposals.md) | Accepted core/capacity/configuration direction and draft encodings | Accepted directions distinguished from unapproved detailed policies |
-| [Repository policy](repository-policy.md) | Active protection and integration workflow | ACTIVE; dated API evidence; local import JSON absent |
-| [Delivery draft](delivery-plan.md) | Local checks, release artifacts, SBOM, failure procedure | DRAFT; detailed execution plan and release authorization PENDING |
-| [Canonical model notes](canonical-model.md) | Authoritative JSON, storage boundary, lineage/security proposals | Direction accepted; complete architecture PENDING |
-| [History remediation](privacy-remediation.md) | Bounded historical procedure and dated execution record | Consumed authorization; retained-copy disposition accepted; no server-purge claim |
-| [Documentation QA/QC](documentation-qa.md) | Full semantic review and repeatable structural checks | Directly requested procedure under DEC-037/038 |
-| Full architecture | Model/schema mappings, storage/publication, threat model, compatibility | PENDING architecture approval; requirements approved; existing notes are partial drafts |
-| Implementation plan | Ordered increments, pinned tooling, exact checks and test inventory | PENDING architecture approval |
-| Product verification plan and reports | Automated evidence and exact manual walkthrough | PENDING command/model design; acceptance obligations retained |
+| Read when | Document and authoritative content |
+| --- | --- |
+| Coordinating work | [Workflow](workflow.md): phase routes, handoffs, transitions and escalation |
+| Checking authorization | [Planning gates](planning-gates.md): exact approval scope/revisions and pending deliverables |
+| Planning or changing behavior | [Requirements](requirements.md): capabilities and stable acceptance criteria; [RTM](rtm.md): artifact/evidence mappings |
+| Resolving current decisions or rationale | [Decisions](decisions.md): current decisions and necessary provenance; older wording through Git |
+| Designing or verifying product behavior | [Engineering](engineering.md): toolchain, security, catalog and licensing constraints |
+| Maintaining planning or delivery records | [Governance](governance.md): authority conventions, traceability, versioning and completion obligations |
+| Designing intake | [Intake proposals](intake-proposals.md): unresolved detailed policies and minimum-export demonstration |
+| Designing persistence, lineage or parsing | [Canonical model](canonical-model.md): storage, migration, RDF, lineage and security proposals |
+| Selecting standards/tools | [Research](research.md): upstream observations, revisions and hashes; not final runtime pins |
+| Reviewing documentation | [Documentation QA/QC](documentation-qa.md): distributed coverage, semantic matrix and structural checks |
+| Integrating changes | [Repository policy](repository-policy.md): active protection and PR/rebase procedure |
+| Preparing or verifying a release | [Delivery plan](delivery-plan.md): draft checks, artifact and failure procedures; approval remains in the gate record |
+| Assessing the retained historical exception | [Remediation disposition](privacy-remediation.md): consumed authority, accepted retention and evidence references |
+| Resuming the current governance change | [Workflow task](tasks/documentation-workflow.md): scope, acceptance, current stage and evidence |
 
-Agents MUST prepare remaining gate deliverables under [planning-gates.md](planning-gates.md) and obtain explicit approval of each exact revision before dependent implementation. The initial version remains 0.1.0; optional DCAT-US 1.1 support MUST NOT block mandatory initial scope.
+Full product architecture, the implementation plan, and product verification deliverables MUST be prepared at their respective gates; existing partial notes MUST NOT be treated as complete approved deliverables. Agents MUST follow relevant links only as their assignment and dependencies require.

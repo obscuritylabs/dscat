@@ -2,7 +2,7 @@
 
 ## Authority and status
 
-This is the consolidated navigation for approval status, derived from the decision record. The complete requirements baseline is APPROVED under DEC-039 and ready for architecture planning. Full architecture, implementation plan, and product release authorization remain PENDING. RTM baseline APPROVED under DEC-040; decision-log baseline APPROVED under DEC-041. Accepted directions MUST NOT be described as approval of those remaining gates. The reconciliation instruction in DEC-038 authorizes documentation corrections, not dependent product implementation.
+This is the authoritative current approval-status record; linked decisions supply supporting provenance. The complete requirements baseline is APPROVED under DEC-039 and ready for architecture planning. Full architecture, implementation plan, and product release authorization remain PENDING. RTM baseline APPROVED under DEC-040; decision-log baseline APPROVED under DEC-041. Accepted directions MUST NOT be described as approval of those remaining gates. The reconciliation instruction in DEC-038 authorizes documentation corrections, not dependent product implementation.
 
 | Subject | Recorded authority | Status and boundary |
 | --- | --- | --- |
@@ -17,6 +17,7 @@ This is the consolidated navigation for approval status, derived from the decisi
 | Optional lineage and conditional Excel selection | DEC-029/031/032 | Accepted scope; detailed reference policy and mappings pending architecture. |
 | Proprietary licensing requirement wording | DEC-035; NFR-014 | Individually approved wording; CLI notice and distribution verification pending implementation. |
 | Documentation QA/QC and reconciliation | DEC-037/038 | Directly requested governance work; product and release gates remain unchanged. |
+| Documentation workflow maintenance | [Current task scope](tasks/documentation-workflow.md#scope-and-authority); explicit human instruction 2026-11-16 | AUTHORIZED maintenance: progressive disclosure and Git-history cleanup together with distinct fresh sub-agents per SDLC phase. No product-baseline, architecture, implementation-plan or release approval is granted. |
 | Historical remediation | [Bounded approval record](privacy-remediation.md#approval-and-stage-record) | Separate maintenance approval and consumed exception; not a product approval. |
 
 An approval MUST identify an exact document revision or commit, its scope, the human decision date/reference, and affected requirements. Subsequent evidence or editorial corrections MUST NOT inherit approval of new technical choices. Each approval request MUST identify changes since the last approved revision and their requirement, compatibility, security, and acceptance impacts.

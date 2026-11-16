@@ -21,7 +21,7 @@ The following details are LLM design proposals, not approved architecture. They 
 
 ## Proposed migration and verification policy
 
-These safeguards are LLM proposals and MUST receive architecture approval before implementation.
+Architecture proposals:
 
 - Readers SHOULD identify the stored schema version and reject unsupported versions with actionable diagnostics. Unknown future versions MUST NOT be silently rewritten as current data.
 - Any future migration SHOULD declare source and target versions, preserve stable IDs and supported metadata, validate the entire result, and write to a separate destination by default. Failed migrations MUST NOT corrupt the source catalog.
@@ -31,7 +31,7 @@ These safeguards are LLM proposals and MUST receive architecture approval before
 
 ## Proposed RDF verification
 
-These implementation details are LLM proposals and MUST pass architecture review before implementation.
+Architecture proposals:
 
 - JSON-LD serializers SHOULD use pinned, locally available contexts or embedded context definitions. Processing MUST NOT require remote context fetches, including indirectly referenced contexts; unavailable contexts MUST produce diagnostics rather than trigger network requests.
 - Verification MUST assess JSON syntax, JSON-LD processing, intended IRIs/types/relationships, and target-profile conformance. Schema validation alone MUST NOT establish RDF semantic correctness. The serializer design MUST reconcile JSON-LD context handling with the selected DCAT-US schema/profile rather than assume arbitrary context fields are accepted.
@@ -40,11 +40,11 @@ These implementation details are LLM proposals and MUST pass architecture review
 
 DEC-029 establishes OPTIONAL manually supplied lineage in 0.1.0, governed by FR-012. The canonical model MUST preserve dataset relationships, processing steps, software versions, responsibility/handoffs, and supplied evidence. Automatic discovery MUST remain outside scope.
 
-The architecture draft MUST specify stable processing-step identities, relationship/reference validation, treatment of upstream datasets outside the selected catalog, and standards mappings without claiming unsupported conformance. These details MUST remain unapproved until architecture review. Tests MUST cover multi-input derivation, multi-step handoffs, canonical round trips, malformed references, and applicable exports. Workbook design MUST assess these examples for practical entry and MUST raise concrete complexity limitations under DEC-030. Requirements are approved under DEC-039; architecture and implementation-plan approval gates MUST remain pending.
+The architecture draft MUST specify stable processing-step identities, relationship/reference validation, treatment of upstream datasets outside the selected catalog, and standards mappings without claiming unsupported conformance. These details MUST remain unapproved until architecture review. Tests MUST cover multi-input derivation, multi-step handoffs, canonical round trips, malformed references, and applicable exports. Workbook design MUST assess these examples for practical entry and MUST raise concrete complexity limitations under DEC-030.
 
 ## Draft lineage reference policy
 
-The following agent proposals support FR-012 and MUST receive architecture approval before implementation.
+The following architecture proposals support FR-012.
 
 - Processing-step IDs MUST be nonempty and unique within the catalog. Dataset and step references MUST use the architecture-approved identifier grammar; filesystem paths MUST NOT be inferred from identifiers. Normalization MUST be identical across intake, canonical loading, duplicate comparison, and exports.
 - Each supplied processing step MUST identify at least one input and one output. Multiple inputs/outputs and multiple handoff steps MUST be supported. A dataset reference outside the selected snapshot MUST be explicitly marked external; an unmarked unresolved local reference MUST fail. External references MUST be preserved without runtime network resolution and MUST NOT create synthetic local dataset records.
