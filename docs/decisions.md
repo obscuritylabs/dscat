@@ -18,7 +18,7 @@
 - DEC-002 [FACT; HUMAN_DERIVED] The original 100% statement and branch coverage proposal MUST be read with D18 below, which authorizes narrowly justified agent-selected exceptions.
 - DEC-003 [ASSUMPTION; LLM_ASSUMPTION] Agents SHOULD initially commit all durable planning documents rather than leave an untracked issue backlog; later migration SHOULD preserve links and IDs.
 - DEC-004 [FACT; LLM_INFERENCE] The next interview MUST resolve remaining identity/conflict rules, capacity measurement semantics, minimal workbook fields, schema versions, and verification platform coverage. D11–D22 below MUST supersede conflicting earlier proposals.
-- DEC-005 [FACT; LLM_INFERENCE] Ruff, ty, Python, and uv configuration MUST remain pending the engineering plan gate; this documentation change MUST NOT be represented as implemented tooling configuration.
+- DEC-005 [FACT; LLM_INFERENCE] Full Ruff, ty, Python, dependency, and build configuration MUST remain pending the engineering plan gate. Initial license metadata and the uv dependency-age cutoff MAY be configured during initialization; they MUST NOT be represented as a completed package or CLI.
 
 - DEC-006 [FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST preserve the following round-2 instructions; they MUST NOT infer approval of the complete written requirements, architecture, or plan.
 
@@ -40,3 +40,5 @@
 
 - DEC-007 [FACT; TOOL_VERIFIED; 2026-11-16] Agents MUST treat repository access as verified: the invitation for the exact target repository was accepted through the GitHub API; repository permissions reported pull=true and push=true, visibility private, and the initial remote contained no refs. This MUST NOT imply authorization to release or change visibility.
 - DEC-008 [FACT; LLM_INFERENCE] Directly requested licensing artifacts and dependency-age configuration MAY be created during initialization; CLI behavior, dependency selection, and build configuration MUST remain pending the implementation gates. The metadata-only pyproject MUST NOT be presented as a completed installable CLI.
+
+- DEC-009 [FACT; LLM_INFERENCE] The initial proprietary license MUST reserve rights to Obscurity Labs and require separate written authorization for use or distribution; detailed wording MUST remain available for human review. The CLI help notice and built-distribution license checks MUST remain pending implementation.

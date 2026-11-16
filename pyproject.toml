@@ -1,0 +1,16 @@
+# META-001 [FACT; HUMAN_DERIVED] Project identity and licensing MUST match NFR-014.
+# META-002 [FACT; LLM_INFERENCE] Build backend, Python pin, dependencies, and CLI
+# entrypoint MUST remain pending the approved implementation plan.
+[project]
+name = "dscat"
+version = "0.1.0"
+description = "Dataset Catalog: workbook intake and standards-based catalog exports."
+license = "LicenseRef-Proprietary"
+license-files = ["LICENSE"]
+
+[project.urls]
+Repository = "https://github.com/obscuritylabs/dscat"
+
+# META-003 [FACT; HUMAN_DERIVED] Resolved artifacts MUST be at least 14 days old.
+[tool.uv]
+exclude-newer = "14 days"
