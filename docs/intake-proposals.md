@@ -2,7 +2,7 @@
 
 ### INTAKE-001
 
-[ASSUMPTION; LLM_ASSUMPTION] The human SHOULD review the following choices before requirements approval; these proposals MUST NOT authorize implementation.
+Requirements approval is recorded in DEC-039. Remaining detailed proposals MUST receive the applicable architecture or implementation-plan approval before dependent implementation.
 ### INTAKE-002
 
 [FACT; HUMAN_DERIVED] Per DEC-023, a workbook MUST contain Instructions and Datasets sheets with OPTIONAL Fields and Details/Quality sheets. Each dataset MUST occupy one main-sheet row. People completing workbooks MUST supply stable IDs; exact ID syntax MUST remain pending.

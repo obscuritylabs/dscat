@@ -2,7 +2,7 @@
 
 ## Approved direction
 
-The following direction is a human-derived fact from DEC-020 and DEC-021. Detailed fields, filenames, schema versions, and migration behavior MUST still pass the requirements, architecture, and implementation-plan gates.
+The following direction is a human-derived fact from DEC-020 and DEC-021. Detailed fields, filenames, schema versions, and migration behavior MUST conform to the DEC-039 approved requirements and still pass the architecture and implementation-plan gates.
 
 - Workbook intake MUST validate into a Pydantic canonical catalog model, which MUST serialize to organized JSON flat files as the catalog source of truth.
 - DCAT-US and ODCS MUST be derived from that model. Canonical persistence MUST preserve all supported capacity and optional metadata; a target projection MAY omit metadata its standard cannot represent, with omissions documented in the approved mapping. Projection limitations MUST NOT cause loss from canonical storage or unsupported conformance claims.
@@ -40,7 +40,7 @@ These implementation details are LLM proposals and MUST pass architecture review
 
 DEC-029 establishes OPTIONAL manually supplied lineage in 0.1.0, governed by FR-012. The canonical model MUST preserve dataset relationships, processing steps, software versions, responsibility/handoffs, and supplied evidence. Automatic discovery MUST remain outside scope.
 
-The architecture draft MUST specify stable processing-step identities, relationship/reference validation, treatment of upstream datasets outside the selected catalog, and standards mappings without claiming unsupported conformance. These details MUST remain unapproved until architecture review. Tests MUST cover multi-input derivation, multi-step handoffs, canonical round trips, malformed references, and applicable exports. Workbook design MUST assess these examples for practical entry and MUST raise concrete complexity limitations under DEC-030. Existing requirements and architecture/implementation approval gates MUST remain pending.
+The architecture draft MUST specify stable processing-step identities, relationship/reference validation, treatment of upstream datasets outside the selected catalog, and standards mappings without claiming unsupported conformance. These details MUST remain unapproved until architecture review. Tests MUST cover multi-input derivation, multi-step handoffs, canonical round trips, malformed references, and applicable exports. Workbook design MUST assess these examples for practical entry and MUST raise concrete complexity limitations under DEC-030. Requirements are approved under DEC-039; architecture and implementation-plan approval gates MUST remain pending.
 
 ## Draft lineage reference policy
 
