@@ -10,6 +10,10 @@ The following constraints are human-derived facts from DEC-018, DEC-019, and DEC
 - Security, coverage, typing, workbook compatibility, and schema-conformance requirements MUST remain mandatory regardless of where checks run.
 - Every task MUST remain incomplete until all seven stages in the [Definition of done](../AGENTS.md#definition-of-done) have evidence: planning, implementation, tests, local verification, remote-main merge, publication, and verification from the released version. Tasks MAY share a release but MUST NOT close before their release verification. Human approval gates MUST remain in force.
 
+## Portability and installation decision
+
+Per DEC-028, Windows, macOS, and Linux MUST be portability targets using ordinary cross-platform Python tooling, rather than a mandatory verified-platform matrix. Installation MUST use uv tool install with GitHub Release artifacts; private assets MAY require authenticated download first. Specialized installers MUST NOT be required. Reports MUST identify actual verified environments. Excel verification arrangements MUST remain deferred, without implying successful workbook verification or waiving acceptance.
+
 ## Proposed workflow
 
 The following workflow is an LLM proposal and MUST NOT be treated as an approved implementation plan.
