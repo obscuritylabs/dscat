@@ -35,3 +35,5 @@
 | [NFR-019](requirements.md) | CAP-03 | DEC-021 | [NFR-019](requirements.md) | [Canonical/export boundary](canonical-model.md) | RDF serializers PENDING | JSON-LD, graph-semantics, and offline-context checks PENDING | Requirement confirmed; design PENDING |
 
 - RTM-003 [FACT; LLM_INFERENCE] [intake proposals](intake-proposals.md) MUST distinguish confirmed decisions from remaining field and behavior assumptions supporting FR-001, FR-002, FR-005, FR-006, FR-007, FR-008, and NFR-009/NFR-013. Confirmed choices in INTAKE-005/006/009 MUST trace to DEC-012 and INTAKE-007/016 MUST trace to DEC-020; remaining assumptions MUST NOT supersede approved requirements.
+
+- The [history remediation plan](privacy-remediation.md) MUST trace to CAP-04/NFR-008 and CAP-05/NFR-006. Its draft approval gates, proposed process exception, history checks, remote verification, and retained-copy review MUST remain PENDING until separately evidenced.
