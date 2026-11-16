@@ -15,6 +15,8 @@ The dated entries below preserve human instructions and agent proposals at the t
 | DEC-010/011 | DEC-012 D26 and REPO-012 supersede preparation/activation instructions; exports remain absent and protections active. |
 | DEC-023 | Its references to preassigned-ID proposals identify historical text; current INTAKE-002/003 and SPEC-006 already contain the accepted submitter-supplied-ID policy. |
 
+DEC-039 supersedes earlier statements that the consolidated requirements baseline remains unapproved. Their historical approval boundaries MUST remain preserved; architecture, implementation-plan, and release gates MUST remain pending.
+
 ## Chronological entries
 
 ### DEC-001
@@ -196,3 +198,7 @@ The proposed policy MUST require pull requests, resolved conversations, linear h
 ### DEC-038
 
 [FACT; HUMAN_DERIVED; 2026-11-16] The human requested reconciliation of the existing planning documents using the recommendations discussed in the documentation review and stronger recurrence controls. Agents MUST apply those corrections and maintain the [documentation QA/QC procedure](documentation-qa.md). Existing detailed architecture, implementation-plan, and release gates MUST remain in force; this instruction MUST NOT be treated as approval of newly drafted technical policies or of the consolidated product requirements baseline. Review findings MUST remain conversational; corrected specifications and procedures MAY be maintained on disk under this request.
+
+### DEC-039
+
+[FACT; HUMAN_DERIVED; 2026-11-16] The human explicitly instructed that everything in requirements.md be marked approved and ready to start, with rtm.md review next and decisions.md review afterward. Agents MUST record approval of the complete docs/requirements.md baseline at commit `00c3535236028197805c0199401321631c709cd0`, covering SPEC-001–SPEC-007, all 30 FR/NFR requirements, and their acceptance criteria. This decision MUST supersede prior pending-baseline statements within that scope. Requirements are ready for architecture planning; architecture and implementation-plan approval MUST still precede dependent implementation. RTM and decision-log review MUST remain pending. This approval MUST NOT authorize release or approve detailed proposals in other documents.

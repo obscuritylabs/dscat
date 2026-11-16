@@ -1,7 +1,7 @@
-# Requirements draft
+# Approved requirements
 
 - SPEC-001 [FACT; HUMAN_DERIVED] DSCat MUST enable distribution of dataset metadata intake materials, receipt of completed submissions, validation of metadata, and generation of standards-based exports. Excel workbooks SHOULD provide the initial intake mechanism; Excel MUST NOT be a permanent product constraint. A replacement intake mechanism MAY be selected through the affected requirements, architecture, and implementation-plan approvals if workbook completion becomes too burdensome.
-- SPEC-002 The consolidated requirements baseline MUST remain DRAFT until the human approves its exact revision. Accepted interview decisions MUST retain their recorded authority; NFR-014 wording is individually approved under DEC-035. Neither individual approval nor this reconciliation MUST imply approval of the complete baseline. Acceptance criteria MUST be refined where interview decisions remain open; the [planning gates](planning-gates.md) MUST identify the remaining gate deliverables.
+- SPEC-002 The complete requirements baseline in docs/requirements.md at commit `00c3535236028197805c0199401321631c709cd0` is APPROVED by explicit human instruction on 2026-11-16, recorded in [DEC-039](decisions.md#dec-039). Approval covers SPEC-001–SPEC-007, all 30 FR/NFR requirements, and their acceptance criteria. The requirements are ready for architecture planning; dependent implementation MUST still await architecture and implementation-plan approval. RTM and decision-log review MUST remain pending; release authorization MUST remain separate. The [planning gates](planning-gates.md) MUST identify the remaining deliverables.
 - SPEC-003 [FACT; HUMAN_DERIVED] The project MUST use the following capabilities.
 
 | Capability | Name |
@@ -137,7 +137,7 @@ Architecture MUST treat the canonical model as the likely persisted-data migrati
 
 Any RDF export MUST use JSON-LD serialization. Acceptance MUST verify valid JSON-LD and intended RDF graph semantics as well as applicable target-profile constraints; JSON-LD context processing MUST work offline under NFR-010. Non-RDF canonical JSON and other non-RDF exports MUST NOT be required to become RDF.
 
-- SPEC-004 Capability and acceptance criteria drafts MUST NOT authorize implementation; model fields, command names, canonical file layout and schema version policy, exact schema pins, compatibility surface, and security verification procedures MUST be settled through subsequent planning.
+- SPEC-004 Requirements and acceptance criteria approval alone MUST NOT authorize implementation; model fields, command names, canonical file layout and schema version policy, exact schema pins, compatibility surface, and security verification procedures MUST be settled through subsequent planning.
 
 - SPEC-005 [FACT; HUMAN_DERIVED] Version 0.1.0 scope MUST include FR-001 through FR-008, FR-010 through FR-012, and supporting NFRs. Optional DCAT-US 1.1 support MUST NOT postpone completion of mandatory initial features.
 - SPEC-006 [FACT; HUMAN_DERIVED] DEC-023/024 MUST govern the required intake core and capacity policy. The earlier preassigned-ID proposal MUST be superseded by submitter-supplied stable IDs. DEC-027 MUST govern validated shared export metadata configuration; defaults MUST NOT invent facts or data-use commitments.
