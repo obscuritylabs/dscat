@@ -1,6 +1,6 @@
 # Requirements traceability matrix
 
-Requirements and acceptance criteria are APPROVED under [DEC-039](decisions.md#dec-039). RTM review remains PENDING. Draft design entries and unperformed implementation, tests, and verification MUST retain their existing status.
+Requirements and acceptance criteria are APPROVED under [DEC-039](decisions.md#dec-039). The RTM baseline at commit `110b441b60c3404f70ddf1ffde44243f7b934d33` is APPROVED by explicit human instruction on 2026-11-16 under [DEC-040](decisions.md#dec-040). Approval MUST NOT be represented as human verification of individual mappings; agent checks MUST remain separately evidenced. Draft design entries and unperformed implementation, tests, and verification MUST retain their existing status.
 
 - RTM-001 Each row MUST trace the requirement in [requirements.md](requirements.md) to a capability and artifacts; PENDING MUST indicate work not performed, never a pass. Requirement classifications MUST be inherited from the referenced requirement.
 - RTM-002 Requirement sources MUST reference applicable recorded decisions in [decisions.md](decisions.md), including later decisions and explicit supersession; no fixed upper decision number MUST restrict valid sources. Individually accepted decisions MUST remain distinct from consolidated baseline approval. Design, code, tests, and evidence MUST be added before a row can become verified.
@@ -54,4 +54,4 @@ Requirements and acceptance criteria are APPROVED under [DEC-039](decisions.md#d
 
 - DEC-033 positive/negative boundary and business-rule testing MUST trace to CAP-02/NFR-002, CAP-04/NFR-003/NFR-005, and CAP-05/NFR-007. Durable guidance MUST reside in AGENTS.md and the delivery-plan.md positive/negative verification section; the boundary/rule inventory, tests, failure evidence, and manual walkthrough MUST remain PENDING until their respective phases.
 
-The [current planning gates](planning-gates.md) and [documentation QA/QC procedure](documentation-qa.md) MUST trace to CAP-05/NFR-006/NFR-007 through DEC-037/038/039. Their artifact-level mappings MUST remain in the NFR-006 row. Requirement headings MUST provide stable acceptance anchors; unperformed checks MUST remain PENDING.
+The [current planning gates](planning-gates.md) and [documentation QA/QC procedure](documentation-qa.md) MUST trace to CAP-05/NFR-006/NFR-007 through DEC-037/038/039/040. Their artifact-level mappings MUST remain in the NFR-006 row. Requirement headings MUST provide stable acceptance anchors; unperformed checks MUST remain PENDING.
