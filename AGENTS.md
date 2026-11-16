@@ -1,0 +1,50 @@
+# Agent instructions
+
+## Authority and statement conventions
+
+- GOV-001 [FACT; HUMAN_DERIVED] Agents MUST treat approved requirements and planning documents as the source of truth; code MUST conform to them.
+- GOV-002 [FACT; HUMAN_DERIVED] Normative statements MUST use RFC 2119 keywords (MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, OPTIONAL), interpreted with RFC 8174 uppercase semantics.
+- GOV-003 [FACT; HUMAN_DERIVED] Material claims, requirements, decisions, and assumptions in maintained documents MUST have stable IDs, a FACT or ASSUMPTION basis, and provenance: HUMAN_DERIVED, HUMAN_VERIFIED, LLM_INFERENCE, LLM_ASSUMPTION, or TOOL_VERIFIED.
+- GOV-004 [FACT; LLM_INFERENCE] FACT MUST mean a directly supported claim or recorded instruction, not automatic human approval. TOOL_VERIFIED claims MUST cite the source or command, observation date, and evidence. Approval status MUST be recorded separately from provenance.
+- GOV-005 [FACT; HUMAN_DERIVED] Agents MUST NOT imply human approval from silence, elapsed time, tool success, or their own review. Human verification MUST record a date and evidence or decision reference; approver identity MAY be omitted.
+- GOV-006 [FACT; LLM_INFERENCE] Tables MAY inherit classification from a labeled parent statement when all rows share it. Mixed classifications MUST be labeled per row. Headings, IDs, paths, commands, and literal schema examples MAY omit normative wording when their governing statement supplies it.
+- GOV-007 [FACT; HUMAN_DERIVED] Agents MUST NOT persist private conversational context, organizational affiliations, identifying source URLs, or sensitive real-world examples in repository artifacts, Git history, issues, fixtures, or logs. Agents MUST use neutral descriptions and synthetic examples.
+
+## Required SDLC and approval gates
+
+- GOV-010 [FACT; HUMAN_DERIVED] Agents MUST begin work by reading this file and docs/index.md, checking Git status, and inspecting applicable approved requirements and plans.
+- GOV-011 [FACT; HUMAN_DERIVED] Agents MUST interview the human, record decisions, identify assumptions, and maintain concise on-disk planning documents before implementation. All planning MUST remain on disk until an explicit migration to GitHub.
+- GOV-012 [FACT; HUMAN_DERIVED] Agents MUST obtain explicit human approval of requirements, then architecture, then an implementation plan before dependent implementation. Agents MAY prepare clearly labeled drafts before approval. Approval MUST identify the document revision or commit.
+- GOV-013 [FACT; LLM_INFERENCE] Approved work MAY proceed autonomously within scope. Changes affecting approved requirements, architecture, acceptance criteria, or plan MUST receive impact analysis and renewed approval for the affected gates before dependent implementation.
+- GOV-014 [FACT; HUMAN_DERIVED] Agents MUST implement in small verifiable increments, update traceability and documentation with each increment, and complete testing before requesting human review and release authorization.
+- GOV-015 [FACT; HUMAN_DERIVED] Agents MUST provide a written manual verification walkthrough with setup, synthetic inputs, exact commands, expected results, negative cases, and cleanup. Human authorization MUST precede release, tagging, publishing, or distribution as a release.
+- GOV-016 [FACT; HUMAN_DERIVED] Independent reviews SHOULD occur periodically. The human MAY waive or request agent assistance for an independent review. An agent's self-review MUST NOT be represented as independent review or human approval. Waivers MUST be recorded; review waivers MUST NOT imply release authorization or waived security requirements.
+- GOV-017 [FACT; LLM_INFERENCE] Completion MUST require satisfied acceptance criteria, passing required checks, current documents and RTM, recorded verification evidence, and no unresolved blocking defects. Untested or blocked work MUST be reported explicitly.
+
+## Traceability and change control
+
+- GOV-020 [FACT; HUMAN_DERIVED] Every feature and NFR MUST trace to a capability in docs/rtm.md. Each RTM row MUST link a stable requirement ID to its source, acceptance criteria, design, implementation, tests, and verification evidence.
+- GOV-021 [FACT; LLM_INFERENCE] Governance, dependencies, configuration, infrastructure, tooling, documentation, migrations, and tests MUST trace to a supporting capability and requirement. Agents MUST maintain artifact-level mappings and symbol-level mappings where a file spans multiple requirements; line numbers alone MUST NOT be used as durable identifiers.
+- GOV-022 [FACT; HUMAN_DERIVED] Code without an approved RTM justification MUST be removed. Agents MUST first inspect its purpose and dependencies, record the discrepancy and impact, and preserve unrelated human changes. Agents MUST NOT invent a requirement to justify existing code. Removal that changes approved scope MUST pass the affected approval gates.
+- GOV-023 [FACT; LLM_INFERENCE] RTM fields MAY say PENDING before the corresponding phase; missing implementation or tests MUST NOT be reported as verified. Removed requirements MUST retain a retirement record and impact links; IDs MUST NOT be reused.
+- GOV-024 [FACT; LLM_INFERENCE] Assumptions affecting correctness, security, interoperability, or acceptance MUST be resolved or explicitly accepted by the human before dependent implementation. Exceptions MUST document scope, reason, risk, expiration/revisit condition, and explicit authorization.
+
+## Project and engineering constraints
+
+- GOV-030 [FACT; HUMAN_DERIVED] DSCat (Dataset Catalog) MUST be a uv-managed Python package with a Typer CLI. All structured boundary input and output MUST pass through Pydantic models, including workbook records, exports, configuration, and structured diagnostics. Ordinary CLI help and human-readable rendering MAY be derived from those models.
+- GOV-031 [FACT; HUMAN_DERIVED] DSCat MUST generate Excel workbooks for human completion, validate returned workbooks, and export validated catalog metadata to DCAT-US. ODCS support SHOULD be planned; exact standard versions and scope MUST be approved before implementation.
+- GOV-032 [FACT; HUMAN_DERIVED] The project MUST select the latest stable Python at initial implementation and MUST verify dependency/tool compatibility. Agents MUST report incompatibility rather than silently downgrade. Python upgrades thereafter MUST receive impact analysis.
+- GOV-033 [FACT; HUMAN_DERIVED] uv MUST exclude dependency artifacts uploaded less than 14 days before resolution, including development dependencies. The implementation SHOULD use exclude-newer = "14 days" after verifying support in the pinned uv release. Lockfiles MUST be committed and routine verification MUST use frozen synchronization. The age policy MUST NOT be treated as vulnerability protection by itself.
+- GOV-034 [FACT; HUMAN_DERIVED] Ruff MUST enable ALL rules and formatting checks. ty MUST enable all available diagnostics at error severity. Agents MUST verify current configuration syntax and tool support. Mutually exclusive rules and formatter conflicts MUST receive narrow documented resolutions; blanket ignores, diagnostic baselines, and unchecked typing escapes MUST NOT conceal defects.
+- GOV-035 [FACT; HUMAN_DERIVED] All maintained Python code MUST be typed and compliant with the configured checks. The verification plan MUST define measurable statement and branch coverage and behavior-based acceptance tests; coverage alone MUST NOT establish correctness.
+- GOV-036 [FACT; HUMAN_DERIVED] Security MUST be a hard requirement. Agents MUST plan and verify dependency vulnerability checks, lock integrity, approved package sources, secret exclusion, safe workbook parsing, and safe output generation. Agents MUST NOT execute workbook macros, formulas, external links, or untrusted content.
+- GOV-037 [FACT; LLM_INFERENCE] Tests MUST cover malformed and hostile inputs, validation failures, interoperability with pinned external schemas, and failure without corrupting outputs. External schemas and dependencies MUST have recorded versions and provenance. Unknown vulnerability status MUST NOT be reported as a clean scan.
+- GOV-038 [FACT; HUMAN_DERIVED] Accessibility and performance MAY remain without dedicated targets unless a requirement or security constraint warrants them.
+
+## Git, versions, and releases
+
+- GOV-040 [FACT; HUMAN_DERIVED] Agents MUST use trunk-based development with short-lived feature branches and Conventional Commits. Agents MUST create atomic commits frequently, including at least one commit per individual feature and per human interaction producing version-controlled artifacts. A commit MUST NOT combine unrelated work or include unrelated human changes.
+- GOV-041 [FACT; LLM_INFERENCE] Agents MUST inspect staged diffs for private information, secrets, scope, and traceability before committing. Planning artifacts SHOULD be committed now; future issue migration MUST preserve stable IDs, approval history, and local navigation.
+- GOV-042 [FACT; HUMAN_DERIVED] The initial version MUST be 0.1.0. Pre-1.0 breaking changes MAY occur with documented impacts. From 1.0.0 onward, backward compatibility MUST be preserved within a major version. Breaking major releases MUST be avoided and MUST receive explicit human approval before work requiring them.
+- GOV-043 [FACT; LLM_INFERENCE] The approved compatibility contract MUST enumerate CLI commands/options, exit codes, structured outputs, configuration, workbook schemas, persisted data, and any public Python API. Breaking changes MUST NOT be hidden in minor or patch releases after 1.0.0.
+- GOV-044 [FACT; HUMAN_DERIVED] Agents MUST use judgment to place durable specifications in files and execution tracking in future issues; no GitHub repository MUST be assumed to exist yet.
