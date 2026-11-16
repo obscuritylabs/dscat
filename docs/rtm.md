@@ -5,13 +5,13 @@
 
 | Requirement | Capability | Source | Acceptance | Design | Implementation | Tests | Evidence/status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [FR-001](requirements.md) | CAP-01 | D01,D12,D17 | [FR-001](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
+| [FR-001](requirements.md) | CAP-01 | D01,D12,D17,DEC-023 | [FR-001](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [FR-002](requirements.md) | CAP-02 | D01,D16,D24 | [FR-002](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [FR-003](requirements.md) | CAP-03 | D03,D11 | [FR-003](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [FR-004](requirements.md) | CAP-03 | D03,D11 | [FR-004](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-005](requirements.md) | CAP-01 | D15 | [FR-005](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
-| [FR-006](requirements.md) | CAP-01 | D12 | [FR-006](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
-| [FR-007](requirements.md) | CAP-06 | D13,D25 | [FR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
+| [FR-006](requirements.md) | CAP-01 | D12,DEC-023 | [FR-006](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
+| [FR-007](requirements.md) | CAP-06 | D13,D25,DEC-024 | [FR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-008](requirements.md) | CAP-03 | D14,DEC-020 | [FR-008](requirements.md) | [Canonical model notes](canonical-model.md) | PENDING | PENDING | Direction approved; implementation PENDING |
 | [FR-009](requirements.md) | CAP-07 | D21 | [FR-009](requirements.md) | PENDING | PENDING | PENDING | DEFERRED; 0.2.0 |
 | [NFR-001](requirements.md) | CAP-04 | D02 | [NFR-001](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
@@ -39,3 +39,5 @@
 - The [history remediation plan](privacy-remediation.md) MUST trace to CAP-04/NFR-008 and CAP-05/NFR-006. Revision 1 requirements, architecture, procedure, and bounded process exception are human-approved on 2026-11-16; candidate checks and fresh-clone remote verification passed, protection restoration was verified, and the human accepted residual server retention on 2026-11-16. The plan MUST remain the evidence and scope-exception record; no server-side purge or product release is claimed.
 
 - The standing context-exclusion rule in AGENTS.md MUST trace to CAP-04/NFR-008 and the human instruction recorded in the history remediation plan. Verification MUST review its generic wording, covered artifact surfaces, and pre-publication inspection requirement.
+
+- DEC-023/024 interview decisions MUST trace to CAP-01/FR-001/FR-006 and CAP-06/FR-007 respectively, through docs/requirements.md and INTAKE-002/003/005/018. Full requirements approval, detailed design, implementation, and verification MUST remain PENDING.
