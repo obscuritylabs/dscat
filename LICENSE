@@ -1,0 +1,21 @@
+Proprietary License
+
+Copyright (c) 2026 Obscurity Labs. All rights reserved.
+
+LIC-001 [FACT; HUMAN_DERIVED] This software and its accompanying documentation
+MUST be treated as proprietary to Obscurity Labs.
+
+LIC-002 [FACT; LLM_INFERENCE] Use, reproduction, modification, distribution,
+sublicensing, and disclosure MUST require prior written authorization from
+Obscurity Labs and MUST comply with the terms of that authorization. Possession
+of the source code MUST NOT be interpreted as a grant of license or other rights.
+
+LIC-003 [FACT; LLM_INFERENCE] Copies authorized by Obscurity Labs MUST retain
+this copyright notice and proprietary license notice.
+
+LIC-004 [FACT; LLM_INFERENCE] Unless a separate written agreement provides
+otherwise, authorized users MUST accept this software "AS IS", without warranties
+of any kind, express or implied, to the maximum extent permitted by applicable
+law. Authorized users MUST NOT hold Obscurity Labs liable for claims, damages,
+or other liability arising from the software, to the maximum extent permitted
+by applicable law.
