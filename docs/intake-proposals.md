@@ -32,7 +32,7 @@
 
 ### INTAKE-012
 
-Per [FR-002](requirements.md#fr-002)/[NFR-005](requirements.md#nfr-005), validation MUST examine every independently readable input within approved safe processing limits and accumulate discoverable file, sheet, row, field, and cross-record errors. Unsafe, resource-limited, or unreadable content MUST produce an explicit diagnostic; dependent checks MUST be reported as unperformed rather than passed or populated with invented cascading failures. Validation MUST continue on independent inputs and MUST block catalog exports by default on any failure. A separate structured diagnostic report MAY be written without publishing catalog outputs. Detailed limits and diagnostic design MUST pass architecture approval.
+Per [FR-002](requirements.md#fr-002)/[NFR-005](requirements.md#nfr-005), validation MUST examine every independently readable input within approved safe processing limits and accumulate discoverable file, sheet, row, field, and cross-record errors. Unsafe, resource-limited, or unreadable content MUST produce an explicit diagnostic; dependent checks MUST be reported as unperformed rather than passed or populated with invented cascading failures. Validation MUST continue on independent inputs and MUST block all catalog exports by default on invalid intake. Missing target-specific export facts in otherwise valid intake MUST block only the affected target under FR-004/013. A separate structured diagnostic report MAY be written without publishing catalog outputs. Detailed limits and diagnostic design MUST pass architecture approval.
 
 ## Unresolved intake proposals
 
@@ -58,7 +58,7 @@ The following are agent-proposed detailed rules supporting FR-007 and DEC-024, n
 
 ## Draft minimum-export demonstration
 
-FR-006 requires the four-field intake core, not invented facts. Before architecture approval, the mapping MUST demonstrate ID, title, description, and contact/owner plus validated shared configuration producing each mandatory export without optional detail sheets. The DCAT-US mapping MUST resolve contact shape and identifier encoding; an owner label alone MUST NOT be assumed sufficient contact metadata. ODCS MUST supply schema-defined apiVersion/kind constants and an explicitly configured contract version, with description mapped to the correct target shape. Missing facts MUST fail with field/source diagnostics. Synthetic positive and negative fixtures MUST validate against the complete offline pinned schemas; this draft MUST NOT be presented as a completed conformance demonstration.
+FR-006 requires the four-field intake core, not invented facts. Before architecture approval, the mapping MUST demonstrate ID, title, description, and contact/owner plus validated shared configuration producing each mandatory export without optional detail sheets. The DCAT-US mapping MUST resolve contact shape and identifier encoding; an owner label alone MUST NOT be assumed sufficient contact metadata. ODCS MUST supply schema-defined apiVersion/kind constants and an explicitly configured contract version, with description mapped to the correct target shape. Missing target-specific facts in otherwise valid intake MUST block only the affected target with field/source diagnostics. Synthetic positive and negative fixtures MUST validate against the complete offline pinned schemas; this draft MUST NOT be presented as a completed conformance demonstration.
 
 
 ## Research revision intake dependencies

@@ -1,7 +1,7 @@
-# Requirements: proposed research revision
+# Requirements: consolidated decision candidate
 
 - SPEC-001 [FACT; HUMAN_DERIVED] DSCat MUST enable distribution of dataset metadata intake materials, receipt of completed submissions, validation of metadata, and generation of standards-based exports. Excel workbooks SHOULD provide the initial intake mechanism; Excel MUST NOT be a permanent product constraint. A replacement intake mechanism MAY be selected through the affected requirements, architecture, and implementation-plan approvals if workbook completion becomes too burdensome.
-- SPEC-002 The approved baseline remains docs/requirements.md at `00c3535236028197805c0199401321631c709cd0` (2026-11-16, [DEC-039](decisions.md#dec-039)), covering SPEC-001–SPEC-007 and its original 30 FR/NFR requirements. This consolidated research revision is PROPOSED under [DEC-042](decisions.md#dec-042), pending renewed human requirements approval. Unchanged requirements retain their original authority only within that exact baseline scope. New and refined acceptance MUST NOT authorize dependent implementation. Current authority MUST follow [planning gates](planning-gates.md).
+- SPEC-002 The approved baseline remains docs/requirements.md at `00c3535236028197805c0199401321631c709cd0` (2026-11-16, [DEC-039](decisions.md#dec-039)), covering SPEC-001–SPEC-007 and its original 30 FR/NFR requirements. This consolidated revision is PROPOSED under [DEC-042](decisions.md#dec-042), with narrowly approved interview decisions under [DEC-043](decisions.md#dec-043); exact-revision renewed human requirements approval remains PENDING. Unchanged requirements retain their original authority only within that exact baseline scope. New and refined acceptance MUST NOT authorize dependent implementation. Current authority MUST follow [planning gates](planning-gates.md).
 - SPEC-003 [FACT; HUMAN_DERIVED] The project MUST use the following capabilities.
 
 | Capability | Name |
@@ -19,7 +19,7 @@ Source: consolidated human instructions in [decisions.md](decisions.md); propose
 
 ### FR-001
 
-DSCat MUST generate human-completable dataset metadata intake materials with instructions, one primary entry per dataset, and OPTIONAL field-schema, detail/quality, and lineage sections. A synthetic completed submission MUST be readable by the intake workflow and the selected completion interface. The current Excel layout MUST follow DEC-023/029 while Excel remains selected.
+DSCat MUST generate human-completable dataset metadata intake materials with instructions, one primary entry per dataset, and OPTIONAL field-schema, detail/quality, and lineage sections. A synthetic completed submission MUST be readable by the intake workflow and the selected completion interface. The current Excel layout MUST follow DEC-023/029 while Excel remains selected; lineage-specific materials MUST follow the later FR-012 sequence under SPEC-005.
 
 ### FR-002
 
@@ -27,11 +27,11 @@ DSCat MUST parse completed submissions into validated catalog records; invalid i
 
 ### FR-003
 
-Version 0.1.0 MUST export schema-valid DCAT-US 3.0; the exporter MUST pass its pinned authoritative schema and semantic acceptance tests. DCAT-US 1.1 SHOULD be supported but MUST NOT block release.
+Version 0.1.0 MUST export schema-valid DCAT-US 3.0; the exporter MUST pass its pinned authoritative schema and semantic acceptance tests. DCAT-US 3.0 MUST precede ODCS 3.2.0 implementation, and both MUST be available for the first release. Later export targets MUST follow SPEC-005. Acceptance MUST validate both mandatory targets independently with synthetic minimum and detailed records.
 
 ### FR-004
 
-Version 0.1.0 MUST export ODCS contracts using a minimal conforming scope; output MUST pass the selected pinned schema. Per DEC-027, the target MUST be ODCS 3.2.0 with identity, name, description, contract version, and available ownership/field-schema details. Quality and service commitments MUST be included only when explicitly supplied. Validated configuration MAY supply shared export-required metadata; missing required facts MUST block export. Exact mappings and schema pins MUST pass architecture review.
+Version 0.1.0 MUST export ODCS contracts using a minimal conforming scope; output MUST pass the selected pinned schema. Per DEC-027, the target MUST be ODCS 3.2.0 with identity, name, description, contract version, and available ownership/field-schema details. Quality and service commitments MUST be included only when explicitly supplied. Validated configuration MAY supply shared export-required metadata; missing target-required facts in otherwise valid intake MUST block only the affected target. Invalid intake MUST block all catalog exports by default under FR-002. Exact mappings and schema pins MUST pass architecture review.
 
 ### FR-005
 
@@ -59,7 +59,7 @@ Builds MUST represent exactly the selected inputs; omitted datasets MUST be abse
 
 ### FR-012
 
-Version 0.1.0 MUST support OPTIONAL manually supplied dataset-and-processing-step lineage through an OPTIONAL lineage section without enlarging the required intake core (DEC-029). Records MUST support upstream and derived dataset references, multiple-input derivation, processing software/tool and version, transformation descriptions, input/output dataset IDs, responsible teams/owners and handoffs, and OPTIONAL timestamps, process references, and supporting documentation. Canonical JSON MUST preserve supported lineage metadata and standards exports MUST include supported mappings. Acceptance MUST demonstrate a synthetic multi-input derivation and multi-step handoff, canonical save/load preservation, applicable export mappings, and validation of malformed references under the architecture-approved reference policy. Automatic lineage discovery MUST remain outside 0.1.0 scope. Proposed refinement: manually supplied lineage MUST distinguish dataset entities, processing activities, and responsible agents using PROV-informed meanings, and MUST distinguish DCAT datasets, distributions, and data services in mappings. Acceptance MUST preserve those distinctions through round trips and exports, document unmapped relationships, and MUST NOT claim complete PROV conformance.
+After the separate W3C DCAT 3 capability in SPEC-005, DSCat MUST support OPTIONAL manually supplied dataset-and-processing-step lineage through an OPTIONAL lineage section without enlarging the required intake core (DEC-029). Records MUST support upstream and derived dataset references, multiple-input derivation, processing software/tool and version, transformation descriptions, input/output dataset IDs, responsible teams/owners and handoffs, and OPTIONAL timestamps, process references, and supporting documentation. Canonical JSON MUST preserve supported lineage metadata and standards exports MUST include supported mappings. Acceptance MUST demonstrate a synthetic multi-input derivation and multi-step handoff, canonical save/load preservation, applicable export mappings, and validation of malformed references under the architecture-approved reference policy. External lineage ingestion and automatic discovery MUST remain deferred. Manually supplied lineage capture and export MUST distinguish dataset entities, processing activities, and responsible agents using PROV-O semantics, and MUST distinguish DCAT datasets, distributions, and data services in mappings. Acceptance MUST preserve those distinctions through round trips and exports, document unmapped relationships, and MUST NOT claim complete PROV-O conformance. Acceptance MUST include an explicit lineage export using the supported PROV-O terms and verify its intended graph relationships offline; serialization and exact supported term mappings remain architecture deliverables.
 
 ### NFR-001
 
@@ -139,7 +139,7 @@ Any RDF export MUST use JSON-LD serialization. Acceptance MUST verify valid JSON
 
 - SPEC-004 Requirements and acceptance criteria approval alone MUST NOT authorize implementation; model fields, command names, canonical file layout and schema version policy, exact schema pins, compatibility surface, and security verification procedures MUST be settled through subsequent planning.
 
-- SPEC-005 Version 0.1.0 scope, as expanded by the pending DEC-042 proposal, MUST include FR-001 through FR-008, FR-010 through FR-018, and supporting NFRs, including proposed NFR-020 through NFR-022. New scope remains pending under SPEC-002. Optional DCAT-US 1.1 support MUST NOT postpone completion of mandatory initial features.
+- SPEC-005 Under DEC-043, version 0.1.0 MUST deliver DCAT-US 3.0 followed by ODCS 3.2.0, with both required for release. FR-001–FR-008, FR-010/011 and supporting NFRs remain initial capabilities; DEC-042 additions FR-013–FR-018 and NFR-020–NFR-022 remain proposed for that release. FR-012 lineage MUST follow a later, separate W3C DCAT 3 capability (FR-019), then ODPS metadata/export (FR-020), and lastly DCAT-US 1.1 (FR-021). These later capabilities MUST NOT block the first release. Later version numbers and detailed designs remain PENDING; capability ordering MUST NOT imply release authorization. Exact consolidated approval remains PENDING under SPEC-002.
 - SPEC-006 [FACT; HUMAN_DERIVED] DEC-023/024 MUST govern the required intake core and capacity policy. Stable IDs MUST be supplied by submitters. DEC-027 MUST govern validated shared export metadata configuration; defaults MUST NOT invent facts or data-use commitments.
 
 - SPEC-007 [FACT; HUMAN_DERIVED] Per DEC-031/032, Excel SHOULD be the initial intake technology. Requirements describing intake capabilities MUST remain technology-neutral where practical. Technology-specific MUST clauses MUST apply only while that technology is selected and MUST NOT make its selection mandatory. A technology replacement MUST revise or retire its specific clauses and acceptance criteria, preserve applicable technology-neutral obligations, and resolve compatibility impacts through affected planning approvals. This clarification MUST NOT select or authorize another technology now.
@@ -184,3 +184,19 @@ Intake materials, CLI output, and user documentation MUST provide testable acces
 ### NFR-022
 
 Secure development planning MUST map the selected final NIST SP 800-218 SSDF 1.1 practices to concrete project controls/evidence or justified nonapplicability, without claiming certification. The release plan MUST define a vulnerability reporting channel, triage/remediation and coordinated disclosure process, supported versions/support period, and end-of-support communication. Acceptance MUST review the practice mapping, exercise a synthetic vulnerability report through documented triage, and verify published support/reporting instructions in released artifacts. Later drafts MUST NOT silently replace the selected final baseline.
+
+## Later capability acceptance
+
+DEC-043 approves the capability scope and sequence below, not this unseen consolidated revision or detailed architecture. Each capability MUST pass applicable requirements, architecture, implementation-plan and release gates before dependent execution.
+
+### FR-019
+
+After the first release, DSCat MUST provide a separate W3C DCAT 3 export capability, distinct from DCAT-US profiles. Acceptance MUST verify intended DCAT 3 graph semantics, JSON-LD serialization and offline resource closure using synthetic dataset, distribution and data-service cases; target-specific missing facts MUST affect only that target. Exact supported terms, resource pins and mappings MUST pass architecture approval.
+
+### FR-020
+
+After FR-012 lineage, DSCat MUST capture, validate, preserve and export ODPS product metadata with distinct product identities, dataset references and ODCS contract links. Product lifecycle states and supplied transitions MUST be recorded and validated; input/output ports MUST describe and validate interfaces and access metadata. Acceptance MUST cover synthetic valid and invalid product links, lifecycle transitions and port metadata, canonical round trips and conforming ODPS exports. Exact ODPS version, state vocabulary, allowed transitions, link/reference policy and port field mappings MUST be settled through architecture approval rather than invented here. Access provisioning, deployment and live endpoint testing MUST remain outside this capability.
+
+### FR-021
+
+After FR-020, DSCat MUST provide DCAT-US 1.1 export. Acceptance MUST verify the selected pinned profile and semantic mappings offline, identify unrepresentable metadata without losing canonical information, and keep its readiness independent of other targets. This later capability MUST NOT delay the mandatory first release.
