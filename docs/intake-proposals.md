@@ -26,3 +26,5 @@
 - INTAKE-021 [FACT; HUMAN_DERIVED] Per DEC-030, agents MUST raise concrete workbook usability or complexity limitations with the human before proposing an alternative intake process. Workbook feasibility MUST be assessed during detailed design using synthetic lineage examples; a different intake process MUST require affected planning approvals.
 
 - INTAKE-022 [FACT; HUMAN_DERIVED] Per DEC-031/SPEC-001/SPEC-007, Excel SHOULD be the initial intake mechanism and MUST NOT permanently constrain the product. Current workbook requirements MUST apply to the planned workbook implementation. A guided form workflow MAY be considered when evaluating alternatives, without selecting a replacement now or bypassing affected approval gates.
+
+- INTAKE-023 [FACT; HUMAN_DERIVED] DEC-032/SPEC-007 MUST govern all workbook-specific decisions and proposals in this document: their technology-specific obligations MUST apply only while Excel remains selected. Replacement planning MUST revise or retire those details and preserve applicable technology-neutral intake capabilities; historical decisions MUST remain as history rather than make Excel permanently mandatory.

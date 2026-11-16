@@ -48,3 +48,5 @@
 - DEC-030/INTAKE-021 workbook feasibility and intake change-control guidance MUST trace to CAP-01/FR-001/FR-012 and CAP-05/NFR-006. Architecture MUST assess synthetic lineage entry complexity before dependent implementation; alternatives MUST retain affected approval gates.
 
 - DEC-031/SPEC-001/SPEC-007/INTAKE-022 intake flexibility MUST trace to CAP-01/FR-001/FR-005/FR-006/FR-010/FR-012 and CAP-05/NFR-006. Current workbook requirements MUST remain the initial implementation plan; alternative intake mechanisms MUST remain unselected and subject to affected planning approvals. The requirements approval candidate MUST be the revised document commit, not the superseded revision 2475300.
+
+- DEC-032/SPEC-007 conditional technology selection MUST govern CAP-01/FR-001/FR-002/FR-005/FR-006/FR-010/FR-012, CAP-03/FR-008, and CAP-01/NFR-013, with CAP-05/NFR-006 governing replacement change control. Existing requirement IDs MUST remain stable; implementation and verification MUST remain PENDING.
