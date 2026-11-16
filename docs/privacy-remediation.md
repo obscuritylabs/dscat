@@ -43,8 +43,14 @@ Explicit human approval MUST authorize direct history replacement instead of a P
 
 ## Approval and stage record
 
-Requirements: APPROVED. Architecture: APPROVED. Implementation plan: APPROVED. One-time history-update authorization: APPROVED. Completion-process exception: APPROVED. Candidate: PENDING. Remote update: PENDING. Protection restoration: PENDING. Server retention review: PENDING. Local cleanup: PENDING.
+Requirements: APPROVED. Architecture: APPROVED. Implementation plan: APPROVED. One-time history-update authorization: APPROVED. Completion-process exception: APPROVED. Candidate: VERIFIED LOCALLY; remote update pending. Remote update: PENDING. Protection restoration: PENDING. Server retention review: PENDING. Local cleanup: PENDING.
 
 Human approval recorded 2026-11-16: the human replied "Approved" to the request covering revision 1 requirements, architecture, procedure, one-time force-push, and completion-process exception. This approval MUST remain limited to this remediation.
 
 Observed baseline on 2026-11-16: main f0d2aabf08dab8e3d9995ae0a5a1c5846fc0514c; one GitHub pull request; no tags or releases; Protect main ruleset 27396943 active. Evidence commands: `git ls-remote origin` and read-only GitHub repository/ruleset API inspection. Approval MUST identify this document revision or its commit and MUST NOT be inferred from these observations.
+
+## Local candidate verification
+
+Evidence recorded 2026-11-16 against candidate 6cbb38c059d71c8298f55c09d447f469b2f3e6a2: all 15 commits were compared against the approved transformation, with author/committer headers, messages, and parent ordering preserved. All 123 candidate Git objects and all historical paths passed the identifying-content scan. Both original research versions triggered the negative-control scan. All 11 Markdown files passed relative file-link and anchor checks; all 28 RTM requirement rows remain present. Local rewrite and verification scripts executed outside the repository produced a passing report and a private old/new commit map.
+
+This evidence MUST NOT be treated as a remote update or server-side purge. Package behavior tests were not run because this change alters documentation history only. The next metadata-only evidence commit MUST receive the same object, link, and traceability checks before pushing. Protection changes MUST remain the human responsibility; the agent MUST wait for confirmation and verify the live state.
