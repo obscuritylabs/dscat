@@ -16,7 +16,7 @@ The authorized design separates compact control documents, phase role instructio
 
 ## Current handoff
 
-Phase: approval-synchronized candidate awaiting final fresh verification and affected semantic review plus cross-document reconciliation. Original source baseline: `0b7b82459a7136922bdc2d8439839553114b6905`; integration baseline: `67c56cd56dd01b6bc03ae2f33e0e7720f28fa860`, incorporating DEC-041 approval of the original committed decision baseline only; working tree contains uncommitted documentation changes. Exact final candidate digest MUST accompany verification evidence. Assigned outputs: compact entry documents, workflow and phase instructions, relocated governance/engineering policy, current-state document cleanup and reconciled traceability. Existing product requirements MUST retain their approved behavior; editorial updates MUST be distinguished from the original approved revision.
+Phase: protected PR integration; the linked PR evidence is authoritative for the integration outcome and exact remote-main revision. Original source baseline: `0b7b82459a7136922bdc2d8439839553114b6905`; integration baseline: `67c56cd56dd01b6bc03ae2f33e0e7720f28fa860`, incorporating DEC-041 approval of the original committed decision baseline only. Implementation commit: `f14a70ffd5cdfa2063a8b7acf6e768eb5ca4f608`. [PR #17](https://github.com/obscuritylabs/dscat/pull/17) retains exact structural recipe, candidate identity, review coverage and verification results. The final task-status metadata MUST receive fresh affected review before integration. Existing product requirements retain their approved behavior; editorial updates do not extend original approval scope.
 
 Bootstrap implementation: the parent prepared entry points, extracted policy and this task record before activating the new coordinator boundary. Fresh agents implemented workflow/roles and current-state cleanup. A fresh reconciliation agent owns governance, engineering, QA, gates, requirements and RTM. Fresh reviewers cover the current-state documents and the control/policy/role set separately, followed by cross-document reconciliation. Subsequent execution MUST follow the new coordinator boundary; this bootstrap MUST NOT be described as an entirely phase-isolated run. Findings MUST be corrected before integration; summaries MUST NOT substitute for reading assigned sections.
 
@@ -36,19 +36,19 @@ Coverage uses all nine areas of the [semantic matrix](../documentation-qa.md#ful
 
 | Assignment and reviewed scope | Reviewer | Candidate evidence and disposition |
 | --- | --- | --- |
-| Historical control set: AGENTS.md; docs/index.md; docs/workflow.md; docs/tasks/documentation-workflow.md; docs/governance.md; docs/engineering.md; docs/documentation-qa.md; docs/planning-gates.md; docs/requirements.md; docs/rtm.md; all eight phase files (architecture, implementation, integration, planning, release, requirements, review, verification; 18 documents, complete sections) | `/root/review_control` | All nine matrix areas reviewed; SHA-256 `b69182b1e279dc0473a60b0053ebc5810e4cab93c07d20968591e2196990cd11` over sorted relative path + NUL + file bytes + NUL; retained only for identical content and applicability; synchronized approval and task sections require fresh affected review |
-| Domain set: decisions, intake proposals, canonical model, research, delivery plan, privacy remediation, README; LICENSE and pyproject.toml (complete files) | `/root/review_current`; final `/root/review_compaction` | Prior review covers all nine matrix areas where applicable; final corrected-candidate review PENDING |
-| Combined candidate: cross-document authority, terminology, links, mappings and review dispositions | `/root/final_reconciliation` | Conditional review returned; final corrected-candidate reconciliation and exact digest PENDING |
+| Historical control set: AGENTS.md; docs/index.md; docs/workflow.md; docs/tasks/documentation-workflow.md; docs/governance.md; docs/engineering.md; docs/documentation-qa.md; docs/planning-gates.md; docs/requirements.md; docs/rtm.md; all eight phase files (architecture, implementation, integration, planning, release, requirements, review, verification; 18 documents, complete sections) | `/root/review_control` | All nine matrix areas reviewed; SHA-256 `b69182b1e279dc0473a60b0053ebc5810e4cab93c07d20968591e2196990cd11` over sorted relative path + NUL + file bytes + NUL; retained only for identical content and applicability; synchronized approval and task sections reviewed by `/root/verify_synced`; subsequent task-status metadata requires fresh affected review |
+| Domain set: decisions, intake proposals, canonical model, research, delivery plan, privacy remediation, repository policy; LICENSE and pyproject.toml (complete files) | `/root/review_current`; final `/root/review_compaction` | All nine matrix areas where applicable; corrected candidate reconciled by `/root/verify_synced`; no README exists in this checkout |
+| Combined candidate: cross-document authority, terminology, links, mappings and review dispositions | `/root/final_reconciliation` | Corrections checked by `/root/verify_corrections`; final `/root/verify_synced` PASS at SHA-256 `6369dcade9fd6ed4ceeb07b3d2ad63ca46aa30308ae695d030af22f503bd80c4`; exact scope/results retained in PR #17 |
 
 ## Stage ledger
 
 | Stage | Current evidence/status |
 | --- | --- |
 | Planned | Direct maintenance instruction and scope/acceptance above; product gates unchanged |
-| Implemented | DONE: maintenance scope implemented; semantic corrections applied; final candidate verification pending |
-| Tested | Structural recipe and seven synthetic controls passed after corrections; independent final candidate rerun PENDING |
-| Locally verified | PENDING final fresh semantic review, cross-document reconciliation and walkthrough |
-| Remote-main integration | PENDING PR and revision verification |
+| Implemented | DONE: implementation commit and reviewed scope linked above |
+| Tested | PASS: final structural recipe, all seven in-memory negative controls and whitespace checks; exact commands/results in PR #17 |
+| Locally verified | PASS: bounded semantic coverage, final fresh affected review/reconciliation and walkthrough at recorded candidate; task-status metadata review required before integration |
+| Remote-main integration | [PR #17](https://github.com/obscuritylabs/dscat/pull/17) holds the protected rebase-merge outcome and origin/main revision verification; this stage MUST remain pending until that evidence confirms both |
 | Published release | PENDING human release authorization |
 | Released-artifact verification | PENDING publication and downloaded-source checks |
 
