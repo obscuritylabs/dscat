@@ -17,7 +17,7 @@
 
 - DEC-002 [FACT; HUMAN_DERIVED] The original 100% statement and branch coverage proposal MUST be read with D18 below, which authorizes narrowly justified agent-selected exceptions.
 - DEC-003 [ASSUMPTION; LLM_ASSUMPTION] Agents SHOULD initially commit all durable planning documents rather than leave an untracked issue backlog; later migration SHOULD preserve links and IDs.
-- DEC-004 [FACT; LLM_INFERENCE] The next interview MUST resolve canonical persistence, identifier allocation and duplicate normalization, capacity unit conventions, minimal workbook fields, schema versions, and verification platform coverage. Later decisions MUST supersede conflicting earlier proposals.
+- DEC-004 [FACT; LLM_INFERENCE] The next interview MUST resolve identifier allocation and duplicate normalization, capacity unit conventions, minimal workbook fields, schema versions, and verification platform coverage. Later decisions MUST supersede conflicting earlier proposals.
 - DEC-005 [FACT; LLM_INFERENCE] Full Ruff, ty, Python, dependency, and build configuration MUST remain pending the engineering plan gate. Initial license metadata and the uv dependency-age cutoff MAY be configured during initialization; they MUST NOT be represented as a completed package or CLI.
 
 - DEC-006 [FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST preserve the following round-2 instructions; they MUST NOT infer approval of the complete written requirements, architecture, or plan.
@@ -55,7 +55,7 @@
 | D26 | Agents MUST recognize that the human activated branch protection and deleted the local import JSON. The deleted JSON MUST NOT be recreated merely to satisfy earlier preparation instructions. |
 
 - DEC-013 [FACT; TOOL_VERIFIED; 2026-11-16] Agents MUST treat branch protection as active based on GET /repos/obscuritylabs/dscat/rulesets/27396943: enforcement=active, target refs/heads/main, deletion and non-fast-forward blocks, linear history, pull requests, rebase-only merges, resolved conversations, and zero required approvals. Local filesystem inspection confirmed local/github/main.ruleset.json absent; Git MUST continue to exclude that path if a future export is explicitly requested.
-- DEC-014 [ASSUMPTION; LLM_ASSUMPTION] The architecture SHOULD use a Pydantic catalog model between workbook parsing and serializers so capacity and optional metadata are preserved. Persisting that model as authoritative canonical JSON SHOULD remain a separate proposal; the human's question MUST NOT imply either architecture or storage approval.
+- DEC-014 [ASSUMPTION; LLM_ASSUMPTION] The architecture SHOULD use a Pydantic catalog model between workbook parsing and serializers so capacity and optional metadata are preserved. This original proposal MUST be read with DEC-020, which approves the canonical model and JSON persistence; exact fields and storage layout MUST still pass architecture/planning review.
 
 - DEC-015 [FACT; HUMAN_DERIVED; 2026-11-16] LICENSE MUST use conventional proprietary license text without LIC identifiers, FACT/ASSUMPTION labels, or provenance assertions. The license MUST retain Obscurity Labs ownership and proprietary terms; provenance and traceability MUST remain in planning documents rather than the legal text. This instruction MUST take precedence over the general document annotation convention for LICENSE.
 
@@ -66,3 +66,5 @@
 - DEC-018 [FACT; HUMAN_DERIVED; 2026-11-16] GitHub Actions usage MUST be minimized, with local verification and testing as the primary quality gate. A small CI pipeline MAY provide supplementary checks. GitHub Releases MUST distribute installable software. Existing human release authorization and security requirements MUST remain in force.
 
 - DEC-019 [FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST NOT consider any task complete until it is planned, implemented, tested, verified locally, pushed and merged into remote main, released, and verified from the released version. Agents MUST retain evidence for all seven stages and MUST keep work incomplete while any stage is pending. Earlier completion criteria MUST be read with this stricter rule; existing human approval gates MUST remain in force.
+
+- DEC-020 [FACT; HUMAN_DERIVED; 2026-11-16] DSCat MUST use a canonical JSON catalog model between workbook inputs and standards exports, with organized flat files as the authoritative catalog storage for now. Planning MUST treat this model as the likely data migration boundary and MUST preserve the ability to move its persistence into a database later. This approval MUST resolve the canonical model/persistence choice, but MUST NOT imply approval of the complete requirements baseline, exact fields, file layout, architecture, or implementation plan.

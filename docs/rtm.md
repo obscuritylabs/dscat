@@ -1,7 +1,7 @@
 # Requirements traceability matrix
 
 - RTM-001 [FACT; LLM_INFERENCE] Each row MUST trace the requirement in [requirements.md](requirements.md) to a capability and artifacts; PENDING MUST indicate work not performed, never a pass. Requirement classifications MUST be inherited from the referenced requirement.
-- RTM-002 [FACT; LLM_INFERENCE] Requirement sources MUST reference DEC-001, DEC-006, DEC-010, DEC-012, DEC-018, or DEC-019 and their D-numbers in [decisions.md](decisions.md). Design, code, tests, and evidence MUST be added before a row can become verified.
+- RTM-002 [FACT; LLM_INFERENCE] Requirement sources MUST reference DEC-001, DEC-006, DEC-010, DEC-012, DEC-018, DEC-019, or DEC-020 and their D-numbers in [decisions.md](decisions.md). Design, code, tests, and evidence MUST be added before a row can become verified.
 
 | Requirement | Capability | Source | Acceptance | Design | Implementation | Tests | Evidence/status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -12,7 +12,7 @@
 | [FR-005](requirements.md) | CAP-01 | D15 | [FR-005](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-006](requirements.md) | CAP-01 | D12 | [FR-006](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-007](requirements.md) | CAP-06 | D13,D25 | [FR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
-| [FR-008](requirements.md) | CAP-03 | D14 | [FR-008](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
+| [FR-008](requirements.md) | CAP-03 | D14,DEC-020 | [FR-008](requirements.md) | [Canonical model notes](canonical-model.md) | PENDING | PENDING | Direction approved; implementation PENDING |
 | [FR-009](requirements.md) | CAP-07 | D21 | [FR-009](requirements.md) | PENDING | PENDING | PENDING | DEFERRED; 0.2.0 |
 | [NFR-001](requirements.md) | CAP-04 | D02 | [NFR-001](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-002](requirements.md) | CAP-02 | D02 | [NFR-002](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
@@ -31,5 +31,6 @@
 | [NFR-015](requirements.md) | CAP-05 | DEC-010,D26 | [NFR-015](requirements.md) | [Repository policy](repository-policy.md) | [Branch policy](../AGENTS.md#main-branch-protection); active GitHub ruleset 27396943 | [Remote/local verification](repository-policy.md) REPO-012 | ACTIVE; import artifact deleted and untracked |
 | [NFR-016](requirements.md) | CAP-04 | DEC-018 | [NFR-016](requirements.md) | [Delivery draft](delivery-plan.md) | AGENTS.md local verification policy; workflows PENDING | Local verification reports PENDING | DRAFT; CI not implemented |
 | [NFR-017](requirements.md) | CAP-05 | DEC-018,DEC-019 | [NFR-017](requirements.md) | [Delivery draft](delivery-plan.md) | Release artifacts and installer documentation PENDING | Clean-install/release verification PENDING | DRAFT; no release authorized |
+| [NFR-018](requirements.md) | CAP-02 | DEC-020 | [NFR-018](requirements.md) | [Canonical model notes](canonical-model.md) | PENDING | Schema-version, round-trip, and migration-policy checks PENDING | Direction approved; detailed design PENDING |
 
-- RTM-003 [FACT; LLM_INFERENCE] [intake proposals](intake-proposals.md) MUST distinguish confirmed decisions from remaining field and behavior assumptions supporting FR-001, FR-002, FR-005, FR-006, FR-007, FR-008, and NFR-009/NFR-013. Confirmed choices in INTAKE-005/006/009 MUST trace to DEC-012; remaining assumptions MUST NOT supersede approved requirements.
+- RTM-003 [FACT; LLM_INFERENCE] [intake proposals](intake-proposals.md) MUST distinguish confirmed decisions from remaining field and behavior assumptions supporting FR-001, FR-002, FR-005, FR-006, FR-007, FR-008, and NFR-009/NFR-013. Confirmed choices in INTAKE-005/006/009 MUST trace to DEC-012 and INTAKE-007/016 MUST trace to DEC-020; remaining assumptions MUST NOT supersede approved requirements.
