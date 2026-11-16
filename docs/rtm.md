@@ -13,7 +13,6 @@
 | [FR-006](requirements.md) | CAP-01 | D12,DEC-023 | [FR-006](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-007](requirements.md) | CAP-06 | D13,D25,DEC-024 | [FR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT; 0.1.0 |
 | [FR-008](requirements.md) | CAP-03 | D14,DEC-020 | [FR-008](requirements.md) | [Canonical model notes](canonical-model.md) | PENDING | PENDING | Direction approved; implementation PENDING |
-| [FR-009](requirements.md) | CAP-07 | D21 | [FR-009](requirements.md) | PENDING | PENDING | PENDING | DEFERRED; 0.2.0 |
 | [FR-010](requirements.md) | CAP-01 | DEC-026 | [FR-010](requirements.md) | PENDING; INTAKE-019 | PENDING | PENDING | Interview decision accepted; baseline approval PENDING |
 | [FR-011](requirements.md) | CAP-02 | DEC-025 | [FR-011](requirements.md) | PENDING; INTAKE-010 | PENDING | PENDING | Interview decision accepted; baseline approval PENDING |
 | [FR-012](requirements.md) | CAP-01, CAP-02, CAP-03 | DEC-029 | [FR-012](requirements.md) | [Lineage design impact](canonical-model.md#lineage-scope-and-design-impact); INTAKE-020 | PENDING | PENDING | Interview scope accepted; baseline and architecture approval PENDING |
