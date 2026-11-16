@@ -13,6 +13,10 @@ DEC-037/038 directly request this procedure, supporting CAP-05/NFR-006 and NFR-0
 5. Agents MUST inspect the staged diff for scope, traceability, private context, secrets, unsupported claims, and unrelated changes. They MUST record concise check commands/results against the exact tested commit and artifact/tree hashes in the authorized task/verification record or PR. Findings MUST remain conversational when the human requests that restriction; verification evidence MUST NOT reproduce those findings.
 6. Agents MUST self-review and integrate through the active PR/rebase workflow, verify the merged revision on origin/main, and accurately report remaining approval/release stages. They MUST rerun affected checks after any post-verification edit or integration conflict. An unchanged, verified result MAY be reused only when its exact content and applicability are established.
 
+## Reusable structural verification
+
+The standard-library structural verification recipe and seven in-memory negative controls are retained with [PR #13 verification evidence](https://github.com/obscuritylabs/dscat/pull/13). Agents MUST retrieve and run that recipe from the current checkout root for every documentation change, adapting it when document structure changes and retaining the exact revised recipe with the new verification evidence. They MUST verify current document/requirement counts rather than trust historical output labels. The recipe checks local links/anchors, identifier uniqueness, RTM membership, and source/capability/acceptance references; it MUST NOT replace the full semantic review below. It is a local audit recipe, not an installed product command or a configured CI enforcement claim.
+
 ## Full semantic review matrix
 
 | Area | Required review |
