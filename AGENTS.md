@@ -3,14 +3,14 @@
 ## Authority and statement conventions
 
 - GOV-001 [FACT; HUMAN_DERIVED] Agents MUST treat approved requirements and planning documents as the source of truth; code MUST conform to them.
-- GOV-002 [FACT; HUMAN_DERIVED] Normative statements MUST use RFC 2119 keywords (MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, OPTIONAL), interpreted with RFC 8174 uppercase semantics.
-- GOV-003 [FACT; HUMAN_DERIVED] Material claims, requirements, decisions, and assumptions in maintained documents MUST have stable IDs, a FACT or ASSUMPTION basis, and provenance: HUMAN_DERIVED, HUMAN_VERIFIED, LLM_INFERENCE, LLM_ASSUMPTION, or TOOL_VERIFIED.
+- GOV-002 [FACT; HUMAN_DERIVED] Normative statements in governance and planning documents MUST use RFC 2119 keywords (MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, OPTIONAL), interpreted with RFC 8174 uppercase semantics.
+- GOV-003 [FACT; HUMAN_DERIVED] Material claims, requirements, decisions, and assumptions in governance and planning documents MUST have stable IDs, a FACT or ASSUMPTION basis, and provenance: HUMAN_DERIVED, HUMAN_VERIFIED, LLM_INFERENCE, LLM_ASSUMPTION, or TOOL_VERIFIED.
 - GOV-004 [FACT; LLM_INFERENCE] FACT MUST mean a directly supported claim or recorded instruction, not automatic human approval. TOOL_VERIFIED claims MUST cite the source or command, observation date, and evidence. Approval status MUST be recorded separately from provenance.
 - GOV-005 [FACT; HUMAN_DERIVED] Agents MUST NOT imply human approval from silence, elapsed time, tool success, or their own review. Human verification MUST record a date and evidence or decision reference; approver identity MAY be omitted.
 - GOV-006 [FACT; LLM_INFERENCE] Tables MAY inherit classification from a labeled parent statement when all rows share it. Mixed classifications MUST be labeled per row. Headings, IDs, paths, commands, and literal schema examples MAY omit normative wording when their governing statement supplies it.
 - GOV-007 [FACT; HUMAN_DERIVED] Agents MUST NOT persist private conversational context, private organizational affiliations, identifying private-context source URLs, or sensitive real-world examples in repository artifacts, Git history, issues, fixtures, or logs. Agents MUST use neutral descriptions and synthetic examples.
 
-- GOV-008 [FACT; HUMAN_DERIVED] LICENSE MUST use conventional legal prose without requirement IDs, classification labels, provenance assertions, or RFC 2119 formatting; licensing decisions and traceability MUST remain in planning documents.
+- GOV-008 [FACT; HUMAN_DERIVED] Source code, tests, configuration, package manifests, LICENSE, user-facing documentation, and CLI output MUST use their conventional formats without planning IDs or fact/provenance annotations. LICENSE MUST use conventional legal prose rather than RFC 2119 formatting. Classification, provenance, and requirements traceability MUST remain in governance and planning documents; agents MUST NOT inject those annotations into ordinary project artifacts.
 
 ## Required SDLC and approval gates
 

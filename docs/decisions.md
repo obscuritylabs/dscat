@@ -58,3 +58,5 @@
 - DEC-014 [ASSUMPTION; LLM_ASSUMPTION] The architecture SHOULD use a Pydantic catalog model between workbook parsing and serializers so capacity and optional metadata are preserved. Persisting that model as authoritative canonical JSON SHOULD remain a separate proposal; the human's question MUST NOT imply either architecture or storage approval.
 
 - DEC-015 [FACT; HUMAN_DERIVED; 2026-11-16] LICENSE MUST use conventional proprietary license text without LIC identifiers, FACT/ASSUMPTION labels, or provenance assertions. The license MUST retain Obscurity Labs ownership and proprietary terms; provenance and traceability MUST remain in planning documents rather than the legal text. This instruction MUST take precedence over the general document annotation convention for LICENSE.
+
+- DEC-016 [FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST remove planning IDs and fact/provenance assertions from ordinary project artifacts such as pyproject.toml and MUST use conventional formatting in those files. These annotations MUST remain confined to governance and planning documents; configuration values and behavior MUST remain unchanged by this cleanup.
