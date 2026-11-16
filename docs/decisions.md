@@ -42,3 +42,6 @@
 - DEC-008 [FACT; LLM_INFERENCE] Directly requested licensing artifacts and dependency-age configuration MAY be created during initialization; CLI behavior, dependency selection, and build configuration MUST remain pending the implementation gates. The metadata-only pyproject MUST NOT be presented as a completed installable CLI.
 
 - DEC-009 [FACT; LLM_INFERENCE] The initial proprietary license MUST reserve rights to Obscurity Labs and require separate written authorization for use or distribution; detailed wording MUST remain available for human review. The CLI help notice and built-distribution license checks MUST remain pending implementation.
+
+- DEC-010 [FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST create an untracked, GitHub-importable protection JSON for main and MUST update operating instructions to match; policy details MAY be selected by the agent for a single-contributor workflow. Agents MUST NOT commit the JSON or assume this request authorizes remote activation.
+- DEC-011 [FACT; LLM_INFERENCE] The proposed policy MUST require pull requests, resolved conversations, linear history, and rebase merges with zero required approvals and no bypass actors; it MUST prevent deletion and force pushes. Required status checks MUST be added when stable CI jobs exist. The JSON MUST remain locally excluded from Git.

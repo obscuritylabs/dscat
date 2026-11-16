@@ -58,3 +58,9 @@
 - GOV-054 [FACT; HUMAN_DERIVED] Releases MUST include a dependency SBOM. Known High or Critical vulnerabilities MUST block release unless evidence establishes non-applicability; VEX MAY document non-applicability supported by execution-path analysis. Severity assessment, affected artifacts, and supporting evidence MUST be recorded; scanner absence or missing severity MUST NOT silently establish safety.
 - GOV-055 [FACT; HUMAN_DERIVED] Workbook schema compatibility MUST be explicitly versioned, tested, and tracked as the principal compatibility surface. A CLI-launched catalog web viewer MUST be planned for 0.2.0 and MUST NOT enter 0.1.0 without approved scope changes.
 - GOV-056 [FACT; HUMAN_DERIVED] The project MUST be proprietary to Obscurity Labs. LICENSE and Python project metadata MUST express the proprietary license and CLI help MUST display a matching notice. Agents MUST NOT substitute an open-source license or publish proprietary artifacts without release authorization.
+
+## Main branch protection
+
+- GOV-060 [FACT; HUMAN_DERIVED] Agents MUST follow docs/repository-policy.md and MUST keep local/github/main.ruleset.json out of Git using .git/info/exclude. Agents MUST NOT apply the local ruleset remotely on behalf of the human unless separately instructed.
+- GOV-061 [FACT; LLM_INFERENCE] Main MUST accept changes through pull requests with resolved review conversations and rebase merges preserving atomic Conventional Commits. Agents MUST NOT directly push, force-push, delete, or bypass protections on main. The one-time pre-activation bootstrap exception in REPO-007 MAY establish main in an empty repository.
+- GOV-062 [FACT; LLM_INFERENCE] Required GitHub approval count MUST be zero in the single-contributor workflow; human planning and release approval gates MUST remain mandatory. CI checks MUST be run and recorded before merge, and required-check rules MUST be added once stable CI check names exist.
