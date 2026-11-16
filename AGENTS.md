@@ -10,6 +10,8 @@
 - GOV-006 [FACT; LLM_INFERENCE] Tables MAY inherit classification from a labeled parent statement when all rows share it. Mixed classifications MUST be labeled per row. Headings, IDs, paths, commands, and literal schema examples MAY omit normative wording when their governing statement supplies it.
 - GOV-007 [FACT; HUMAN_DERIVED] Agents MUST NOT persist private conversational context, private organizational affiliations, identifying private-context source URLs, or sensitive real-world examples in repository artifacts, Git history, issues, fixtures, or logs. Agents MUST use neutral descriptions and synthetic examples.
 
+- GOV-008 [FACT; HUMAN_DERIVED] LICENSE MUST use conventional legal prose without requirement IDs, classification labels, provenance assertions, or RFC 2119 formatting; licensing decisions and traceability MUST remain in planning documents.
+
 ## Required SDLC and approval gates
 
 - GOV-010 [FACT; HUMAN_DERIVED] Agents MUST begin work by reading this file and docs/index.md, checking Git status, and inspecting applicable approved requirements and plans.

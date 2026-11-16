@@ -27,7 +27,7 @@
 | [NFR-011](requirements.md) | CAP-04 | D19 | [NFR-011](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-012](requirements.md) | CAP-04 | D19 | [NFR-012](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-013](requirements.md) | CAP-01 | D20 | [NFR-013](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
-| [NFR-014](requirements.md) | CAP-05 | D22 | [NFR-014](requirements.md) | AGENTS.md GOV-056 | LICENSE; pyproject.toml | Metadata parsing; built-artifact/help tests PENDING | Source notices added; CLI pending |
+| [NFR-014](requirements.md) | CAP-05 | D22,DEC-015 | [NFR-014](requirements.md) | AGENTS.md GOV-056 | LICENSE; pyproject.toml | Metadata parsing; built-artifact/help tests PENDING | Source notices added; conventional license text reviewed; CLI pending |
 | [NFR-015](requirements.md) | CAP-05 | DEC-010,D26 | [NFR-015](requirements.md) | [Repository policy](repository-policy.md) | AGENTS.md GOV-060–062; active GitHub ruleset 27396943 | [Remote/local verification](repository-policy.md) REPO-012 | ACTIVE; import artifact deleted and untracked |
 
 - RTM-003 [FACT; LLM_INFERENCE] [intake proposals](intake-proposals.md) MUST distinguish confirmed decisions from remaining field and behavior assumptions supporting FR-001, FR-002, FR-005, FR-006, FR-007, FR-008, and NFR-009/NFR-013. Confirmed choices in INTAKE-005/006/009 MUST trace to DEC-012; remaining assumptions MUST NOT supersede approved requirements.
