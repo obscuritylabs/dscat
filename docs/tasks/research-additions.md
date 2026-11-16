@@ -2,7 +2,7 @@
 
 ## Identity and scope
 
-Requirements/documentation phase; source `55dcd0a6e052361112c467c9e06876c8d541d088`, clean at intake. Agent `/root/research_additions` owns only the documentation files in this commit. DEC-042 authorizes proposed planning preparation and protected-PR integration. [Impact package](../research-additions.md) owns proposed scope, boundaries and impacts; [planning gates](../planning-gates.md) owns approval status. No product code, remote policy changes, release, or new exact-revision approval is authorized.
+Requirements/documentation phase; source `55dcd0a6e052361112c467c9e06876c8d541d088`, clean at intake. Preparation agent `/root/research_additions` produced candidate `2f7fab2e35917d15f73bef5efb6302f24f2ac702`; integration agent `/root/integrate_research` owns only this task-record evidence update and the protected PR lifecycle. DEC-042 authorizes proposed planning preparation and protected-PR integration. [Impact package](../research-additions.md) owns proposed scope, boundaries and impacts; [planning gates](../planning-gates.md) owns approval status. No product code, remote policy changes, release, or new exact-revision approval is authorized.
 
 Required reading: AGENTS.md; index/workflow and requirements phase; governance authority/SDLC/traceability/Git/completion sections; documentation QA; requirements/RTM/decisions/gates; engineering; research; intake/canonical/delivery proposals; repository policy. The output is the consolidated proposed requirements, RTM, source provenance and impact package with reconciled dependent summaries. Current source/artifact identity MUST be established by the commit and `git status --short`; dirty candidate checks MUST use the sorted path-NUL-bytes-NUL SHA-256 recipe retained in PR evidence.
 
@@ -20,10 +20,10 @@ Suggested full-document partitions (all nine semantic matrix areas where applica
 | --- | --- |
 | Planned | Authorized documentation preparation under DEC-042; exact new requirements approval PENDING |
 | Implemented | Proposed documentation revision in this task's atomic commit; product implementation unperformed |
-| Tested | Author self-check PASS: recursive 28-document/license structural inventory, 39 requirement/RTM rows, all seven negative controls, and `git diff --check`; exact recipe/results to be retained with PR. Independent verification PENDING |
-| Locally verified | Fresh full-document semantic coverage and reconciliation PENDING |
+| Tested | Author and fresh reviewers PASS at candidate `2f7fab2`: recursive 28-document/license structural inventory, 39 requirement/RTM rows, seven negative controls and whitespace checks. Exact recipe/results and artifact digests MUST be retained in the integration PR; metadata update verification PENDING |
+| Locally verified | Fresh bounded semantic QA PASS at candidate `2f7fab2`: `/root/review_research_scope` (six scope documents), `/root/review_research_controls` (14 control/phase documents), `/root/verify_research_domain` (nine domain/task/license/manifest artifacts); all nine matrix areas assessed where applicable. Distinct `/root/reconcile_research` PASS across all 29 artifacts with no material findings or coverage gaps. Metadata update verification PENDING |
 | Remote-main integration | PENDING protected rebase PR and origin/main revision verification |
 | Published release | PENDING explicit human release authorization |
 | Released-artifact verification | PENDING publication and downloaded-source checks |
 
-Next phase: fresh bounded documentation review/verification, then protected PR integration; after integration the human MUST receive the concrete exact-revision renewed requirements decision package. Architecture/implementation-plan approval MUST follow before dependent product work. The task remains incomplete through release/post-release stages. Review/integration agents MUST replace status in place and retain detailed exact-revision evidence in the PR rather than append task logs.
+Next phase: fresh affected verification of this evidence-only update, then protected PR integration; after integration the human MUST receive the concrete exact-revision renewed requirements decision package. Architecture/implementation-plan approval MUST follow before dependent product work. The task remains incomplete through release/post-release stages. Review/integration agents MUST replace status in place and retain detailed exact-revision evidence in the PR rather than append task logs.
