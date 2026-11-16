@@ -2,7 +2,7 @@
 
 ## Authority and accepted-direction pointers
 
-[Planning gates](planning-gates.md) governs approval status. The requirements baseline governs accepted scope; these notes own unresolved intake design proposals. Proposals MUST receive applicable architecture/implementation-plan approval before implementation. Workbook-specific obligations apply only while Excel remains selected under SPEC-007. Original notes are available with `git show 0b7b824:docs/intake-proposals.md`.
+[Planning gates](planning-gates.md) governs approval status. The exact approved requirements baseline governs accepted scope; the current research revision remains proposed under SPEC-002; these notes own unresolved intake design proposals. Proposals MUST receive applicable architecture/implementation-plan approval before implementation. Workbook-specific obligations apply only while Excel remains selected under SPEC-007. Original notes are available with `git show 0b7b824:docs/intake-proposals.md`.
 
 | Stable source | Current home |
 | --- | --- |
@@ -59,3 +59,8 @@ The following are agent-proposed detailed rules supporting FR-007 and DEC-024, n
 ## Draft minimum-export demonstration
 
 FR-006 requires the four-field intake core, not invented facts. Before architecture approval, the mapping MUST demonstrate ID, title, description, and contact/owner plus validated shared configuration producing each mandatory export without optional detail sheets. The DCAT-US mapping MUST resolve contact shape and identifier encoding; an owner label alone MUST NOT be assumed sufficient contact metadata. ODCS MUST supply schema-defined apiVersion/kind constants and an explicitly configured contract version, with description mapped to the correct target shape. Missing facts MUST fail with field/source diagnostics. Synthetic positive and negative fixtures MUST validate against the complete offline pinned schemas; this draft MUST NOT be presented as a completed conformance demonstration.
+
+
+## Research revision intake dependencies
+
+The proposed additions in [the impact package](research-additions.md) MUST preserve ID, title, description, and contact/owner as the only required intake core. Optional owner/steward/domain, review and dataset dates, restrictions, disposition, consumer documentation, definitions, and lineage detail MUST NOT become hidden intake requirements. Architecture MUST demonstrate separate validity, completeness, and target-readiness diagnostics and an accessible selected-application workflow before implementation. A minimal valid submission MUST NOT be assumed approved for public projection; missing publication authority MUST fail closed under proposed FR-014 without invalidating the minimum intake itself.
