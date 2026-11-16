@@ -21,7 +21,7 @@
 - Agents MUST implement in small verifiable increments, update traceability and documentation with each increment, and complete testing before requesting human review and release authorization.
 - Agents MUST provide a written manual verification walkthrough with setup, synthetic inputs, exact commands, expected results, negative cases, and cleanup. Human authorization MUST precede release, tagging, publishing, or distribution as a release.
 - Independent reviews SHOULD occur periodically. The human MAY waive or request agent assistance for an independent review. An agent's self-review MUST NOT be represented as independent review or human approval. Waivers MUST be recorded; review waivers MUST NOT imply release authorization or waived security requirements.
-- Completion MUST require satisfied acceptance criteria, passing required checks, current documents and RTM, recorded verification evidence, and no unresolved blocking defects. Untested or blocked work MUST be reported explicitly.
+- Completion MUST require every stage in the Definition of done below, satisfied acceptance criteria, current documents and RTM, and no unresolved blocking defects. Agents MUST report the actual stage reached and any remaining gates; a branch push, passing CI, or merge alone MUST NOT be described as completion.
 
 ## Traceability and change control
 
@@ -75,3 +75,19 @@
 - GitHub Actions MUST remain minimal. Agents SHOULD use at most one small pull-request verification job initially, without broad platform matrices, scheduled full-suite runs, or redundant release builds. Any expansion MUST have a documented need and human agreement. Local commands SHOULD be reusable by the selected CI job.
 - GitHub Releases MUST distribute the approved software as installable Python artifacts. Release preparation MUST build and verify a wheel and source distribution locally, include checksums and an SBOM (plus VEX where applicable), and provide authenticated download/install instructions for the private repository.
 - Agents MUST obtain human release authorization for the exact candidate before creating a release tag or publishing release assets. Passing CI or pushing a tag MUST NOT automatically publish a release. Public PyPI publication MUST NOT be assumed; runtime dependencies MAY be installed from PyPI under the approved dependency policy.
+
+## Definition of done
+
+Agents MUST NOT mark a task complete, close it as done, or report it as delivered until all seven stages have evidence:
+
+1. The task MUST be planned, mapped to requirements and acceptance criteria, and covered by the required human approvals.
+2. The planned change MUST be implemented, including applicable documentation and traceability updates.
+3. Appropriate tests MUST pass and their commands and results MUST be recorded. Documentation-only work MUST receive appropriate document checks; it MUST NOT be silently exempted from the remaining stages.
+4. The change MUST be verified locally against acceptance criteria, including relevant integration, security, compatibility, and installation behavior. Evidence MUST identify the tested revision and artifacts; test success alone MUST NOT substitute for acceptance verification.
+5. The change MUST be pushed and merged through a pull request into remote main. Agents MUST verify the merged change is present on origin/main; a feature-branch push or local merge MUST NOT satisfy this stage.
+6. The change MUST be included in a published GitHub Release from the verified main revision, with the required artifacts and explicit human release authorization. A draft release or tag alone MUST NOT satisfy this stage. Multiple tasks MAY share a release, but each MUST remain incomplete until its release and post-release verification are finished.
+7. The released version MUST be downloaded from GitHub Releases, its integrity and version MUST be checked, and its applicable acceptance scenarios MUST pass locally using the downloaded artifacts in a clean environment. Software verification MUST install the released package and verify its CLI and offline operation; documentation changes MUST be checked in the released source. Testing the working checkout or a pre-upload build MUST NOT substitute for this stage.
+
+- The task record MUST link planning, implementation/PR, test results, local verification, remote-main revision, release/tag and artifact hashes, and post-release verification evidence. Issues and RTM statuses MUST reflect the actual stage reached.
+- Existing human approval gates MUST remain mandatory. Pending approval, merge, release, or post-release verification MUST keep the task incomplete; agents MUST NOT waive a stage or publish without authorization merely to claim completion.
+- Verification failures MUST keep or return the task to an incomplete state. Agents MUST report the failure, correct it through the same process, and verify the resulting released version before closure.
