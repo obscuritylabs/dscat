@@ -53,7 +53,7 @@
 
 ## Catalog behavior and licensing
 
-- Workbooks MUST be intake artifacts; exported catalog data MUST be the persisted source of truth. DSCat MUST accept individual workbooks or a directory and MUST rebuild deterministically and idempotently from unchanged inputs without requiring an application database.
+- Workbooks MUST be intake artifacts; a Pydantic-backed canonical JSON catalog MUST be the persisted source of truth, with DCAT-US and ODCS derived from it. Canonical data MUST be kept in organized flat files for now. The architecture MUST treat the canonical schema as a migration boundary and keep persistence separate from the catalog model to allow a future database adapter without coupling exporters to file paths. DSCat MUST accept individual workbooks or a directory and MUST rebuild deterministically and idempotently from unchanged inputs without requiring an application database.
 - Validation MUST examine all readable inputs and collect all discoverable failures before returning failure; catalog exports MUST be blocked by default on any failure. Fatal unreadable files MUST be reported while validation continues on other inputs; agents MUST NOT claim to validate unreadable content.
 - Workbooks MUST prioritize participation through a small required core and optional detail fields. Capacity metadata MUST support current size, average and peak daily ingestion, retention, and measurement date, with explicit Unknown allowed. Unknown MUST NOT become zero. Version 0.1.0 MUST NOT implement forecasts.
 - Installed runtime operations MUST work offline. Network-dependent dependency/security checks MAY run during development or release preparation; authoritative schema validation MUST NOT require runtime downloads.
@@ -67,7 +67,7 @@
 - Main MUST accept changes through pull requests with resolved review conversations and rebase merges preserving atomic Conventional Commits. Agents MUST NOT directly push, force-push, delete, or bypass protections on main. The one-time bootstrap has been consumed and MUST NOT be used again.
 - Required GitHub approval count MUST be zero in the single-contributor workflow; human planning and release approval gates MUST remain mandatory. Full applicable local verification MUST be run and recorded before merge. Any configured minimal CI checks MUST also pass; required-check rules MUST be limited to the selected small CI workflow once stable check names exist.
 
-- Identical dataset records sharing an ID MUST deduplicate; conflicting records sharing an ID MUST block export with both source locations. Neither duplicate handling nor canonical storage proposals MUST bypass complete validation or the human architecture gate.
+- Identical dataset records sharing an ID MUST deduplicate; conflicting records sharing an ID MUST block export with both source locations. Neither duplicate handling nor canonical storage work MUST bypass complete validation or the remaining human architecture/planning gates.
 
 ## Local verification and distribution
 
