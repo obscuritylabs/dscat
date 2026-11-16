@@ -9,8 +9,11 @@
 | [Requirements](requirements.md) | Charter, capabilities, acceptance criteria | DRAFT; approval pending |
 | [RTM](rtm.md) | Requirement and artifact traceability | DRAFT; approval pending |
 | [Standards research](research.md) | Neutral public-source evidence and recommendations | Research; selection pending |
+| [Intake proposals](intake-proposals.md) | Minimum fields, capacity, conflicts, canonical exports | DRAFT; interview choices pending |
 | Architecture | Boundaries, models, schema mappings, security design | PENDING requirements interview |
 | Implementation plan | Ordered increments and checks | PENDING architecture |
 | Verification plan and reports | Automated tests, manual walkthrough, evidence | PENDING detailed scope |
 
 - IDX-003 [FACT; LLM_INFERENCE] Agents MUST create the pending artifacts as the interview resolves scope, and MUST record explicit approvals against document commits before dependent work.
+
+- IDX-004 [FACT; HUMAN_DERIVED] Readers MUST treat 0.1.0 as workbook intake plus DCAT-US 3.0/ODCS export; the CLI-launched catalog web viewer MUST be scheduled for 0.2.0. All requirements, architecture, planning, and release approval gates MUST remain in force.
