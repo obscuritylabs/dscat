@@ -5,7 +5,7 @@
 The following direction is a human-derived fact from DEC-020 and DEC-021. Detailed fields, filenames, schema versions, and migration behavior MUST still pass the requirements, architecture, and implementation-plan gates.
 
 - Workbook intake MUST validate into a Pydantic canonical catalog model, which MUST serialize to organized JSON flat files as the catalog source of truth.
-- DCAT-US and ODCS MUST be derived from that model; their target schemas MUST NOT force loss of capacity measurements or other supported optional catalog metadata.
+- DCAT-US and ODCS MUST be derived from that model. Canonical persistence MUST preserve all supported capacity and optional metadata; a target projection MAY omit metadata its standard cannot represent, with omissions documented in the approved mapping. Projection limitations MUST NOT cause loss from canonical storage or unsupported conformance claims.
 - Any RDF export MUST use JSON-LD. Canonical JSON MUST remain distinct from standards-specific RDF projections.
 - The canonical model MUST be treated as the likely migration boundary as stored data evolves. Architecture MUST preserve the option of moving this layer into a database in the future; a database MUST NOT be required now.
 
@@ -41,3 +41,21 @@ These implementation details are LLM proposals and MUST pass architecture review
 DEC-029 establishes OPTIONAL manually supplied lineage in 0.1.0, governed by FR-012. The canonical model MUST preserve dataset relationships, processing steps, software versions, responsibility/handoffs, and supplied evidence. Automatic discovery MUST remain outside scope.
 
 The architecture draft MUST specify stable processing-step identities, relationship/reference validation, treatment of upstream datasets outside the selected catalog, and standards mappings without claiming unsupported conformance. These details MUST remain unapproved until architecture review. Tests MUST cover multi-input derivation, multi-step handoffs, canonical round trips, malformed references, and applicable exports. Workbook design MUST assess these examples for practical entry and MUST raise concrete complexity limitations under DEC-030. Existing requirements and architecture/implementation approval gates MUST remain pending.
+
+## Draft lineage reference policy
+
+The following agent proposals support FR-012 and MUST receive architecture approval before implementation.
+
+- Processing-step IDs MUST be nonempty and unique within the catalog. Dataset and step references MUST use the architecture-approved identifier grammar; filesystem paths MUST NOT be inferred from identifiers. Normalization MUST be identical across intake, canonical loading, duplicate comparison, and exports.
+- Each supplied processing step MUST identify at least one input and one output. Multiple inputs/outputs and multiple handoff steps MUST be supported. A dataset reference outside the selected snapshot MUST be explicitly marked external; an unmarked unresolved local reference MUST fail. External references MUST be preserved without runtime network resolution and MUST NOT create synthetic local dataset records.
+- Duplicate/conflicting step IDs, malformed references, self-dependency, and cycles among internal derivation steps MUST fail with relevant source locations. Cyclic or iterative processing without distinct versioned dataset identities MUST remain unsupported under this proposed initial policy. Tests MUST exercise these failures and valid external references; this limitation MUST be approved rather than inferred from lineage scope.
+- Optional lineage remains optional, but supplied invalid lineage MUST block export under FR-002. Supported target mappings and omitted unmappable fields MUST be listed per standard; canonical round trips MUST preserve every supported lineage field even when a target lacks an equivalent.
+
+## Draft security boundaries
+
+The following agent proposals support NFR-005/010 and FR-002/010/011. They MUST receive threat-model and architecture approval, including measured resource limits, before parser or writer implementation.
+
+- Parsing MUST treat XLSX as untrusted ZIP/XML. Archive member count, compressed/uncompressed totals, expansion ratio, individual XML size/depth, worksheet count, cell count/string length, and processing time MUST have finite approved limits with documented diagnostics. Exact numeric limits MUST be selected using synthetic boundary/resource tests before architecture approval. Encrypted or unsupported archives, path traversal, duplicate archive paths, entity expansion, and unsafe external resources MUST be rejected without executing content or writing extracted paths.
+- Formula cells in intake data fields MUST be rejected, never evaluated or accepted through cached values. Generated feedback formulas MAY exist only in designated non-input cells and MUST NOT supply imported metadata. Macros, external links/connections, embedded executable content, and network resolution MUST be rejected or disabled according to the approved parser matrix. Formula-like user strings in generated text cells MUST be written as inert strings and verified as such.
+- Source discovery MUST define symlink handling and reject unsafe input/output overlap. Canonical manifests MUST reject absolute/traversal paths and unsupported versions. Publication MUST stage validated outputs separately and preserve prior snapshots on validation, serialization, permission, disk-space, interrupted-write, and replacement failures. The platform-specific atomicity and recovery contract MUST be demonstrated before implementation-plan approval; an incomplete multi-file write MUST NOT become a valid published snapshot.
+- Runtime schema/JSON-LD processing MUST use only the approved local resource registry, including transitive references. Unknown references MUST fail offline. Diagnostics MUST identify failure locations without echoing secrets, arbitrary workbook contents, or private paths into repository evidence. Logs and structured diagnostics MUST follow the approved Pydantic boundary and privacy policy.

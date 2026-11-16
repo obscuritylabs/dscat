@@ -1,6 +1,6 @@
 # History remediation plan
 
-Revision: 1 (2026-11-16). Status: APPROVED for this bounded maintenance operation. This document MUST NOT record the private identity, matching search terms, or local checkout path.
+Historical procedure revision: 1 (2026-11-16), APPROVED only for the bounded operation recorded below. The procedure sections preserve that authorization; subsequent dated execution evidence and editorial reconciliation MUST NOT be treated as newly approved procedure or reusable authorization. This document MUST NOT record the private identity, matching search terms, or local checkout path.
 
 ## Requirements and acceptance
 
@@ -14,7 +14,7 @@ This maintenance task MUST support CAP-04/NFR-008 and CAP-05/NFR-006. The human 
 ## Architecture and impact
 
 - The agent MUST prepare an isolated local mirror and apply a deterministic content transformation to the affected file. A candidate MUST remain local until approval and remote protection changes are confirmed.
-- Existing main has 13 commits. The agent MUST preserve logical commits and parent ordering; affected commit hashes and descendants MUST change. References to rewritten commit hashes in maintained documentation MUST be reconciled without reintroducing removed material.
+- At the original preparation baseline, main had 13 commits. The agent MUST preserve logical commits and parent ordering; affected commit hashes and descendants MUST change. References to rewritten commit hashes in maintained documentation MUST be reconciled without reintroducing removed material.
 - The agent MUST compare each rewritten tree against its original tree with only the approved transformation applied, and MUST verify author/committer metadata and commit messages. Documentation checks MUST validate links, retained requirement mappings, and retired identifiers.
 - The maintenance plan and final evidence MUST use neutral language. A temporary recovery copy MAY exist outside the repository until verification succeeds; it MUST NOT be pushed or released.
 - GitHub-managed pull-request refs and cached objects cannot be rewritten through ordinary branch pushes. The agent MUST inspect the existing pull request and old commit accessibility after the rewrite and prepare a support escalation when necessary. A fresh clone alone MUST NOT establish server-side erasure.
@@ -53,7 +53,7 @@ Rewritten counterpart of the baseline inspected on 2026-11-16: main f0d2aabf08da
 
 Evidence recorded 2026-11-16 against candidate 6cbb38c059d71c8298f55c09d447f469b2f3e6a2: all 15 commits were compared against the approved transformation, with author/committer headers, messages, and parent ordering preserved. All 123 candidate Git objects and all historical paths passed the identifying-content scan. Both original research versions triggered the negative-control scan. All 11 Markdown files passed relative file-link and anchor checks; all 28 RTM requirement rows remain present. Local rewrite and verification scripts executed outside the repository produced a passing report and a private old/new commit map.
 
-This evidence MUST NOT be treated as a remote update or server-side purge. Package behavior tests were not run because this change alters documentation history only. The next metadata-only evidence commit MUST receive the same object, link, and traceability checks before pushing. Protection changes MUST remain the human responsibility; the agent MUST wait for confirmation and verify the live state.
+This evidence MUST NOT be treated as a remote update or server-side purge. Package behavior tests were not run because this change alters documentation history only. At that candidate stage, the next evidence commit required the same object, link, and traceability checks before pushing, and the agent awaited human protection confirmation. These are historical prerequisites, not an instruction to repeat the consumed operation; the subsequent remote record describes execution.
 
 ## Remote verification and accepted retention
 
@@ -65,6 +65,10 @@ On 2026-11-16 the human confirmed protection restoration and declined the prepar
 
 This explicit human decision MUST supersede the server-purge completion condition for this task only. Scope: retained historical GitHub objects and the original closed pull-request reference. Reason: the human declined further escalation. Residual risk: repository-authorized readers MAY retrieve removed historical content through those retained references. No server-side purge MUST be claimed. This disposition MUST be revisited before a visibility change, broader repository distribution, or a new disclosure finding; all other privacy requirements MUST remain in force. The agent MUST NOT submit a Support request or alter GitHub-managed references for this task without a new instruction.
 
-The one-time history-replacement authorization is consumed. Subsequent maintenance MUST follow restored protection and normal PR integration. This neutral closeout MUST be integrated through an agent-reviewed PR; the approved exception from release and released-artifact verification remains limited to this remediation.
+The one-time history-replacement authorization is consumed. Subsequent maintenance MUST follow restored protection and normal PR integration. The neutral closeout required integration through an agent-reviewed PR; the approved exception from release and released-artifact verification remains limited to this remediation.
 
-Local cleanup on 2026-11-16: obsolete local refs were removed, all checkout reflogs expired, and unreachable objects pruned. The isolated mirrors, fresh audit clone, recovery bundle, private commit map, scan scripts, and unsubmitted Support draft were deleted. A complete remaining-object scan and closeout document checks MUST pass before PR integration. This cleanup does not establish secure physical erasure or GitHub server-side removal.
+Local cleanup on 2026-11-16: obsolete local refs were removed, all checkout reflogs expired, and unreachable objects pruned. The isolated mirrors, fresh audit clone, recovery bundle, private commit map, scan scripts, and unsubmitted Support draft were deleted. The original closeout required a complete remaining-object scan and document checks before PR integration. The narrative above is retained historical evidence; the deleted private verification tooling is unavailable for independent replay, and this reconciliation MUST NOT claim a fresh replay or reconstruct private match terms. This cleanup does not establish secure physical erasure or GitHub server-side removal.
+
+## Integration evidence boundary
+
+Read-only verification on 2026-11-16 using `gh pr view 2 --json state,mergeCommit` identifies [PR #2](https://github.com/obscuritylabs/dscat/pull/2) as MERGED at ad1b1f6f3149eb5dc436885401bb403f4b1b5fc3. This supports closeout integration only, not a fresh identifying-content scan, secure erasure, or GitHub server-side purge. The historical release exception MUST remain limited to this remediation; later documentation work MUST follow the ordinary completion stages.
