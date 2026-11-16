@@ -1,6 +1,6 @@
 # Requirements draft
 
-- SPEC-001 [FACT; HUMAN_DERIVED] DSCat MUST enable a maintainer to distribute an Excel dataset inventory workbook, receive completed copies, validate metadata, and generate standards-based exports.
+- SPEC-001 [FACT; HUMAN_DERIVED] DSCat MUST enable distribution of dataset metadata intake materials, receipt of completed submissions, validation of metadata, and generation of standards-based exports. Excel workbooks SHOULD provide the initial intake mechanism; Excel MUST NOT be a permanent product constraint. A replacement intake mechanism MAY be selected through the affected requirements, architecture, and implementation-plan approvals if workbook completion becomes too burdensome.
 - SPEC-002 [FACT; LLM_INFERENCE] Requirements below MUST remain DRAFT until the human approves a revision. Acceptance criteria MUST be refined where interview decisions remain open.
 - SPEC-003 [FACT; HUMAN_DERIVED] The project MUST use the following capabilities.
 
@@ -52,3 +52,5 @@
 
 - SPEC-005 [FACT; HUMAN_DERIVED] Release scope MUST distinguish 0.1.0 (FR-001 through FR-008, FR-010 through FR-012, and supporting NFRs) from 0.2.0 (FR-009). Optional DCAT-US 1.1 support MUST NOT postpone completion of mandatory initial features.
 - SPEC-006 [FACT; HUMAN_DERIVED] DEC-023/024 MUST govern the required workbook core and capacity policy. The earlier preassigned-ID proposal MUST be superseded by submitter-supplied stable IDs. DEC-027 MUST govern validated shared export metadata configuration; defaults MUST NOT invent facts or data-use commitments.
+
+- SPEC-007 [FACT; HUMAN_DERIVED] Per DEC-031, workbook-specific requirements MUST describe the currently planned 0.1.0 intake implementation rather than permanently require Excel as the product intake mechanism. A future replacement MUST receive affected planning approvals; this clarification MUST NOT select or authorize a web application, form workflow, or state machine now.

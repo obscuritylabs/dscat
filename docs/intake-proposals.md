@@ -24,3 +24,5 @@
 
 - INTAKE-020 [FACT; HUMAN_DERIVED] Per DEC-029, an OPTIONAL Lineage sheet MUST capture manually supplied dataset relationships and processing steps, including multi-input derivation, processing tools/versions, transformations, responsibility, handoffs, and OPTIONAL supporting evidence. FR-012 MUST govern scope and acceptance. Exact row structure, references, and validation feedback MUST remain pending architecture.
 - INTAKE-021 [FACT; HUMAN_DERIVED] Per DEC-030, agents MUST raise concrete workbook usability or complexity limitations with the human before proposing an alternative intake process. Workbook feasibility MUST be assessed during detailed design using synthetic lineage examples; a different intake process MUST require affected planning approvals.
+
+- INTAKE-022 [FACT; HUMAN_DERIVED] Per DEC-031/SPEC-001/SPEC-007, Excel SHOULD be the initial intake mechanism and MUST NOT permanently constrain the product. Current workbook requirements MUST apply to the planned workbook implementation. A guided form workflow MAY be considered when evaluating alternatives, without selecting a replacement now or bypassing affected approval gates.
