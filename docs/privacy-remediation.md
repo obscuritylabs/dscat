@@ -26,7 +26,7 @@ This maintenance task MUST support CAP-04/NFR-008 and CAP-05/NFR-006. The human 
 3. The human MUST temporarily disable the existing protection ruleset once the candidate is ready. Disabling rather than deleting SHOULD preserve its configuration. The agent MUST NOT change GitHub security settings. Concurrent pushes MUST stop during the update window.
 4. Immediately before pushing, the agent MUST recheck remote refs and protection state. The agent MUST push only the approved branch with an explicit force-with-lease tied to the observed old main hash. Unexpected remote changes MUST stop the update for reconciliation. The agent MUST NOT use a mirror push or attempt to overwrite GitHub-managed refs.
 5. The human MUST restore the original protection ruleset promptly after the branch update. The agent MUST verify private visibility, the restored controls, and remote main's exact candidate hash.
-6. The agent MUST make a fresh clone, scan all fetched history, validate documentation, and inspect GitHub pull-request refs and old commit access. The agent MUST prepare any required GitHub Support request; the human MAY need to submit it with owner authority. The task MUST remain pending while accessible server-side copies require removal.
+6. The agent MUST make a fresh clone, scan all fetched history, validate documentation, and inspect GitHub pull-request refs and old commit access. The agent MUST prepare any required GitHub Support request; the human MAY need to submit it with owner authority. The task MUST remain pending while accessible server-side copies require removal, except for the explicit retained-copy disposition recorded below.
 7. Once remote verification succeeds, the agent MUST replace stale local history, expire obsolete reflogs and unreachable objects in this checkout and temporary audit copies, and verify the resulting object inventory. Other clone holders MUST replace stale clones rather than merge or push old history. Recovery-copy disposal MUST follow verification, not precede it.
 
 ## Approved completion-process exception
@@ -43,14 +43,26 @@ Explicit human approval MUST authorize direct history replacement instead of a P
 
 ## Approval and stage record
 
-Requirements: APPROVED. Architecture: APPROVED. Implementation plan: APPROVED. One-time history-update authorization: APPROVED. Completion-process exception: APPROVED. Candidate: VERIFIED LOCALLY; remote update pending. Remote update: PENDING. Protection restoration: PENDING. Server retention review: PENDING. Local cleanup: PENDING.
+Requirements: APPROVED. Architecture: APPROVED. Implementation plan: APPROVED. One-time history-update authorization: APPROVED. Completion-process exception: APPROVED. Candidate: VERIFIED. Remote update: VERIFIED. Protection restoration: VERIFIED. Server retention review: residual retention explicitly accepted by the human; no Support submission requested. Local cleanup: verification recorded below.
 
 Human approval recorded 2026-11-16: the human replied "Approved" to the request covering revision 1 requirements, architecture, procedure, one-time force-push, and completion-process exception. This approval MUST remain limited to this remediation.
 
-Observed baseline on 2026-11-16: main f0d2aabf08dab8e3d9995ae0a5a1c5846fc0514c; one GitHub pull request; no tags or releases; Protect main ruleset 27396943 active. Evidence commands: `git ls-remote origin` and read-only GitHub repository/ruleset API inspection. Approval MUST identify this document revision or its commit and MUST NOT be inferred from these observations.
+Rewritten counterpart of the baseline inspected on 2026-11-16: main f0d2aabf08dab8e3d9995ae0a5a1c5846fc0514c; one GitHub pull request; no tags or releases; Protect main ruleset 27396943 active. Evidence commands: `git ls-remote origin` and read-only GitHub repository/ruleset API inspection. Approval MUST identify this document revision or its commit and MUST NOT be inferred from these observations.
 
 ## Local candidate verification
 
 Evidence recorded 2026-11-16 against candidate 6cbb38c059d71c8298f55c09d447f469b2f3e6a2: all 15 commits were compared against the approved transformation, with author/committer headers, messages, and parent ordering preserved. All 123 candidate Git objects and all historical paths passed the identifying-content scan. Both original research versions triggered the negative-control scan. All 11 Markdown files passed relative file-link and anchor checks; all 28 RTM requirement rows remain present. Local rewrite and verification scripts executed outside the repository produced a passing report and a private old/new commit map.
 
 This evidence MUST NOT be treated as a remote update or server-side purge. Package behavior tests were not run because this change alters documentation history only. The next metadata-only evidence commit MUST receive the same object, link, and traceability checks before pushing. Protection changes MUST remain the human responsibility; the agent MUST wait for confirmation and verify the live state.
+
+## Remote verification and accepted retention
+
+On 2026-11-16 the agent updated remote main to 2ccc7a73456f3329100946a061c9580fcd47b4ff using an explicit expected-old-head lease. A fresh GitHub clone of that revision passed scans across 16 commits and 128 objects, document file links and anchors, and all 28 requirement mappings. Repository visibility remained private. Evidence: `git ls-remote origin`, fresh `git clone`, and local object/document verification tooling.
+
+On 2026-11-16 the human confirmed protection restoration and declined the prepared Support escalation after being told old commits and the original pull-request head remained accessible. Read-only GitHub API inspection confirmed ruleset 27396943 active, deletion and non-fast-forward blocks, linear history, rebase-only pull requests, resolved conversations, and zero required approvals.
+
+This explicit human decision MUST supersede the server-purge completion condition for this task only. Scope: retained historical GitHub objects and the original closed pull-request reference. Reason: the human declined further escalation. Residual risk: repository-authorized readers MAY retrieve removed historical content through those retained references. No server-side purge MUST be claimed. This disposition MUST be revisited before a visibility change, broader repository distribution, or a new disclosure finding; all other privacy requirements MUST remain in force. The agent MUST NOT submit a Support request or alter GitHub-managed references for this task without a new instruction.
+
+The one-time history-replacement authorization is consumed. Subsequent maintenance MUST follow restored protection and normal PR integration. This neutral closeout MUST be integrated through an agent-reviewed PR; the approved exception from release and released-artifact verification remains limited to this remediation.
+
+Local cleanup on 2026-11-16: obsolete local refs were removed, all checkout reflogs expired, and unreachable objects pruned. The isolated mirrors, fresh audit clone, recovery bundle, private commit map, scan scripts, and unsubmitted Support draft were deleted. A complete remaining-object scan and closeout document checks MUST pass before PR integration. This cleanup does not establish secure physical erasure or GitHub server-side removal.
