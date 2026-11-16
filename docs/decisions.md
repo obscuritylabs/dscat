@@ -17,7 +17,7 @@
 
 - DEC-002 [FACT; HUMAN_DERIVED] The original 100% statement and branch coverage proposal MUST be read with D18 below, which authorizes narrowly justified agent-selected exceptions.
 - DEC-003 [ASSUMPTION; LLM_ASSUMPTION] Agents SHOULD initially commit all durable planning documents rather than leave an untracked issue backlog; later migration SHOULD preserve links and IDs.
-- DEC-004 [FACT; LLM_INFERENCE] The next interview MUST resolve remaining identity/conflict rules, capacity measurement semantics, minimal workbook fields, schema versions, and verification platform coverage. D11–D22 below MUST supersede conflicting earlier proposals.
+- DEC-004 [FACT; LLM_INFERENCE] The next interview MUST resolve canonical persistence, identifier allocation and duplicate normalization, capacity unit conventions, minimal workbook fields, schema versions, and verification platform coverage. Later decisions MUST supersede conflicting earlier proposals.
 - DEC-005 [FACT; LLM_INFERENCE] Full Ruff, ty, Python, dependency, and build configuration MUST remain pending the engineering plan gate. Initial license metadata and the uv dependency-age cutoff MAY be configured during initialization; they MUST NOT be represented as a completed package or CLI.
 
 - DEC-006 [FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST preserve the following round-2 instructions; they MUST NOT infer approval of the complete written requirements, architecture, or plan.
@@ -45,3 +45,14 @@
 
 - DEC-010 [FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST create an untracked, GitHub-importable protection JSON for main and MUST update operating instructions to match; policy details MAY be selected by the agent for a single-contributor workflow. Agents MUST NOT commit the JSON or assume this request authorizes remote activation.
 - DEC-011 [FACT; LLM_INFERENCE] The proposed policy MUST require pull requests, resolved conversations, linear history, and rebase merges with zero required approvals and no bypass actors; it MUST prevent deletion and force pushes. Required status checks MUST be added when stable CI jobs exist. The JSON MUST remain locally excluded from Git.
+
+- DEC-012 [FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST preserve the following round-3 decisions; an explanatory question about the intermediate data model MUST NOT be treated as approval of canonical JSON persistence.
+
+| ID | Confirmed instruction |
+| --- | --- |
+| D24 | Identical records with the same dataset ID MUST be deduplicated; conflicting records with the same ID MUST block export and report both source locations. |
+| D25 | Capacity metadata MUST support current size, average and peak daily ingestion, retention, and measurement date, with explicit Unknown allowed. Version 0.1.0 MUST provide information for human capacity planning and MUST NOT implement forecasts. |
+| D26 | Agents MUST recognize that the human activated branch protection and deleted the local import JSON. The deleted JSON MUST NOT be recreated merely to satisfy earlier preparation instructions. |
+
+- DEC-013 [FACT; TOOL_VERIFIED; 2026-11-16] Agents MUST treat branch protection as active based on GET /repos/obscuritylabs/dscat/rulesets/27396943: enforcement=active, target refs/heads/main, deletion and non-fast-forward blocks, linear history, pull requests, rebase-only merges, resolved conversations, and zero required approvals. Local filesystem inspection confirmed local/github/main.ruleset.json absent; Git MUST continue to exclude that path if a future export is explicitly requested.
+- DEC-014 [ASSUMPTION; LLM_ASSUMPTION] The architecture SHOULD use a Pydantic catalog model between workbook parsing and serializers so capacity and optional metadata are preserved. Persisting that model as authoritative canonical JSON SHOULD remain a separate proposal; the human's question MUST NOT imply either architecture or storage approval.
