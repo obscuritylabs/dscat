@@ -1,18 +1,8 @@
 # Local verification and release delivery
 
-## Confirmed constraints
+## Governing policy and open verification
 
-The following constraints are human-derived facts from DEC-018, DEC-019, and DEC-022; the detailed implementation MUST remain subject to the existing planning gates.
-
-- Local testing and verification MUST be the primary quality gate; GitHub Actions MUST remain minimal and supplementary.
-- GitHub Releases MUST provide installable software. Release publication MUST retain explicit human authorization and private repository visibility.
-- Agents MUST own implementation, local verification, PR review, and merging within approved scope, without routine human PR review. Planning SHOULD resolve critical decisions and release conditions beforehand.
-- Security, coverage, typing, workbook compatibility, and schema-conformance requirements MUST remain mandatory regardless of where checks run.
-- Every task MUST remain incomplete until all seven stages in the [Definition of done](../AGENTS.md#definition-of-done) have evidence: planning, implementation, tests, local verification, remote-main merge, publication, and verification from the released version. Tasks MAY share a release but MUST NOT close before their release verification. Human approval gates MUST remain in force.
-
-## Portability and installation decision
-
-Per DEC-028, Windows, macOS, and Linux MUST be portability targets using ordinary cross-platform Python tooling, rather than a mandatory verified-platform matrix. Installation MUST use uv tool install with GitHub Release artifacts; private assets MAY require authenticated download first. Specialized installers MUST NOT be required. Reports MUST identify actual verified environments. Excel verification arrangements MUST remain deferred, without implying successful workbook verification or waiving acceptance.
+[Delivery governance](governance.md#local-verification-and-distribution) owns local-first verification, minimal CI, installable private releases and release authority. [Completion stages](governance.md#definition-of-done) and [agent delivery ownership](governance.md#autonomous-delivery-ownership) apply to every task. [NFR-001](requirements.md#nfr-001) owns portability targets and uv installation; actual tested environments MUST be reported. Excel verification arrangements remain deferred under [DEC-028](decisions.md#dec-028), without waiving acceptance. The proposals below MUST NOT be treated as an approved implementation/release plan; current gates are in [planning gates](planning-gates.md).
 
 ## Proposed workflow
 
@@ -39,7 +29,7 @@ DEC-033 requires positive and negative tests for all inputs, outputs, and busine
 - Regression fixtures and compatibility checks MUST protect supported submissions, persisted schemas, and public behavior as code evolves. A changed business rule MUST update acceptance criteria and tests through affected change-control gates.
 - The manual walkthrough MUST include synthetic positive and negative inputs, exact commands, expected results and failures, preservation checks, recovery steps where applicable, and cleanup. Reports MUST bind evidence to the tested source revision/artifact hashes. Missing tests or unverified failure behavior MUST remain explicit; coverage totals alone MUST NOT establish correctness.
 
-Detailed test design and implementation MUST remain subject to the architecture and implementation-plan gates.
+Detailed test design remains pending architecture and implementation planning.
 
 ## Draft release evidence and failure policy
 

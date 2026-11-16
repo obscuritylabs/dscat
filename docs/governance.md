@@ -1,0 +1,72 @@
+# Delivery governance
+
+Phase agents MUST read the sections assigned by their [role](workflow.md#phase-routing). The coordinator MUST use the compact control rules in [AGENTS.md](../AGENTS.md) and the [workflow](workflow.md); it MUST NOT load this entire policy merely to route work.
+
+## Authority and statement conventions
+
+- Agents MUST treat approved requirements and planning documents as the source of truth; code MUST conform to them.
+- Normative requirements in planning documents and these operating instructions MUST use RFC 2119 keywords (MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, OPTIONAL), interpreted with RFC 8174 uppercase semantics.
+- Agents MUST use fact/assumption and provenance markings sparingly, only in planning documents they maintain and where the distinction helps assess a requirement, decision, assumption, or evidence. Agents SHOULD label a shared section or table once rather than repeat markings on every sentence. Requirements MUST retain stable IDs for traceability; ordinary prose MUST NOT receive IDs merely for uniformity. Human-provided or third-party documents MUST NOT be annotated without an explicit request.
+- FACT MUST mean a directly supported claim or recorded instruction, not automatic human approval. TOOL_VERIFIED claims MUST cite the source or command, observation date, and evidence. Approval status MUST be recorded separately from provenance.
+- Agents MUST NOT imply human approval from silence, elapsed time, tool success, or their own review. Human verification MUST record a date and evidence or decision reference; approver identity MAY be omitted.
+- Tables MAY inherit classification from a labeled parent statement when all rows share it. Mixed classifications MUST be labeled per row. Headings, IDs, paths, commands, and literal schema examples MAY omit normative wording when their governing statement supplies it.
+
+- Source code, tests, configuration, package manifests, LICENSE, user-facing documentation, CLI output, and these operating instructions MUST use their conventional formats without planning IDs or fact/provenance annotations. LICENSE MUST use conventional legal prose rather than RFC 2119 formatting. Classification, provenance, and requirements traceability MUST remain in suitable agent-maintained planning documents; agents MUST NOT inject those annotations into ordinary project artifacts.
+
+## Required SDLC and approval gates
+
+- Agents MUST follow the startup and assigned-section reading requirements in [AGENTS.md](../AGENTS.md) and their [phase route](workflow.md#phase-routing), check Git status, and inspect applicable approved requirements and plans.
+- Agents MUST interview the human, record decisions, identify assumptions, and maintain concise on-disk planning documents before implementation. All planning MUST remain on disk until an explicit migration to GitHub issues.
+- Agents MUST obtain explicit human approval of requirements, then architecture, then an implementation plan before dependent implementation. Agents MAY prepare clearly labeled drafts before approval. Approval MUST identify the document revision or commit.
+- Agents MUST carry approved work autonomously through implementation, self-review, testing, local verification, integration, and authorized release verification; routine implementation and merge decisions MUST NOT wait for human PR review. Changes affecting approved requirements, architecture, acceptance criteria, or plan MUST receive impact analysis and renewed approval for the affected gates before dependent implementation.
+- Agents MUST implement in small verifiable increments, update traceability and documentation with each increment, and complete testing before release preparation. Agents MUST NOT request routine human implementation review; any required release authorization SHOULD be settled during planning when the human explicitly authorizes release under stated conditions.
+- Agents MUST provide a written manual verification walkthrough with setup, synthetic inputs, exact commands, expected results, negative cases, and cleanup. Human authorization MUST precede release, tagging, publishing, or distribution as a release; an approved plan MAY explicitly provide that authorization under stated release conditions without another implementation review.
+- Independent reviews SHOULD occur periodically. The human MAY waive or request agent assistance for an independent review. An agent's self-review MUST NOT be represented as independent review or human approval. Waivers MUST be recorded; review waivers MUST NOT imply release authorization or waived security requirements.
+- Completion MUST require every stage in the Definition of done below, satisfied acceptance criteria, current documents and RTM, and no unresolved blocking defects. Agents MUST report the actual stage reached and any remaining gates; a branch push, passing CI, or merge alone MUST NOT be described as completion.
+
+## Traceability and change control
+
+- Every feature and NFR MUST trace to a capability in docs/rtm.md. Each RTM row MUST link a stable requirement ID to its source, acceptance criteria, design, implementation, tests, and verification evidence.
+- Governance, dependencies, configuration, infrastructure, tooling, documentation, migrations, and tests MUST trace to a supporting capability and requirement. Agents MUST maintain artifact-level mappings and symbol-level mappings where a file spans multiple requirements; line numbers alone MUST NOT be used as durable identifiers.
+- Code without an approved RTM justification MUST be removed. Agents MUST first inspect its purpose and dependencies, record the discrepancy and impact, and preserve unrelated human changes. Agents MUST NOT invent a requirement to justify existing code. Removal that changes approved scope MUST pass the affected approval gates.
+- RTM fields MAY say PENDING before the corresponding phase; missing implementation or tests MUST NOT be reported as verified. Removed requirements MUST retain a retirement record and impact links; IDs MUST NOT be reused.
+- Assumptions affecting correctness, security, interoperability, or acceptance MUST be resolved or explicitly accepted by the human before dependent implementation. Exceptions MUST document scope, reason, risk, expiration/revisit condition, and authorization. The human-delegated coverage exception under [engineering constraints](engineering.md#project-and-engineering-constraints) MAY be exercised by agents without additional approval; it MUST NOT waive required behavior or security verification.
+
+## Git, versions, and releases
+
+- Agents MUST use trunk-based development and Conventional Commits. Short-lived feature branches MAY be used and MUST be integrated promptly; long-lived review queues MUST NOT replace trunk integration. Agents MUST create atomic commits frequently, including at least one commit per individual feature and per human interaction producing version-controlled artifacts. A commit MUST NOT combine unrelated work or include unrelated human changes.
+- Agents MUST inspect staged diffs for private information, secrets, scope, and traceability before committing. Planning artifacts SHOULD be committed now; future issue migration MUST preserve stable IDs, approval history, and local navigation.
+- The initial version MUST be 0.1.0. Pre-1.0 breaking changes MAY occur with documented impacts. From 1.0.0 onward, backward compatibility MUST be preserved within a major version. Breaking major releases MUST be avoided and MUST receive explicit human approval before work requiring them.
+- The approved compatibility contract MUST enumerate CLI commands/options, exit codes, structured outputs, configuration, workbook schemas, persisted data, and any public Python API. Breaking changes MUST NOT be hidden in minor or patch releases after 1.0.0.
+- Agents MUST use judgment to place durable specifications in files and execution tracking in future issues; origin MUST be https://github.com/obscuritylabs/dscat. Repository visibility MUST remain private unless the human explicitly authorizes a change.
+
+## Local verification and distribution
+
+- Local verification MUST be the primary quality gate. Agents MUST run the applicable lint, formatting, typing, test/coverage, schema interoperability, security, and package installation checks locally and MUST record evidence against the exact source revision and artifact hashes. Reduced GitHub Actions usage MUST NOT reduce verification requirements.
+- GitHub Actions MUST remain minimal. Agents SHOULD use at most one small pull-request verification job initially, without broad platform matrices, scheduled full-suite runs, or redundant release builds. Any expansion MUST have a documented need and human agreement. Local commands SHOULD be reusable by the selected CI job.
+- GitHub Releases MUST distribute the approved software as installable Python artifacts. Release preparation MUST build and verify a wheel and source distribution locally, include checksums and an SBOM (plus VEX where applicable), and provide authenticated download/install instructions for the private repository.
+- Agents MUST establish human release authorization before creating a release tag or publishing assets. Authorization MAY be explicitly delegated during planning for releases meeting agreed scope, verification, security, and versioning conditions; otherwise the existing human release gate MUST remain. Agents MUST verify the actual candidate meets the authorized conditions and MUST NOT infer release permission from silence or ordinary plan approval alone. Passing CI or pushing a tag MUST NOT automatically publish a release. Public PyPI publication MUST NOT be assumed; runtime dependencies MAY be installed from PyPI under the approved dependency policy.
+
+## Definition of done
+
+Agents MUST NOT mark a task complete, close it as done, or report it as delivered until all seven stages have evidence:
+
+1. The task MUST be planned, mapped to requirements and acceptance criteria, and covered by the required human approvals.
+2. The planned change MUST be implemented, including applicable documentation and traceability updates.
+3. Appropriate tests MUST pass and their commands and results MUST be recorded. Documentation-only work MUST receive appropriate document checks; it MUST NOT be silently exempted from the remaining stages.
+4. The change MUST be verified locally against acceptance criteria, including relevant integration, security, compatibility, and installation behavior. Evidence MUST identify the tested revision and artifacts; test success alone MUST NOT substitute for acceptance verification.
+5. The change MUST be pushed and merged through a pull request into remote main. Agents MUST verify the merged change is present on origin/main; a feature-branch push or local merge MUST NOT satisfy this stage.
+6. The change MUST be included in a published GitHub Release from the verified main revision, with the required artifacts and explicit human release authorization. A draft release or tag alone MUST NOT satisfy this stage. Multiple tasks MAY share a release, but each MUST remain incomplete until its release and post-release verification are finished.
+7. The released version MUST be downloaded from GitHub Releases, its integrity and version MUST be checked, and its applicable acceptance scenarios MUST pass locally using the downloaded artifacts in a clean environment. Software verification MUST install the released package and verify its CLI and offline operation; documentation changes MUST be checked in the released source. Testing the working checkout or a pre-upload build MUST NOT substitute for this stage.
+
+- The task record MUST link planning, implementation/PR, test results, local verification, remote-main revision, release/tag and artifact hashes, and post-release verification evidence. Issues and RTM statuses MUST reflect the actual stage reached.
+- Existing human approval gates MUST remain mandatory. Pending approval, merge, release, or post-release verification MUST keep the task incomplete; agents MUST NOT waive a stage or publish without authorization merely to claim completion.
+- Verification failures MUST keep or return the task to an incomplete state. Agents MUST report the failure, correct it through the same process, and verify the resulting released version before closure.
+
+## Autonomous delivery ownership
+
+- The human MUST be engaged for requirements, architecture, planning decisions, and unresolved scope or risk decisions. Agents MUST own routine implementation, code review, tests, local verification, commits, pushing, PR lifecycle, merging, and delivery evidence within approved scope.
+- Plans SHOULD settle acceptance criteria, compatibility, security dispositions, release conditions, and escalation boundaries before implementation. Agents MUST resolve routine technical choices themselves when consistent with that plan and MUST NOT repeatedly request approval for already authorized work.
+- Agents MAY request human review of a critical PR when it exposes an unresolved material decision, such as an unapproved compatibility break, destructive migration, security exception, or change to approved scope. Criticality MUST NOT automatically create a human code-review gate when the decision is already covered by the plan. Escalation MUST identify the precise decision needed, with the concrete change and evidence prepared for review.
+- Self-review MUST remain candidly identified as agent review and MUST NOT be represented as independent or human review. Agents MUST report results and unresolved gates without handing routine PR work back to the human.
+- Merging draft planning documents MUST NOT be represented as approval of their requirements or architecture. Agents MAY integrate requested planning changes autonomously while keeping their approval status explicit.

@@ -1,0 +1,9 @@
+# Architecture phase
+
+The agent MUST first read [AGENTS.md](../../AGENTS.md) and the [planning index](../index.md), inspect Git status, and preserve unrelated changes.
+
+This agent MUST follow the [workflow handoff](../workflow.md#bounded-handoff), verify its assigned revision and scope, and read [authority and statement conventions](../governance.md#authority-and-statement-conventions), [required sdlc and approval gates](../governance.md#required-sdlc-and-approval-gates), [traceability and change control](../governance.md#traceability-and-change-control), [git versions and releases](../governance.md#git-versions-and-releases), [engineering constraints](../engineering.md#project-and-engineering-constraints) and [catalog/licensing policy](../engineering.md#catalog-behavior-and-licensing), approved requirement/acceptance sections, applicable decisions and [planning gates](../planning-gates.md). It MUST load linked details relevant to its assignment rather than unrelated transcript history.
+
+The agent MUST design the required boundaries, mappings, compatibility and threat model; verify technical claims and offline resources, and expose unresolved material choices.
+
+The return MUST include a revision-specific architecture decision package, requirement/design mappings and evidence limitations, with human architecture approval as the next gate. Documentation changes MUST receive [full documentation QA/QC](../documentation-qa.md). Unavailable evidence and later completion stages MUST remain explicitly pending.

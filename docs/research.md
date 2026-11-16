@@ -24,7 +24,7 @@
 
 ## Reproducible source evidence
 
-The following retrievals were made on 2026-11-16 using Python standard-library `urllib.request.urlopen` and SHA-256 over the response bytes. Each immutable URL identifies the inspected upstream revision; these research snapshots MUST NOT be represented as the approved runtime schema/context closure or selected tool releases. Original mutable discovery citations above remain discovery references, not reproducibility anchors.
+The following retrievals were made on 2026-11-16 using Python standard-library `urllib.request.urlopen` and SHA-256 over the response bytes. Each immutable URL identifies the inspected upstream revision; these research snapshots MUST NOT be represented as the approved runtime schema/context closure or selected tool releases.
 
 | Source | Immutable inspected resource | SHA-256 of retrieved bytes |
 | --- | --- | --- |

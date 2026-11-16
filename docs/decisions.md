@@ -1,209 +1,196 @@
-# Decisions and interview record
+# Current decisions and source pointers
 
-## Reading this record
+## Current authority
 
-The dated entries below preserve human instructions and agent proposals at the time recorded. Later explicit decisions MUST supersede earlier conflicting instructions only within their stated scope. The [current planning gates](planning-gates.md) MUST govern consolidated approval status; a historical entry MUST NOT independently authorize current implementation.
+[Planning gates](planning-gates.md) is authoritative for current approval status. This record retains decision provenance and rationale; requirements and operating policies own their substantive rules. Human-derived decisions were recorded on 2026-11-16 unless stated otherwise. Accepted directions MUST NOT approve detailed proposals or dependent implementation.
 
-| Historical instruction | Current interpretation |
-| --- | --- |
-| D01, D12, D15, D17, D20 | DEC-031/032 and SPEC-007 make workbook obligations conditional on Excel selection. |
-| D03 | DEC-006 D11 makes DCAT-US 3.0 and ODCS mandatory for 0.1.0; DEC-027 selects ODCS 3.2.0. |
-| D04 | DEC-019 retains release verification; DEC-022 and AGENTS.md permit explicit conditional release authorization during planning. No such product-release authorization is recorded. |
-| D14 | DEC-020 makes canonical JSON authoritative; standards projections are derived outputs. |
-| D15 | DEC-025 and NFR-009 define deterministic results and explicit overwrite refusal separately. |
-| DEC-004 | DEC-023/024/025/027/028 settle ID allocation, core fields, capacity direction, ODCS target, and platform policy. Exact encodings and schema pins remain design work. |
-| DEC-010/011 | DEC-012 D26 and REPO-012 supersede preparation/activation instructions; exports remain absent and protections active. |
-| DEC-023 | Its references to preassigned-ID proposals identify historical text; current INTAKE-002/003 and SPEC-006 already contain the accepted submitter-supplied-ID policy. |
+D records below are current consolidated source pointers, not unaltered interview transcripts. Original wording is available through `git show 0b7b824:docs/decisions.md`. Stable anchors MUST remain available; Git history preserves previous wording.
 
-DEC-039 supersedes earlier statements that the consolidated requirements baseline remains unapproved. Their historical approval boundaries MUST remain preserved; architecture, implementation-plan, and release gates MUST remain pending.
-
-DEC-040 supersedes earlier pending RTM-review statements. DEC-041 supersedes earlier pending decision-log-review statements only for its exact approved baseline.
-
-## Chronological entries
+## Decisions
 
 ### DEC-001
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST preserve the following confirmed direction from interview round 1; captured instructions MUST NOT imply approval of an agent-written requirements baseline.
-
-| ID | Confirmed instruction |
+| Source | Current authoritative home |
 | --- | --- |
-| <a id="d01"></a>D01 | DSCat MUST manage a dataset catalog through generated and returned Excel workbooks. |
-| <a id="d02"></a>D02 | Implementation MUST use Python, uv, Typer, Pydantic, comprehensive Ruff and ty checks, and a 14-day dependency artifact age restriction. |
-| <a id="d03"></a>D03 | DCAT-US export MUST be supported; ODCS SHOULD be considered as a data contract format. |
-| <a id="d04"></a>D04 | Requirements, architecture, and implementation plans MUST receive human approval; release MUST receive authorization after implementation and testing. |
-| <a id="d05"></a>D05 | Documents MUST distinguish facts/assumptions and provenance; verification MAY use tool evidence and MUST remain separate from human approval. |
-| <a id="d06"></a>D06 | Security MUST be enforced, particularly supply-chain security; independent reviews MAY be waived by the human. |
-| <a id="d07"></a>D07 | The human MUST receive a practical written verification walkthrough. |
-| <a id="d08"></a>D08 | Versioning MUST begin at 0.1.0; post-1.0 compatibility MUST hold within each major, and breaking major releases MUST require prior human agreement. |
-| <a id="d09"></a>D09 | Work MUST use short-lived branches and atomic Conventional Commits, including commits for human interactions producing tracked artifacts. |
-| <a id="d10"></a>D10 | Planning MUST initially exist entirely on disk; agents MAY later propose issue tracking without losing traceability. |
+| <a id="d01"></a>D01 | [SPEC-001](requirements.md) |
+| <a id="d02"></a>D02 | [NFR-001](requirements.md#nfr-001), [NFR-002](requirements.md#nfr-002), [NFR-003](requirements.md#nfr-003), [NFR-004](requirements.md#nfr-004); [engineering constraints](engineering.md#project-and-engineering-constraints) |
+| <a id="d03"></a>D03 | [FR-003](requirements.md#fr-003), [FR-004](requirements.md#fr-004) |
+| <a id="d04"></a>D04 | [NFR-006](requirements.md#nfr-006); [approval and delivery gates](governance.md#required-sdlc-and-approval-gates) |
+| <a id="d05"></a>D05 | [NFR-006](requirements.md#nfr-006); [authority and formatting policy](governance.md#authority-and-statement-conventions) |
+| <a id="d06"></a>D06 | [NFR-005](requirements.md#nfr-005); [approval and delivery gates](governance.md#required-sdlc-and-approval-gates) |
+| <a id="d07"></a>D07 | [NFR-007](requirements.md#nfr-007) |
+| <a id="d08"></a>D08 | [NFR-006](requirements.md#nfr-006); [Git/version policy](governance.md#git-versions-and-releases) |
+| <a id="d09"></a>D09 | [NFR-006](requirements.md#nfr-006); [Git/version policy](governance.md#git-versions-and-releases) |
+| <a id="d10"></a>D10 | [NFR-006](requirements.md#nfr-006); [approval and delivery gates](governance.md#required-sdlc-and-approval-gates) |
 
 ### DEC-002
 
-[FACT; HUMAN_DERIVED] The original 100% statement and branch coverage proposal MUST be read with D18 below, which authorizes narrowly justified agent-selected exceptions.
+Coverage target and delegated narrow exceptions: [NFR-003](requirements.md#nfr-003) and [engineering constraints](engineering.md#project-and-engineering-constraints).
+
 ### DEC-003
 
-[ASSUMPTION; LLM_ASSUMPTION] Agents SHOULD initially commit all durable planning documents rather than leave an untracked issue backlog; later migration SHOULD preserve links and IDs.
+On-disk planning and any explicit issue migration: [approval and delivery gates](governance.md#required-sdlc-and-approval-gates).
+
 ### DEC-004
 
-The next interview MUST resolve identifier allocation and duplicate normalization, capacity unit conventions, minimal workbook fields, schema versions, and verification platform coverage. Later decisions MUST supersede conflicting earlier proposals.
+Exact ID grammar, normalization, encodings, and offline resource closure remain architecture deliverables under [planning gates](planning-gates.md#required-gate-deliverables).
+
 ### DEC-005
 
-Full Ruff, ty, Python, dependency, and build configuration MUST remain pending the engineering plan gate. Initial license metadata and the uv dependency-age cutoff MAY be configured during initialization; they MUST NOT be represented as a completed package or CLI.
+Full tool/dependency/build configuration remains subject to implementation-plan approval. Initialization permission covers license metadata and the dependency-age cutoff only; metadata MUST NOT be represented as a completed package or CLI.
 
 ### DEC-006
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST preserve the following round-2 instructions; they MUST NOT infer approval of the complete written requirements, architecture, or plan.
-
-| ID | Confirmed instruction |
+| Source | Current authoritative home |
 | --- | --- |
-| <a id="d11"></a>D11 | Version 0.1.0 MUST export DCAT-US 3.0 and ODCS; DCAT-US 1.1 SHOULD be supported but MUST NOT block release. ODCS MAY use a minimal conforming subset. |
-| <a id="d12"></a>D12 | Workbooks MUST support dataset descriptions, owners, field schemas, provenance, retention, access restrictions, quality, and service commitments; most fields SHOULD be optional to encourage participation. |
-| <a id="d13"></a>D13 | DSCat MUST capture current dataset volume and ingestion/growth rates sufficient to support data lake capacity planning. |
-| <a id="d14"></a>D14 | Workbooks MUST serve as intake only; exports MUST be the persisted catalog source of truth. DSCat MUST NOT require a separate database for this workflow. |
-| <a id="d15"></a>D15 | DSCat MUST accept a single workbook or a folder and assemble the full catalog. Actions MUST be idempotent and repeated runs over unchanged inputs MUST produce the same results. Conflict/failure semantics MUST be settled together. |
-| <a id="d16"></a>D16 | Validation MUST collect all discoverable failures across inputs before reporting failure, and MUST block catalog exports by default when any validation failure exists. |
-| <a id="d17"></a>D17 | DSCat MUST use modern Excel workbooks and portable Python; installed runtime functionality MUST work offline after installation from PyPI dependencies. |
-| <a id="d18"></a>D18 | Maintained Python SHOULD achieve 100% statement and branch coverage. Agents MAY make narrow justified coverage exceptions; exceptions MUST record rationale, scope, residual risk, and compensating verification. |
-| <a id="d19"></a>D19 | Known High or Critical vulnerabilities MUST block release unless evidence establishes non-applicability. The project MUST produce an SBOM and MAY produce VEX statements supported by code execution-path analysis. |
-| <a id="d20"></a>D20 | Workbook schema compatibility MUST be the principal backward-compatibility surface; agents MUST explicitly track supported versions and migrations. |
-| <a id="d22"></a>D22 | DSCat MUST be proprietary to Obscurity Labs. A standard LICENSE file, Python project license metadata, and CLI help notice MUST express that ownership and license. |
-| <a id="d23"></a>D23 | Agents MUST use https://github.com/obscuritylabs/dscat as origin and MUST accept the granted collaborator access and verify required permissions. |
+| <a id="d11"></a>D11 | [FR-003](requirements.md#fr-003), [FR-004](requirements.md#fr-004) |
+| <a id="d12"></a>D12 | [FR-001](requirements.md#fr-001), [FR-006](requirements.md#fr-006) |
+| <a id="d13"></a>D13 | [FR-007](requirements.md#fr-007) |
+| <a id="d14"></a>D14 | [FR-008](requirements.md#fr-008) |
+| <a id="d15"></a>D15 | [FR-005](requirements.md#fr-005), [NFR-009](requirements.md#nfr-009) |
+| <a id="d16"></a>D16 | [FR-002](requirements.md#fr-002) |
+| <a id="d17"></a>D17 | [NFR-001](requirements.md#nfr-001), [NFR-010](requirements.md#nfr-010), [NFR-013](requirements.md#nfr-013) |
+| <a id="d18"></a>D18 | [NFR-003](requirements.md#nfr-003); [engineering constraints](engineering.md#project-and-engineering-constraints) |
+| <a id="d19"></a>D19 | [NFR-011](requirements.md#nfr-011), [NFR-012](requirements.md#nfr-012) |
+| <a id="d20"></a>D20 | [NFR-013](requirements.md#nfr-013) |
+| <a id="d22"></a>D22 | [NFR-014](requirements.md#nfr-014); [catalog and licensing policy](engineering.md#catalog-behavior-and-licensing) |
+| <a id="d23"></a>D23 | [NFR-015](requirements.md#nfr-015); [Git/version policy](governance.md#git-versions-and-releases) |
 
 ### DEC-007
 
-[FACT; TOOL_VERIFIED; 2026-11-16] Agents MUST treat repository access as verified: the invitation for the exact target repository was accepted through the GitHub API; repository permissions reported pull=true and push=true, visibility private, and the initial remote contained no refs. This MUST NOT imply authorization to release or change visibility.
+Repository access was tool-verified on 2026-11-16: the exact repository invitation was accepted through the GitHub API; permissions reported pull=true and push=true, visibility private, and no initial remote refs. Access MUST NOT imply release or visibility-change authorization.
+
 ### DEC-008
 
-Directly requested licensing artifacts and dependency-age configuration MAY be created during initialization; CLI behavior, dependency selection, and build configuration MUST remain pending the implementation gates. The metadata-only pyproject MUST NOT be presented as a completed installable CLI.
+Initialization scope and incomplete CLI status: [DEC-005](#dec-005). Licensing requirements: [NFR-014](requirements.md#nfr-014).
 
 ### DEC-009
 
-The initial proprietary license MUST reserve rights to Obscurity Labs and require separate written authorization for use or distribution; detailed wording MUST remain available for human review. The CLI help notice and built-distribution license checks MUST remain pending implementation.
+Proprietary ownership and written-authorization terms: [LICENSE](../LICENSE). Required notices and distribution checks: [NFR-014](requirements.md#nfr-014) and [DEC-035](#dec-035).
 
 ### DEC-010
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST create an untracked, GitHub-importable protection JSON for main and MUST update operating instructions to match; policy details MAY be selected by the agent for a single-contributor workflow. Agents MUST NOT commit the JSON or assume this request authorizes remote activation.
+Protection export handling and consumed preparation authority: [REPO-001/002](repository-policy.md).
+
 ### DEC-011
 
-The proposed policy MUST require pull requests, resolved conversations, linear history, and rebase merges with zero required approvals and no bypass actors; it MUST prevent deletion and force pushes. Required status checks MUST be added when stable CI jobs exist. The JSON MUST remain locally excluded from Git.
+Active protection and CI-change authorization: [REPO-003–006/012](repository-policy.md).
 
 ### DEC-012
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST preserve the following round-3 decisions; an explanatory question about the intermediate data model MUST NOT be treated as approval of canonical JSON persistence.
-
-| ID | Confirmed instruction |
+| Source | Current authoritative home |
 | --- | --- |
-| <a id="d24"></a>D24 | Identical records with the same dataset ID MUST be deduplicated; conflicting records with the same ID MUST block export and report both source locations. |
-| <a id="d25"></a>D25 | Capacity metadata MUST support current size, average and peak daily ingestion, retention, and measurement date, with explicit Unknown allowed. Version 0.1.0 MUST provide information for human capacity planning and MUST NOT implement forecasts. |
-| <a id="d26"></a>D26 | Agents MUST recognize that the human activated branch protection and deleted the local import JSON. The deleted JSON MUST NOT be recreated merely to satisfy earlier preparation instructions. |
+| <a id="d24"></a>D24 | [FR-002](requirements.md#fr-002) |
+| <a id="d25"></a>D25 | [FR-007](requirements.md#fr-007) |
+| <a id="d26"></a>D26 | [NFR-015](requirements.md#nfr-015); [repository policy](repository-policy.md) |
 
 ### DEC-013
 
-[FACT; TOOL_VERIFIED; 2026-11-16] Agents MUST treat branch protection as active based on GET /repos/obscuritylabs/dscat/rulesets/27396943: enforcement=active, target refs/heads/main, deletion and non-fast-forward blocks, linear history, pull requests, rebase-only merges, resolved conversations, and zero required approvals. Local filesystem inspection confirmed local/github/main.ruleset.json absent; Git MUST continue to exclude that path if a future export is explicitly requested.
+Dated remote activation and local-file evidence: [REPO-012](repository-policy.md).
+
 ### DEC-014
 
-[ASSUMPTION; LLM_ASSUMPTION] The architecture SHOULD use a Pydantic catalog model between workbook parsing and serializers so capacity and optional metadata are preserved. This original proposal MUST be read with DEC-020, which approves the canonical model and JSON persistence; exact fields and storage layout MUST still pass architecture/planning review.
+Canonical persistence choice: [DEC-020](#dec-020); detailed design remains at the architecture gate.
 
 ### DEC-015
 
-[FACT; HUMAN_DERIVED; 2026-11-16] LICENSE MUST use conventional proprietary license text without LIC identifiers, FACT/ASSUMPTION labels, or provenance assertions. The license MUST retain Obscurity Labs ownership and proprietary terms; provenance and traceability MUST remain in planning documents rather than the legal text. This instruction MUST take precedence over the general document annotation convention for LICENSE.
+Conventional legal formatting, without planning annotations: [authority and formatting policy](governance.md#authority-and-statement-conventions). Ownership and proprietary terms: [LICENSE](../LICENSE).
 
 ### DEC-016
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST remove planning IDs and fact/provenance assertions from ordinary project artifacts such as pyproject.toml and MUST use conventional formatting in those files. These annotations MUST remain confined to governance and planning documents; configuration values and behavior MUST remain unchanged by this cleanup.
+Conventional configuration formatting without planning annotations: [authority and formatting policy](governance.md#authority-and-statement-conventions). This editorial instruction does not change configuration values or behavior.
 
 ### DEC-017
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST use planning IDs and fact/provenance markings sparingly, only in planning documents they maintain and where useful. Agents SHOULD apply shared classifications at section or table level rather than annotate every sentence; ordinary project files and operating instructions MUST use conventional formatting. This instruction MUST supersede earlier blanket annotation requirements while preserving requirement IDs and RTM links.
+Sparse planning provenance and conventional ordinary artifacts: [authority and formatting policy](governance.md#authority-and-statement-conventions). Stable requirements and RTM links remain required.
 
 ### DEC-018
 
-[FACT; HUMAN_DERIVED; 2026-11-16] GitHub Actions usage MUST be minimized, with local verification and testing as the primary quality gate. A small CI pipeline MAY provide supplementary checks. GitHub Releases MUST distribute installable software. Existing human release authorization and security requirements MUST remain in force.
+Local verification as primary gate, minimal Actions, and installable GitHub Releases: [distribution policy](governance.md#local-verification-and-distribution).
 
 ### DEC-019
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST NOT consider any task complete until it is planned, implemented, tested, verified locally, pushed and merged into remote main, released, and verified from the released version. Agents MUST retain evidence for all seven stages and MUST keep work incomplete while any stage is pending. Earlier completion criteria MUST be read with this stricter rule; existing human approval gates MUST remain in force.
+All seven completion stages: [definition of done](governance.md#definition-of-done).
 
 ### DEC-020
 
-[FACT; HUMAN_DERIVED; 2026-11-16] DSCat MUST use a canonical JSON catalog model between workbook inputs and standards exports, with organized flat files as the authoritative catalog storage for now. Planning MUST treat this model as the likely data migration boundary and MUST preserve the ability to move its persistence into a database later. This approval MUST resolve the canonical model/persistence choice, but MUST NOT imply approval of the complete requirements baseline, exact fields, file layout, architecture, or implementation plan.
+Canonical JSON and organized flat-file persistence are the accepted direction in [FR-008](requirements.md#fr-008). Rationale: isolate the canonical migration boundary so a later database adapter can replace persistence. Exact fields, file layout, architecture, and plan are not approved by this decision.
 
 ### DEC-021
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Any export expressed as RDF MUST use JSON-LD serialization. This conditional requirement MUST NOT imply that every export or the canonical JSON catalog is RDF, or authorize additional export features.
+Conditional JSON-LD serialization for RDF exports: [NFR-019](requirements.md#nfr-019). This selects neither additional RDF exports nor RDF for canonical JSON.
 
 ### DEC-022
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The project MUST operate as an autonomous AI software factory: the human participates in planning, while agents own implementation and routine verification/integration without human PR review. Trunk-based development MUST remain the workflow, with short-lived branches permitted; pull requests MUST be identified as the agent-selected mechanism used by current protection rather than a human requirement. Agents MAY request critical PR review, but SHOULD resolve the relevant decisions beforehand in planning. This instruction MUST supersede routine human implementation-review expectations; explicit planning and release authorization requirements MUST remain distinct from PR review.
+Agent-owned routine delivery and human planning/release authority: [autonomous delivery ownership](governance.md#autonomous-delivery-ownership). Trunk-based development is human-directed; PRs are the agent-selected protection mechanism in [repository policy](repository-policy.md).
 
 ### DEC-023
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human accepted the workbook layout and required core: Instructions and Datasets sheets with OPTIONAL Fields and Details/Quality sheets, one dataset per main-sheet row, and required stable ID, title, description, and contact/owner. People completing workbooks MUST supply stable IDs. This decision MUST supersede the preassigned-ID proposals in INTAKE-002/003 and SPEC-006; exact ID syntax and duplicate normalization MUST remain pending.
+Accepted initial Excel layout: Instructions and Datasets sheets, OPTIONAL Fields and Details/Quality sheets, one dataset per main-sheet row. Required submitter-supplied core: [FR-006](requirements.md#fr-006). Exact ID syntax and normalization remain architecture work. Excel obligations are conditional under SPEC-007.
 
 ### DEC-024
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human accepted the proposed capacity policy: explicit decimal and binary units MUST be accepted and normalized to bytes; logical and physical size MUST be distinguished; ingestion measurement windows MUST be recorded; retention MUST allow a duration, indefinite, or Unknown. Capacity measurements MUST allow explicit Unknown, distinct from zero. Exact field encodings MUST remain subject to detailed design. These interview decisions MUST NOT imply approval of the complete requirements baseline, architecture, implementation plan, or release.
+Accepted capacity direction: [FR-007](requirements.md#fr-007). Detailed field encodings remain architecture work; [capacity proposals](intake-proposals.md#draft-capacity-policy) are not approved by this decision.
 
 ### DEC-025
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human approved the five import/output rules presented after commit 6273f5a: directory discovery MUST select .xlsx files and ignore Excel lock files, with recursion only by explicit option; each build MUST represent exactly the selected inputs without modifying previous snapshots; replacement MUST require an explicit option and validation/write failure MUST preserve previous output; unchanged inputs, configuration, and tool/schema versions MUST produce byte-identical canonical JSON and standards exports; missing IDs MUST fail validation and duplicate comparison MUST use validated normalized metadata excluding source locations while preserving all source locations for diagnostics. Exact normalization MUST be specified in architecture. This approval MUST NOT imply approval of the complete requirements baseline or later gates.
+Human approval covered the five import/output rules presented after commit `6273f5a`: discovery, exact selected-input snapshots, explicit replacement with failure preservation, byte determinism, and normalized-ID duplicate handling. Current behavior: [FR-002](requirements.md#fr-002), [FR-005](requirements.md#fr-005), [FR-011](requirements.md#fr-011), [NFR-009](requirements.md#nfr-009). Duplicate comparison MUST use validated normalized metadata excluding source locations, while retaining all source locations for diagnostics. Exact normalization and publication design remain architecture work.
 
 ### DEC-026
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Generated workbooks MUST implement as much applicable data validation as practical using normal Excel features, including dropdowns, validated fields, highlighting, error callouts, and formulas. Workbooks MUST NOT contain macros or executable code; ordinary Excel formulas are explicitly permitted. DSCat MUST independently validate returned data and MUST NOT execute workbook formulas. Architecture MUST specify formula handling and validation coverage without depending on workbook controls or cached formula results for correctness.
+Permitted normal Excel formulas, practical interface validation, and independent safe validation: [FR-010](requirements.md#fr-010). Formula handling and validation coverage remain architecture work.
 
 ### DEC-027
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human accepted ODCS 3.2.0 with identity, name, description, contract version, and available ownership/field-schema details. Quality and service commitments MUST be exported only when explicitly supplied. Validated configuration MAY supply shared export-required metadata; missing required facts MUST block export. Exact mappings and pinned schema resources MUST remain pending architecture.
+Accepted ODCS 3.2.0 scope and validated shared configuration: [FR-004](requirements.md#fr-004). Exact mappings and pinned resources remain architecture work.
 
 ### DEC-028
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Windows, macOS, and Linux MUST remain portability targets rather than a mandatory verified-platform matrix. Implementation MUST use ordinary cross-platform Python tooling and standard Python packaging; installation MUST use uv tool install with GitHub Release artifacts, with authenticated download where required by private visibility. Specialized installers MUST NOT be required. Actual platform verification MUST be reported accurately. Excel verification arrangements MUST remain deferred; this deferral MUST NOT be represented as successful verification or a waiver of workbook acceptance.
+Portability targets and installation: [NFR-001](requirements.md#nfr-001). These are targets, not a mandatory verified-platform matrix. Excel verification arrangements remain deferred without waiving acceptance; reports MUST identify actual verified environments.
 
 ### DEC-029
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human accepted OPTIONAL manually supplied dataset-and-processing-step lineage for 0.1.0: upstream inputs and derived outputs, including multiple inputs combined into one output; processing software/tool and version, transformation descriptions, input/output dataset IDs; responsible teams/owners and handoffs; and OPTIONAL timestamps, process references, and supporting documentation. An OPTIONAL Lineage sheet MUST capture these relationships without enlarging the required workbook core. Canonical JSON MUST preserve the supported lineage metadata; standards exports MUST include supported mappings. Automatic discovery from processing systems MUST remain outside this approved scope. Detailed fields, reference handling, and mappings MUST pass architecture review.
+An OPTIONAL Lineage sheet is the accepted Excel layout for the OPTIONAL manually supplied lineage scope: [FR-012](requirements.md#fr-012). Detailed fields, reference handling, and mappings remain architecture work.
 
 ### DEC-030
 
-[FACT; HUMAN_DERIVED; 2026-11-16] Agents MUST notify the human if workbook intake becomes too complex for practical use and MUST identify the concrete limitation so an alternative intake process can be planned. This instruction MUST NOT authorize replacing or adding an intake mechanism without the affected planning approvals.
+Agents MUST notify the human of a concrete workbook usability/complexity limitation before planning an alternative. Replacement requires affected planning approvals; no replacement is selected.
 
 ### DEC-031
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human requested that SPEC-001 retain mandatory intake, validation, and standards-export capabilities while loosening Excel to MAY or SHOULD. SPEC-001 MUST use SHOULD for the initial Excel intake choice; workbook-specific requirements MUST describe the current 0.1.0 implementation rather than permanently constrain the product to Excel. Burdensome workbook completion MAY motivate a replacement intake process through affected planning approvals. An alternative guided form workflow MAY be considered later, but no replacement mechanism or state-machine design MUST be inferred as selected or authorized. This revision MUST supersede the stronger Excel wording in SPEC-001; the consolidated requirements baseline MUST remain unapproved.
+Initial Excel SHOULD choice and technology-neutral capability scope: [SPEC-001](requirements.md). A guided form MAY be considered later; no replacement mechanism or state-machine design is selected.
 
 ### DEC-032
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human clarified that Excel-specific MUST requirements MUST apply only while Excel is selected and MUST NOT override its nonmandatory selection under SPEC-001. Intake requirements SHOULD use technology-neutral language where practical; selection-specific details MAY remain conditional. Replacing Excel MUST revise or retire Excel-specific requirements and acceptance criteria and carry applicable capabilities to the replacement technology through affected planning approvals. This clarification MUST NOT select a replacement or approve the complete baseline.
+Conditional workbook obligations and replacement change control: [SPEC-007](requirements.md).
 
 ### DEC-033
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human requires positive and negative test cases for all inputs, outputs, and ordinary business logic, with evidence of where and how the system fails. Testing and verification MUST support robustness, durability, and safe evolution. AGENTS.md and NFR-002/003/005/007 MUST govern boundary/business-rule coverage, failure behavior, regression protection, and traceable evidence; coverage percentages MUST NOT replace behavior verification. This instruction MUST NOT imply approval of the complete requirements baseline or later gates.
+Positive and negative boundary/business-rule verification and failure evidence: [NFR-002](requirements.md#nfr-002), [NFR-003](requirements.md#nfr-003), [NFR-005](requirements.md#nfr-005), [NFR-007](requirements.md#nfr-007). Coverage totals do not replace behavior verification.
 
 ### DEC-034
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The unimplemented catalog-viewer proposal MUST be removed cleanly from the draft requirements, capability list, RTM, release scope, and operating guidance, without a retirement entry. Future viewer scope and scheduling MUST remain undecided. Remaining requirement IDs MUST remain unchanged. This targeted planning edit MUST NOT imply approval of the complete requirements baseline, architecture, implementation plan, or release.
+Current scope excludes the unimplemented catalog viewer; future scope and scheduling are undecided. The human requested clean removal without a requirement retirement entry and preservation of remaining IDs.
 
 ### DEC-035
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human approved the proposed NFR-014 wording requiring the Obscurity Labs proprietary license, consistent ownership/licensing information in LICENSE, Python package metadata, and CLI help, and verification in source and built distributions. The approved CLI notice MUST read: “© Obscurity Labs. Proprietary software. See LICENSE for terms.” Legal-formatting guidance MUST remain in AGENTS.md. This wording change MUST NOT alter license terms or imply approval of the complete requirements baseline, implementation, or release. CLI implementation and notice verification MUST remain pending their approved phases.
+The human individually approved [NFR-014](requirements.md#nfr-014) wording, without changing license terms or approving the complete baseline, implementation, or release. The approved CLI notice MUST read: “© Obscurity Labs. Proprietary software. See LICENSE for terms.” Source/built-distribution notice verification and CLI implementation remain subject to their gates. Legal formatting follows [authority and formatting policy](governance.md#authority-and-statement-conventions).
 
 ### DEC-036
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human requested softer NFR-015 wording and removal of the obsolete intermediary protection JSON detail from that requirement. NFR-015 MUST focus on following the active documented repository policy and verifying alignment with active settings and the applicable integration workflow. This editorial change MUST NOT authorize remote protection changes or alter the existing integration policy; historical preparation evidence MAY remain in the repository-policy record. Complete baseline approval MUST remain pending.
+The requested NFR-015 editorial wording focuses on active repository policy and alignment verification. It grants no remote-protection change authority; [repository policy](repository-policy.md) retains current safeguards and evidence.
 
 ### DEC-037
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human required a full consistency and correctness QA/QC pass for every documentation change and immediate handling of discovered issues. The operating rule was integrated through [PR #12](https://github.com/obscuritylabs/dscat/pull/12), main revision f77a63193da43f03c2f67ffca7599ce31d21690a. This instruction MUST govern documentation work without implying product-baseline or release approval.
+The full-document QA/QC instruction is implemented by [documentation procedure](documentation-qa.md). Integration evidence: [PR #12](https://github.com/obscuritylabs/dscat/pull/12), main `f77a63193da43f03c2f67ffca7599ce31d21690a`. This is governance authority, not product/release approval.
 
 ### DEC-038
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human requested reconciliation of the existing planning documents using the recommendations discussed in the documentation review and stronger recurrence controls. Agents MUST apply those corrections and maintain the [documentation QA/QC procedure](documentation-qa.md). Existing detailed architecture, implementation-plan, and release gates MUST remain in force; this instruction MUST NOT be treated as approval of newly drafted technical policies or of the consolidated product requirements baseline. Review findings MUST remain conversational; corrected specifications and procedures MAY be maintained on disk under this request.
+The human directly requested planning-document reconciliation and recurrence controls under [documentation procedure](documentation-qa.md). Findings MUST remain conversational; corrected specifications and procedures MAY be maintained on disk. This authority does not approve draft technical policies or any product/release gate.
 
 ### DEC-039
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human explicitly instructed that everything in requirements.md be marked approved and ready to start, with rtm.md review next and decisions.md review afterward. Agents MUST record approval of the complete docs/requirements.md baseline at commit `00c3535236028197805c0199401321631c709cd0`, covering SPEC-001–SPEC-007, all 30 FR/NFR requirements, and their acceptance criteria. This decision MUST supersede prior pending-baseline statements within that scope. Requirements are ready for architecture planning; architecture and implementation-plan approval MUST still precede dependent implementation. RTM and decision-log review MUST remain pending. This approval MUST NOT authorize release or approve detailed proposals in other documents.
+[FACT; HUMAN_DERIVED; 2026-11-16] The human explicitly instructed that everything in requirements.md be marked approved and ready to start, with rtm.md review next and decisions.md review afterward. Agents MUST record approval of the complete docs/requirements.md baseline at commit `00c3535236028197805c0199401321631c709cd0`, covering SPEC-001–SPEC-007, all 30 FR/NFR requirements, and their acceptance criteria. This decision MUST supersede prior pending-baseline statements within that scope. Requirements are ready for architecture planning; architecture and implementation-plan approval MUST still precede dependent implementation. This approval MUST NOT authorize release or approve detailed proposals in other documents.
 
 ### DEC-040
 
