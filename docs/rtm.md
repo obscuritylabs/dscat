@@ -16,6 +16,7 @@
 | [FR-009](requirements.md) | CAP-07 | D21 | [FR-009](requirements.md) | PENDING | PENDING | PENDING | DEFERRED; 0.2.0 |
 | [FR-010](requirements.md) | CAP-01 | DEC-026 | [FR-010](requirements.md) | PENDING; INTAKE-019 | PENDING | PENDING | Interview decision accepted; baseline approval PENDING |
 | [FR-011](requirements.md) | CAP-02 | DEC-025 | [FR-011](requirements.md) | PENDING; INTAKE-010 | PENDING | PENDING | Interview decision accepted; baseline approval PENDING |
+| [FR-012](requirements.md) | CAP-01, CAP-02, CAP-03 | DEC-029 | [FR-012](requirements.md) | [Lineage design impact](canonical-model.md#lineage-scope-and-design-impact); INTAKE-020 | PENDING | PENDING | Interview scope accepted; baseline and architecture approval PENDING |
 | [NFR-001](requirements.md) | CAP-04 | D02,DEC-028 | [NFR-001](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-002](requirements.md) | CAP-02 | D02 | [NFR-002](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-003](requirements.md) | CAP-04 | D02,D18 | [NFR-003](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
@@ -43,3 +44,5 @@
 - The standing context-exclusion rule in AGENTS.md MUST trace to CAP-04/NFR-008 and the human instruction recorded in the history remediation plan. Verification MUST review its generic wording, covered artifact surfaces, and pre-publication inspection requirement.
 
 - DEC-023/024 interview decisions MUST trace to CAP-01/FR-001/FR-006 and CAP-06/FR-007 respectively, through docs/requirements.md and INTAKE-002/003/005/018. Full requirements approval, detailed design, implementation, and verification MUST remain PENDING.
+
+- DEC-030/INTAKE-021 workbook feasibility and intake change-control guidance MUST trace to CAP-01/FR-001/FR-012 and CAP-05/NFR-006. Architecture MUST assess synthetic lineage entry complexity before dependent implementation; alternatives MUST retain affected approval gates.

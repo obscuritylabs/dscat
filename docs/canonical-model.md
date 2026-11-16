@@ -35,3 +35,9 @@ These implementation details are LLM proposals and MUST pass architecture review
 
 - JSON-LD serializers SHOULD use pinned, locally available contexts or embedded context definitions. Processing MUST NOT require remote context fetches, including indirectly referenced contexts; unavailable contexts MUST produce diagnostics rather than trigger network requests.
 - Verification MUST assess JSON syntax, JSON-LD processing, intended IRIs/types/relationships, and target-profile conformance. Schema validation alone MUST NOT establish RDF semantic correctness. The serializer design MUST reconcile JSON-LD context handling with the selected DCAT-US schema/profile rather than assume arbitrary context fields are accepted.
+
+## Lineage scope and design impact
+
+DEC-029 establishes OPTIONAL manually supplied lineage in 0.1.0, governed by FR-012. The canonical model MUST preserve dataset relationships, processing steps, software versions, responsibility/handoffs, and supplied evidence. Automatic discovery MUST remain outside scope.
+
+The architecture draft MUST specify stable processing-step identities, relationship/reference validation, treatment of upstream datasets outside the selected catalog, and standards mappings without claiming unsupported conformance. These details MUST remain unapproved until architecture review. Tests MUST cover multi-input derivation, multi-step handoffs, canonical round trips, malformed references, and applicable exports. Workbook design MUST assess these examples for practical entry and MUST raise concrete complexity limitations under DEC-030. Existing requirements and architecture/implementation approval gates MUST remain pending.
