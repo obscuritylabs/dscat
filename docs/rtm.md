@@ -18,12 +18,12 @@
 | [FR-011](requirements.md) | CAP-02 | DEC-025 | [FR-011](requirements.md) | PENDING; INTAKE-010 | PENDING | PENDING | Interview decision accepted; baseline approval PENDING |
 | [FR-012](requirements.md) | CAP-01, CAP-02, CAP-03 | DEC-029 | [FR-012](requirements.md) | [Lineage design impact](canonical-model.md#lineage-scope-and-design-impact); INTAKE-020 | PENDING | PENDING | Interview scope accepted; baseline and architecture approval PENDING |
 | [NFR-001](requirements.md) | CAP-04 | D02,DEC-028 | [NFR-001](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
-| [NFR-002](requirements.md) | CAP-02 | D02 | [NFR-002](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
-| [NFR-003](requirements.md) | CAP-04 | D02,D18 | [NFR-003](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
+| [NFR-002](requirements.md) | CAP-02 | D02,DEC-033 | [NFR-002](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
+| [NFR-003](requirements.md) | CAP-04 | D02,D18,DEC-033 | [NFR-003](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-004](requirements.md) | CAP-04 | D02 | [NFR-004](requirements.md) | [Engineering constraints](../AGENTS.md#project-and-engineering-constraints) | pyproject.toml tool.uv.exclude-newer | TOML parsing; lock checks pending | Configured; lock verification PENDING |
-| [NFR-005](requirements.md) | CAP-04 | D06,D19 | [NFR-005](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
+| [NFR-005](requirements.md) | CAP-04 | D06,D19,DEC-033 | [NFR-005](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-006](requirements.md) | CAP-05 | D04,D05,D08,D09,D10,DEC-016,DEC-017,DEC-019,DEC-022 | [NFR-006](requirements.md) | AGENTS.md | AGENTS.md; docs/index.md; docs/decisions.md; docs/requirements.md; docs/rtm.md; docs/research.md | Document review | DRAFT; human approval pending |
-| [NFR-007](requirements.md) | CAP-05 | D07 | [NFR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
+| [NFR-007](requirements.md) | CAP-05 | D07,DEC-033 | [NFR-007](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-008](requirements.md) | CAP-04 | Human privacy instruction | [NFR-008](requirements.md) | [Privacy policy](../AGENTS.md#authority-and-statement-conventions) | Initial planning documents | Staged artifact review | PENDING release checks |
 | [NFR-009](requirements.md) | CAP-02 | D15,DEC-025 | [NFR-009](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
 | [NFR-010](requirements.md) | CAP-04 | D17 | [NFR-010](requirements.md) | PENDING | PENDING | PENDING | DRAFT |
@@ -50,3 +50,5 @@
 - DEC-031/SPEC-001/SPEC-007/INTAKE-022 intake flexibility MUST trace to CAP-01/FR-001/FR-005/FR-006/FR-010/FR-012 and CAP-05/NFR-006. Current workbook requirements MUST remain the initial implementation plan; alternative intake mechanisms MUST remain unselected and subject to affected planning approvals. The requirements approval candidate MUST be the revised document commit, not the superseded revision 2475300.
 
 - DEC-032/SPEC-007 conditional technology selection MUST govern CAP-01/FR-001/FR-002/FR-005/FR-006/FR-010/FR-012, CAP-03/FR-008, and CAP-01/NFR-013, with CAP-05/NFR-006 governing replacement change control. Existing requirement IDs MUST remain stable; implementation and verification MUST remain PENDING.
+
+- DEC-033 positive/negative boundary and business-rule testing MUST trace to CAP-02/NFR-002, CAP-04/NFR-003/NFR-005, and CAP-05/NFR-007. Durable guidance MUST reside in AGENTS.md and the delivery-plan.md positive/negative verification section; the boundary/rule inventory, tests, failure evidence, and manual walkthrough MUST remain PENDING until their respective phases.
