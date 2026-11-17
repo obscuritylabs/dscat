@@ -2,7 +2,7 @@
 
 ## Identity and authority
 
-Requirements/documentation correction; source `c1a50ff563afa34d987e70f377997b44a6099c4a`, clean at intake. Preparation invocation `/root/resolve_planning` owns the requirements, decisions, gates, RTM, dependent scope summaries and current task references. DEC-038/042 authorize documentation maintenance; DEC-043 records only the human-approved scope decisions dated 2026-11-16. No product code, downstream gate approval, release or remote-policy change is included. Exact candidate commit/tree and document-set digest MUST be retained in the change PR and bounded review handoff; a dirty digest MUST use sorted relative path + NUL + bytes + NUL.
+Requirements/documentation correction; source `c1a50ff563afa34d987e70f377997b44a6099c4a`, clean at intake. Preparation invocation `/root/resolve_planning` produced the requirements, decisions, gates, RTM and dependent scope summaries; integration invocation `/root/integrate_scope` owns only this evidence update and the protected PR lifecycle. DEC-038/042 authorize documentation maintenance; DEC-043 records only the human-approved scope decisions dated 2026-11-16. No product code, downstream gate approval, release or remote-policy change is included. Exact candidate commit/tree and document-set digest MUST be retained in the change PR and bounded review handoff; a dirty digest MUST use sorted relative path + NUL + bytes + NUL.
 
 Required reading: AGENTS.md, index/workflow requirements route, requirements phase, governance authority/approval/traceability/Git/completion, documentation QA, requirements/decisions/RTM/gates, research impact, canonical/intake/delivery proposals, engineering and repository policy. Proposed details remain proposals.
 
@@ -22,10 +22,10 @@ Fresh reviewers MUST cover all maintained documentation in bounded partitions un
 | --- | --- |
 | Planned | Authorized documentation preparation and stated interview decisions; exact consolidated requirements approval PENDING |
 | Implemented | Documentation candidate; product implementation unperformed |
-| Tested | Author structural self-check evidence supplied in bounded handoff; fresh verification PENDING |
-| Locally verified | Author self-review only; fresh bounded QA and reconciliation PENDING |
-| Remote-main integration | PENDING protected rebase PR |
+| Tested | PASS at candidate `e32ce5c9db90cb17a0a5e47367ac600911767a92`: recursive 29-document/license inventory, 42 requirement/RTM rows, seven negative controls and whitespace checks; exact recipe/results and final candidate checks retained in [PR #19](https://github.com/obscuritylabs/dscat/pull/19) |
+| Locally verified | PASS at `e32ce5c`: `/root/scope_review_a` (six scope documents), `/root/scope_review_b` (14 control/phase documents), `/root/scope_review_c` (10 domain/task/license/manifest artifacts); all nine semantic areas where applicable. Distinct `/root/scope_reconcile` PASS with no findings. Final metadata review and reconciliation evidence retained in PR #19; earlier coverage applies only to unchanged content |
+| Remote-main integration | [PR #19](https://github.com/obscuritylabs/dscat/pull/19) is authoritative for protected rebase outcome and exact verified origin/main revision; this stage is satisfied only when both are recorded there |
 | Published release | PENDING explicit human authorization |
 | Released-artifact verification | PENDING publication and downloaded-source checks |
 
-Next gate: fresh bounded QA/reconciliation of the identified candidate, correction if necessary, protected PR integration, then exact-revision renewed human requirements decision. No full completion is claimed.
+Next human gate: exact-revision renewed requirements decision after verified protected integration. Final metadata review, reconciliation and integration outcomes MUST be retained in PR #19 before dependent work; architecture and implementation-plan approvals follow requirements approval. Release and downloaded-artifact stages remain PENDING; no full completion is claimed.
