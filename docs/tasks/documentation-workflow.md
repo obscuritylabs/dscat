@@ -2,17 +2,17 @@
 
 ## Scope and authority
 
-Human instruction, 2026-11-16: implement the proposed progressive-disclosure and Git-history cleanup together with distinct fresh sub-agents per SDLC phase. The follow-up explicitly includes both parts. This directly requested governance maintenance supports CAP-05/NFR-006/NFR-007 and CAP-04/NFR-008/NFR-015/NFR-016. Product requirements, architecture/implementation approval, and release authority MUST remain unchanged. The instruction MUST NOT be represented as approval of an exact new product baseline or as release authorization.
+Human instruction, 2026-11-16: implement the proposed progressive-disclosure and Git-history cleanup together with distinct fresh sub-agents per SDLC phase. The follow-up explicitly includes both parts. This directly requested governance maintenance supports CAP-05/NFR-006/NFR-007 and CAP-04/NFR-008/NFR-015/NFR-016. That historical instruction preserved then-current approval authority; current approval policy follows DEC-045. The instruction MUST NOT be represented as approval of an exact new product baseline or as release authorization.
 
 ## Maintenance plan and acceptance
 
 The authorized design separates compact control documents, phase role instructions, and domain references. Implementation MUST preserve substantive constraints while moving them to authoritative homes. The change MUST:
 
 1. Provide a minimal coordinator route and a distinct fresh context for each phase, bounded handoffs, prerequisite checks, failure/reopening routes, and shared behavioral baselines for implementation and verification.
-2. Retain all seven completion stages and explicit human planning/release gates; independent review MUST be distinguished from self-review and fresh context.
+2. Retain all seven completion stages and the current [approval policy](../governance.md#required-sdlc-and-approval-gates); independent review MUST be distinguished from self-review and fresh context.
 3. Replace duplicated scope/status and superseded narration with current statements and Git retrieval references; preserve stable IDs, approval evidence, residual risks, security, licensing, and traceability.
 4. Cover the complete maintained documentation set through bounded semantic review assignments and cross-document reconciliation, plus links/anchors, identifiers, RTM membership/references and negative-control checks.
-5. Supply a reproducible manual walkthrough, exact candidate identity and results. Integrate through an agent-reviewed rebase PR after verification. Release and post-release stages MUST remain pending without separate authorization.
+5. Supply a reproducible manual walkthrough, exact candidate identity and results. Integrate through an agent-reviewed rebase PR after verification. Release and post-release stages MUST remain pending until required evidence exists, exercising DEC-045 standing delegation without another approval request.
 
 ## Current handoff
 
@@ -26,7 +26,7 @@ Setup: use a clean clone with Python and Git; check out the exact candidate revi
 
 Positive: inspect every phase route and handoff field; confirm all seven stages map to an owner. Retrieve historical procedure with `git show 0b7b824:docs/privacy-remediation.md` without treating it as current authority. Run `git diff --check 0b7b824 HEAD` and the exact structural recipe retained in the change PR; all local links, anchors, unique IDs, dynamically enumerated current requirement/RTM memberships (30 belongs only to historical PR #17 evidence) and decision/capability references MUST pass.
 
-Negative: run the recipe's in-memory missing-file, missing-anchor, duplicate-ID, missing-RTM-row, unknown-source, unknown-capability and unanchored-acceptance controls; each MUST fail verification. Inspect workflow handling of missing approval, stale candidate revision, unavailable fresh-agent tooling and an implementation-origin reviewer; none MUST advance as a successful phase. A release assignment without authorization MUST remain blocked.
+Negative: run the recipe's in-memory missing-file, missing-anchor, duplicate-ID, missing-RTM-row, unknown-source, unknown-capability and unanchored-acceptance controls; each MUST fail verification. Inspect workflow handling of missing approval, stale candidate revision, unavailable fresh-agent tooling and an implementation-origin reviewer; none MUST advance as a successful phase. A release assignment without required candidate readiness evidence MUST remain blocked; standing delegation MUST NOT waive checks.
 
 Cleanup: synthetic structural mutations MUST remain in memory. Delete any temporary audit script or clone after retaining its exact recipe and results with the PR. No workbook, package, runtime acceptance or release test MUST be claimed for this documentation-only change.
 
@@ -49,7 +49,7 @@ Coverage uses all nine areas of the [semantic matrix](../documentation-qa.md#ful
 | Tested | PASS: final structural recipe, all seven in-memory negative controls and whitespace checks; exact commands/results in PR #17 |
 | Locally verified | PASS: bounded semantic coverage, final fresh affected review/reconciliation and walkthrough at recorded candidate; historical task-status metadata review retained in PR #17; this correction requires fresh affected review |
 | Remote-main integration | [PR #17](https://github.com/obscuritylabs/dscat/pull/17) holds the protected rebase-merge outcome and origin/main revision verification; MERGED at `55dcd0a6e052361112c467c9e06876c8d541d088`, verified through read-only GitHub PR merge metadata and local Git ancestry on 2026-11-16 |
-| Published release | PENDING human release authorization |
+| Published release | PENDING verified candidate/publication under DEC-045 standing delegation |
 | Released-artifact verification | PENDING publication and downloaded-source checks |
 
 This record MUST be updated in place. Exact candidate hashes, commands/results and integration evidence MUST be retained with the PR; this ledger MUST link that evidence rather than accumulate execution transcripts.

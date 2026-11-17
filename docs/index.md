@@ -5,7 +5,7 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then use the [phase routing ma
 | Read when | Document and authoritative content |
 | --- | --- |
 | Coordinating work | [Workflow](workflow.md): phase routes, handoffs, transitions and escalation |
-| Checking authorization | [Planning gates](planning-gates.md): exact approval scope/revisions and pending deliverables |
+| Checking authorization | [Planning gates](planning-gates.md): exact human approval or agent authorization scope/revisions and pending deliverables |
 | Planning or changing behavior | [Requirements](requirements.md): capabilities and stable acceptance criteria; [RTM](rtm.md): artifact/evidence mappings |
 | Resolving current decisions or rationale | [Decisions](decisions.md): current decisions and necessary provenance; older wording through Git |
 | Designing or verifying product behavior | [Engineering](engineering.md): toolchain, security, catalog and licensing constraints |
@@ -17,8 +17,9 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then use the [phase routing ma
 | Selecting standards/tools | [Research](research.md): upstream observations, revisions and hashes; not final runtime pins |
 | Reviewing documentation | [Documentation QA/QC](documentation-qa.md): distributed coverage, semantic matrix and structural checks |
 | Integrating changes | [Repository policy](repository-policy.md): active protection and PR/rebase procedure |
-| Preparing or verifying a release | [Delivery plan](delivery-plan.md): draft checks, artifact and failure procedures; approval remains in the gate record |
+| Preparing or verifying a release | [Delivery plan](delivery-plan.md): draft checks, artifact and failure procedures; standing delegation and candidate readiness remain in the gate record |
 | Assessing the retained historical exception | [Remediation disposition](privacy-remediation.md): consumed authority, accepted retention and evidence references |
+| Inspecting approval-policy maintenance | [Approval-policy task](tasks/approval-policy.md): current scope, stage and verification handoff |
 | Inspecting workflow maintenance | [Workflow task](tasks/documentation-workflow.md): scope, acceptance, current stage and evidence |
 
-The architecture candidate MUST remain proposed until exact-revision human approval. The implementation plan and product verification deliverables MUST be prepared at their respective gates; partial notes and research-only demonstrations MUST NOT be treated as approved or implemented deliverables. Agents MUST follow relevant links only as their assignment and dependencies require.
+The architecture candidate MUST remain proposed until fresh exact-revision risk assessment and disposition under the [approval policy](governance.md#required-sdlc-and-approval-gates). The implementation plan and product verification deliverables MUST be prepared at their respective gates; partial notes and research-only demonstrations MUST NOT be treated as approved or implemented deliverables. Agents MUST follow relevant links only as their assignment and dependencies require.

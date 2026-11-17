@@ -2,7 +2,7 @@
 
 ## Authority and accepted-direction pointers
 
-[Planning gates](planning-gates.md) governs approval status. The exact approved requirements baseline governs accepted scope; the consolidated requirements and research impact scope are approved under DEC-044; [the architecture package](architecture.md) owns detailed unresolved design proposals. Proposals MUST receive applicable architecture/implementation-plan approval before implementation. Workbook-specific obligations apply only while Excel remains selected under SPEC-007. Original notes are available with `git show 0b7b824:docs/intake-proposals.md`.
+[Planning gates](planning-gates.md) governs approval status. The exact approved requirements baseline governs accepted scope; the consolidated requirements and research impact scope are approved under DEC-044; [the architecture package](architecture.md) owns detailed unresolved design proposals. Proposals MUST receive architecture disposition and agent implementation-plan readiness under the [approval policy](governance.md#required-sdlc-and-approval-gates) before implementation. Workbook-specific obligations apply only while Excel remains selected under SPEC-007. Original notes are available with `git show 0b7b824:docs/intake-proposals.md`.
 
 | Stable source | Current home |
 | --- | --- |
@@ -32,7 +32,7 @@
 
 ### INTAKE-012
 
-Per [FR-002](requirements.md#fr-002)/[NFR-005](requirements.md#nfr-005), validation MUST examine every independently readable input within approved safe processing limits and accumulate discoverable file, sheet, row, field, and cross-record errors. Unsafe, resource-limited, or unreadable content MUST produce an explicit diagnostic; dependent checks MUST be reported as unperformed rather than passed or populated with invented cascading failures. Validation MUST continue on independent inputs and MUST block all catalog exports by default on invalid intake. Missing target-specific export facts in otherwise valid intake MUST block only the affected target under FR-004/013. A separate structured diagnostic report MAY be written without publishing catalog outputs. Detailed limits and diagnostic design MUST pass architecture approval.
+Per [FR-002](requirements.md#fr-002)/[NFR-005](requirements.md#nfr-005), validation MUST examine every independently readable input within approved safe processing limits and accumulate discoverable file, sheet, row, field, and cross-record errors. Unsafe, resource-limited, or unreadable content MUST produce an explicit diagnostic; dependent checks MUST be reported as unperformed rather than passed or populated with invented cascading failures. Validation MUST continue on independent inputs and MUST block all catalog exports by default on invalid intake. Missing target-specific export facts in otherwise valid intake MUST block only the affected target under FR-004/013. A separate structured diagnostic report MAY be written without publishing catalog outputs. Detailed limits and diagnostic design MUST pass architecture disposition under that policy.
 
 ## Unresolved intake proposals
 
