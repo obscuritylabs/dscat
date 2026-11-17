@@ -20,16 +20,18 @@ Reproduction: `python3 docs/evidence/architecture/verify_documents.py` (all loca
 
 ## Findings, stage ledger and next gate
 
-The supplied commitment omission is a moderate bounded mapping loss, not a requirements waiver. Singleton ODCS usage/limitations map unchanged; multiple values remain canonical with explicit scalar omission and planned fixtures. Fresh plan readiness MUST establish concrete platform/manual tasks, execution-role owners, environment/access dependencies and acceptance/release hard blocks, alongside dependency/tool pins, exhaustive tests and commands. Exact desktop builds and actual guard/publication/keyboard observations MUST precede their acceptance execution/claims and applicable release readiness; unavailable evidence MUST remain explicit.
+DEC-046 is the architecture phase disposition. Its fresh affected reviews and distinct reconciliation passed against committed source `ecfc15dfee316ece10a2d74c1a3f26fabed9d4db` before planning; exact coverage and artifact identities accompany the external verification handoff. Prior research/source coverage remains attributed to PR #21/#22. The assessed technical design and resources remain byte-identical; new implementation-plan status and execution mappings MUST NOT be treated as retroactive edits to architecture assessment hashes.
 
-| Completion stage | Actual evidence/status |
+The fresh [implementation-planning task](implementation-plan.md) now owns current increments, verification dependencies, pending candidate QA and the combined planning handoff. DEC-047 is agent plan phase readiness contingent on fresh exact-candidate QA/reconciliation, not human approval or product evidence. Planned/manual/platform/reporting/release evidence remains pending at the named future gates.
+
+| Completion stage | Actual status |
 | --- | --- |
-| Planned | DEC-044 scope; DEC-046 architecture phase readiness; implementation-plan readiness PENDING |
-| Implemented | Architecture documentation and risk disposition prepared; product implementation excluded |
-| Tested | Draft self-checks PASS; exact final candidate output MUST accompany handoff; no product-test claim |
-| Locally verified | Source coverage attributed above; fresh candidate verification, affected review and distinct reconciliation PENDING |
-| Remote-main integration | Source architecture/policy integrated through PR #21/#22; this disposition integration PENDING |
+| Planned | DEC-044 approved requirements; DEC-046 architecture readiness/review PASS; DEC-047 plan phase readiness with fresh plan QA PENDING |
+| Implemented | Architecture and planning documents only; product implementation excluded |
+| Tested | Architecture research/document checks PASS at source; new plan candidate checks in planning handoff; no product tests |
+| Locally verified | Architecture source review/reconciliation PASS; plan candidate fresh QA PENDING |
+| Remote-main integration | Combined architecture/plan protected PR PENDING |
 | Published release | PENDING; excluded from current bounded work |
-| Released-artifact verification | PENDING; no publication or downloaded verification claimed |
+| Released-artifact verification | PENDING; task/project incomplete |
 
-Next gate: fresh exact-candidate verification/affected semantic review and distinct reconciliation, then fresh implementation planning after PASS. The planner MUST use the concrete [planning handoff and reopen conditions](../architecture-disposition.md#planning-handoff-and-reopen-conditions); it MUST independently establish plan prerequisites and agent readiness. Architecture phase readiness MUST remain distinct from seven-stage task/project completion. This task remains incomplete until all seven stages have evidence.
+Next gate: fresh committed-plan QA and distinct reconciliation, followed by protected combined document integration, then STOP. Future product work requires a subsequent assignment and exact plan gate PASS. All seven completion stages remain mandatory.
