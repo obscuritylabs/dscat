@@ -57,7 +57,7 @@ The consolidated requirements and research impact scope are APPROVED under DEC-0
 
 | Artifact family | Capability / requirement | Scope and evidence |
 | --- | --- | --- |
-| [Architecture](architecture.md), [standards](architecture-standards.md), [assurance](architecture-assurance.md), [architecture handoff](tasks/architecture.md) | CAP-01–CAP-06; all 42 requirements | Proposed design and revision-specific research evidence; human architecture approval, product implementation/verification and later milestones remain PENDING. |
+| [Architecture](architecture.md), [standards](architecture-standards.md), [assurance](architecture-assurance.md), [architecture handoff](tasks/architecture.md) | CAP-01–CAP-06; all 42 requirements | Proposed design and revision-specific research evidence; fresh exact-candidate architecture risk assessment/disposition, product implementation/verification and later milestones remain PENDING. |
 | [Remediation disposition](privacy-remediation.md) | CAP-04/NFR-008; CAP-05/NFR-006 | Bounded exception, retained evidence and residual risk; authority remains in that record. |
 | [Control instructions](../AGENTS.md), [governance](governance.md), [workflow](workflow.md), [phase roles](workflow.md#phase-routing), [current task](tasks/documentation-workflow.md) | CAP-05/NFR-006/NFR-007; CAP-04/NFR-008/NFR-015/NFR-016 | Delivery, privacy, fresh-phase routing, handoffs and stage evidence; current candidate checks PENDING. |
 | [Engineering policy](engineering.md) | CAP-04/NFR-001/NFR-003/NFR-004/NFR-005/NFR-010/NFR-011/NFR-012/NFR-016/NFR-020/NFR-022; CAP-01/NFR-021; CAP-02/NFR-002; CAP-05/NFR-007/NFR-014 | Shared implementation/verification constraints; runtime checks PENDING. |
