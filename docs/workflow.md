@@ -18,11 +18,23 @@ Each dispatch and return MUST identify the following sections in the task record
 | Scope and authority | Requirement/capability IDs, acceptance anchors, included work, excluded work, approved or agent-authorized document revisions, decision references and dates; unavailable dispositions explicitly PENDING |
 | Required reading | Exact document paths and section anchors needed for this phase, including the phase file and shared policy |
 | Ownership | Allowed files/symbols, shared-file constraints, assigned agent/invocation identity, permitted mutations |
-| Inputs and outputs | Source artifacts, required deliverables, locations, exact artifact hashes and reproducible evidence commands/results or PENDING |
+| Inputs and outputs | Source artifacts, required deliverables, locations, exact artifact hashes and reproducible evidence commands/results or PENDING; private attribution and checkpoint status under [usage tracking](#usage-tracking-checkpoints) |
 | Findings and disposition | Failures, limitations, unresolved assumptions, superseded evidence and affected gates; privacy-sensitive findings only where authorized |
 | Next gate | Pass/fail/blocked result, actual completion stage, next phase, applicable requirements/high-risk architecture decision or autonomous readiness gate |
 
 The receiving agent MUST verify the revision and authority scope before dependent work and reject an incomplete or stale handoff. A dirty-tree digest MUST identify all relevant inputs; a commit alone MUST NOT stand for concurrent uncommitted edits.
+
+## Usage tracking checkpoints
+
+Agents MUST use the [Usage-Refresh setup and publication protocol](https://github.com/obscuritylabs/dscat/wiki/Usage-Refresh). At assignment/start, each worker MUST supply private dispatch evidence associating its task, agent and known turns with supported existing RTM IDs and SDLC phase. Workers MUST reconcile attribution at scope/phase changes and handoff/end. The coordinator MUST serialize shared private mapping writes and checkpoint/publication operations; workers MUST NOT race those operations. Unsupported attribution MUST remain shared/coordinator/unallocated; agents MUST NOT guess historical mappings, duplicate primary allocation or fabricate per-requirement splits.
+
+The coordinator MUST checkpoint at least every 30 minutes of active work, at task/phase handoff and before final reporting. Closely spaced triggers MAY coalesce. Paused work requires no background process. Tracking, review and readback work MUST receive attribution, but MUST NOT recursively spawn refresh agents or trigger a self-accounting loop.
+
+Before attempting an update, the coordinator MUST check that the ignored local tools and private maps are available and usable; fresh clones do not include them. With existing tools, `python3 usage-tracking/wiki.py update` from the repository root prepares refresh/staging and stops for independent review; `python3 usage-tracking/wiki.py check` checks the frozen candidate. A fresh independent reviewer MUST review the exact outgoing tree, inputs and metadata under the linked protocol before the same update command resumes ordinary push; separate independent clone/readback MUST verify publication. Changed candidates or inputs MUST invalidate prior review. Scans MUST NOT replace semantic/privacy review. Failed checks, review or transport MUST preserve the prior published state and remain explicit. Publication MAY be batched after review; each checkpoint MUST distinguish attempted, locally prepared and verified published outcomes.
+
+If tools or maps are missing or unusable, agents MUST report the tracker update unavailable, cite the setup/protocol, and retain attribution in an authorized private handoff. They MUST NOT claim execution or publication, silently install private tooling, or commit raw logs, maps or tools. Public output MUST contain only allowlisted sanitized aggregates, without private context, source paths, identifiers, prompts or labels.
+
+Each checkpoint MUST capture available closed prior work and report measured/published-as-of identities, open/missing/unmapped counts and the unavoidable active final tail. Agents MUST NOT claim full closure or zero missing usage from an active snapshot. Unknown model, token, time and cost facts MUST remain unknown; public API cost estimates MUST remain labeled estimates rather than actual bills.
 
 ## Phase routing
 
