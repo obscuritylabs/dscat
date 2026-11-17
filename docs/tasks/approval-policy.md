@@ -23,11 +23,11 @@ Manual walkthrough: read governance approval rules and route synthetic cases thr
 | Completion stage | Actual evidence/status |
 | --- | --- |
 | Planned | Direct governance instruction DEC-045; bounded implementation scope above; no product-plan approval asserted |
-| Implemented | Policy and dependent current authority metadata prepared; exact candidate in returned handoff |
+| Implemented | Policy and dependent current authority metadata prepared; RTM architecture-gate wording corrected after fresh review; exact candidate in [PR #22](https://github.com/obscuritylabs/dscat/pull/22) |
 | Tested | PASS implementation self-check: 36 document/license files, 42 requirement/RTM rows, all seven negative controls, whitespace and exact approved-byte identity; exact tested candidate/results in returned handoff; no independent verification claimed |
-| Locally verified | PENDING full fresh bounded semantic QA and distinct reconciliation of the exact combined candidate |
-| Remote-main integration | PENDING protected PR/rebase integration and origin/main identity verification |
+| Locally verified | Initial full fresh bounded QA covered all 91 maintained artifacts across applicable nine matrix areas at `8f18a350e1fd6637d20da624426e93bb09172608`; distinct reconciliation confirmed one medium RTM wording finding, now corrected. Exact coverage/digests and current affected-review/reconciliation outcome: [PR #22](https://github.com/obscuritylabs/dscat/pull/22); no corrected-candidate PASS asserted here |
+| Remote-main integration | Authoritative protected PR/rebase integration outcome and exact origin/main identity verification: [PR #22](https://github.com/obscuritylabs/dscat/pull/22); feature-branch publication MUST NOT count as integration |
 | Published release | PENDING verified main/artifacts and publication under DEC-045 standing delegation; no additional human approval gate |
 | Released-artifact verification | PENDING publication and actual downloaded-source verification |
 
-Next: fresh verification and full bounded semantic QA, then distinct reconciliation, protected integration, release and downloaded-artifact verification as routed. The product architecture next phase remains fresh exact-candidate risk assessment/disposition before autonomous planning when ready; governance maintenance MUST NOT substitute for it. This task remains incomplete until all seven stages have evidence.
+Current verification, finding disposition and protected integration outcome MUST be read from [PR #22](https://github.com/obscuritylabs/dscat/pull/22); affected corrections MUST receive fresh review and distinct reconciliation before integration. The current work boundary is architecture risk assessment/disposition followed by autonomous implementation planning, then stop; product implementation and release execution are excluded. Governance maintenance MUST NOT substitute for those readiness gates. This task remains incomplete until all seven stages have evidence; release and downloaded-artifact stages remain PENDING.
