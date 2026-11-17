@@ -36,6 +36,8 @@ The candidate DCAT Catalog schema requires only `dataset`; its Dataset schema re
 
 ## Optional mappings and loss matrix
 
+Approval limitation: both first-release targets intentionally omit even explicitly supplied quality/service commitments. FR-004 permits inclusion only when explicitly supplied (a necessary condition, not an obligation to map every supplied assertion); FR-018 permits documented omission with canonical preservation. This proposed boundary MUST be explicitly included in the human architecture approval scope; it MUST NOT imply a waiver, automatic approval or blanket first-release conformance. A future commitment mapping MUST pass affected design/plan gates.
+
 All optional supplied data MUST remain in canonical storage. Every export MUST return a structured omission/loss report keyed by stable record ID, canonical field and target, without echoing sensitive values. Unsupported supplied target content MUST be reported as omitted or target-unready according to representability; an invalid supplied value MUST fail intake validation. Public projection MUST independently enforce [FR-014](requirements.md#fr-014) before target validation. Schema validity MUST NOT imply disclosure approval.
 
 | Optional canonical group | First-release mapping | Loss and boundary |
