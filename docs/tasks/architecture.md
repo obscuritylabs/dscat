@@ -22,16 +22,16 @@ Reproduction: `python3 docs/evidence/architecture/verify_documents.py` (all loca
 
 DEC-046 is the architecture phase disposition. Its fresh affected reviews and distinct reconciliation passed against committed source `ecfc15dfee316ece10a2d74c1a3f26fabed9d4db` before planning; exact coverage and artifact identities accompany the external verification handoff. Prior research/source coverage remains attributed to PR #21/#22. The assessed technical design and resources remain byte-identical; new implementation-plan status and execution mappings MUST NOT be treated as retroactive edits to architecture assessment hashes.
 
-The fresh [implementation-planning task](implementation-plan.md) now owns current increments, verification dependencies, pending candidate QA and the combined planning handoff. DEC-047 is agent plan phase readiness contingent on fresh exact-candidate QA/reconciliation, not human approval or product evidence. Planned/manual/platform/reporting/release evidence remains pending at the named future gates.
+The fresh [implementation-planning task](implementation-plan.md) now owns current increments, verification dependencies, candidate QA and the combined planning handoff. DEC-047 is agent plan phase readiness contingent on fresh exact-candidate QA/reconciliation, not human approval or product evidence. Planned/manual/platform/reporting/release evidence remains pending at the named future gates.
 
 | Completion stage | Actual status |
 | --- | --- |
-| Planned | DEC-044 approved requirements; DEC-046 architecture readiness/review PASS; DEC-047 plan phase readiness with fresh plan QA PENDING |
+| Planned | DEC-044 approved requirements; DEC-046 architecture readiness/review PASS; DEC-047 plan phase readiness with fresh plan QA/reconciliation PASS at `b7214ca0924dc8081bdaee13d93bf11d0341697f` |
 | Implemented | Architecture and planning documents only; product implementation excluded |
 | Tested | Architecture research/document checks PASS at source; new plan candidate checks in planning handoff; no product tests |
-| Locally verified | Architecture source review/reconciliation PASS; plan candidate fresh QA PENDING |
-| Remote-main integration | Combined architecture/plan protected PR PENDING |
+| Locally verified | Architecture source review/reconciliation PASS; plan candidate fresh QA/reconciliation PASS at `b7214ca0924dc8081bdaee13d93bf11d0341697f` |
+| Remote-main integration | [Combined architecture/plan PR #23](https://github.com/obscuritylabs/dscat/pull/23) owns integration outcome/evidence; current merge disposition MUST be read there |
 | Published release | PENDING; excluded from current bounded work |
 | Released-artifact verification | PENDING; task/project incomplete |
 
-Next gate: fresh committed-plan QA and distinct reconciliation, followed by protected combined document integration, then STOP. Future product work requires a subsequent assignment and exact plan gate PASS. All seven completion stages remain mandatory.
+Next gate: affected review and distinct reconciliation of integration-status metadata, followed by protected combined document integration and remote artifact-identity verification recorded in PR #23, then STOP. Future product work requires a subsequent assignment and exact plan gate PASS. All seven completion stages remain mandatory.
