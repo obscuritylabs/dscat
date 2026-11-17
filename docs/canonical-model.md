@@ -30,4 +30,4 @@ Threats, parser limits, diagnostics, privacy and safe projection MUST follow [as
 
 ## Research revision dependencies
 
-Optional review/roles/retention/semantic references and identity/version boundaries MUST follow [canonical schema](architecture.md#canonical-record-schema); mapping loss MUST follow [standards architecture](architecture-standards.md). Requirements approval MUST remain distinct from pending architecture disposition/agent plan readiness, as recorded in [planning gates](planning-gates.md).
+Optional review/roles/retention/semantic references and identity/version boundaries MUST follow [canonical schema](architecture.md#canonical-record-schema); mapping loss MUST follow [standards architecture](architecture-standards.md). Requirements approval MUST remain distinct from DEC-046 agent architecture readiness and pending agent plan readiness, as recorded in [planning gates](planning-gates.md).
