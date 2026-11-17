@@ -4,6 +4,8 @@
 
 [Planning gates](planning-gates.md) is authoritative for current approval status. This record retains decision provenance and rationale; requirements and operating policies own their substantive rules. Human-derived decisions were recorded on 2026-11-16 unless stated otherwise. Accepted directions MUST NOT approve detailed proposals or dependent implementation.
 
+DEC-045 supersedes earlier requirements/architecture/plan/release approval procedures prospectively; earlier exact approval records and consumed exceptions retain their historical revision and scope, not continuing approval-request instructions.
+
 D records below are current consolidated source pointers, not unaltered interview transcripts. Original wording is available through `git show 0b7b824:docs/decisions.md`. Stable anchors MUST remain available; Git history preserves previous wording.
 
 ## Decisions
@@ -37,7 +39,7 @@ Exact ID grammar, normalization, encodings, and offline resource closure remain 
 
 ### DEC-005
 
-Full tool/dependency/build configuration remains subject to implementation-plan approval. Initialization permission covers license metadata and the dependency-age cutoff only; metadata MUST NOT be represented as a completed package or CLI.
+Full tool/dependency/build configuration remains subject to agent implementation-plan readiness under the [approval policy](governance.md#required-sdlc-and-approval-gates). Initialization permission covers license metadata and the dependency-age cutoff only; metadata MUST NOT be represented as a completed package or CLI.
 
 ### DEC-006
 
@@ -122,7 +124,7 @@ Conditional JSON-LD serialization for RDF exports: [NFR-019](requirements.md#nfr
 
 ### DEC-022
 
-Agent-owned routine delivery and human planning/release authority: [autonomous delivery ownership](governance.md#autonomous-delivery-ownership). Trunk-based development is human-directed; PRs are the agent-selected protection mechanism in [repository policy](repository-policy.md).
+Agent-owned routine delivery and current approval/standing-release authority: [autonomous delivery ownership](governance.md#autonomous-delivery-ownership). Trunk-based development is human-directed; PRs are the agent-selected protection mechanism in [repository policy](repository-policy.md).
 
 ### DEC-023
 
@@ -212,3 +214,8 @@ The human directly requested planning-document reconciliation and recurrence con
 ### DEC-044
 
 [FACT; HUMAN_DERIVED; 2026-11-17] The human explicitly approved the exact consolidated requirements and research impact package at commit `69b686a3d0b1da49290ca37d577d46fb8b63dbfb`. Approval covers docs/requirements.md SPEC-001–SPEC-007, all 42 FR/NFR requirements and acceptance criteria, and docs/research-additions.md additions, refinements, sequencing, impacts and exclusions. Agents MUST preserve DEC-039/040/041 authority at its original revisions and MUST treat this decision as superseding requirements-approval PENDING/proposed labels in the approved source artifacts and dependent summaries only. Those two artifacts retain their exact approved bytes; their embedded approval-status labels describe the pre-approval source revision, not an unresolved current requirements gate. No technical scope changes are made. This approval permits architecture preparation against the consolidated requirements; it MUST NOT approve detailed architecture proposals, the implementation plan, product implementation, release, or unverified RTM mappings. Current approval status MUST follow [planning gates](planning-gates.md).
+
+
+### DEC-045
+
+[FACT; HUMAN_DERIVED; 2026-11-17] The human explicitly revised the SDLC approval policy: requirements SHOULD require approval unless prior explicit approvals entail the only valid solutions available; architecture MAY require approval when the agent judges high risk; implementation plans and all other stages MUST NOT require human approval. [Governance](governance.md#required-sdlc-and-approval-gates) owns the exact exception, risk-assessment and agent-readiness rules. This instruction supplies standing delegation for project-scope versioning, tagging and release publication after required checks, superseding earlier approval-request rules prospectively, including routine version and release gates. It preserves fresh phases, independent verification/review, all seven completion stages, privacy, security and protected-main safeguards, and does not authorize visibility/protection changes, destructive remediation, secrets operations or unrelated external messages. Existing human approvals remain exact-revision records; no new architecture technical choice or first-release quality/service omission limitation is human-approved by this governance change. The reviewed proposed architecture at `dc87ca2f3698abc881f0bb3c610c1005c0c92cb4` requires a fresh architecture risk assessment and disposition; this maintenance phase makes neither. No release is performed by this policy change. [Planning gates](planning-gates.md) owns current dispositions.

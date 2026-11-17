@@ -22,7 +22,7 @@ Manual lineage MUST follow the approved later sequence in [SPEC-005](requirement
 
 ## Draft lineage reference policy
 
-The detailed proposed local/external reference, identity and cycle policy MUST follow the [lineage milestone boundary](architecture.md#later-capability-extension-gates). Milestone-specific serialization/mapping approval MUST precede dependent implementation.
+The detailed proposed local/external reference, identity and cycle policy MUST follow the [lineage milestone boundary](architecture.md#later-capability-extension-gates). Milestone-specific serialization/mapping disposition under the [approval policy](governance.md#required-sdlc-and-approval-gates) MUST precede dependent implementation.
 
 ## Draft security boundaries
 
@@ -30,4 +30,4 @@ Threats, parser limits, diagnostics, privacy and safe projection MUST follow [as
 
 ## Research revision dependencies
 
-Optional review/roles/retention/semantic references and identity/version boundaries MUST follow [canonical schema](architecture.md#canonical-record-schema); mapping loss MUST follow [standards architecture](architecture-standards.md). Requirements approval MUST remain distinct from pending architecture/plan approval, as recorded in [planning gates](planning-gates.md).
+Optional review/roles/retention/semantic references and identity/version boundaries MUST follow [canonical schema](architecture.md#canonical-record-schema); mapping loss MUST follow [standards architecture](architecture-standards.md). Requirements approval MUST remain distinct from pending architecture disposition/agent plan readiness, as recorded in [planning gates](planning-gates.md).
