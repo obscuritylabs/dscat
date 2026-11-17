@@ -1,0 +1,72 @@
+{
+  "@context": {
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "vcard": "http://www.w3.org/2006/vcard/ns#",
+    "Catalog": "dcat:Catalog",
+    "Dataset": "dcat:Dataset",
+    "Kind": "vcard:Kind",
+    "dataset": {
+      "@id": "dcat:dataset",
+      "@type": "@id"
+    },
+    "identifier": "dcterms:identifier",
+    "title": "dcterms:title",
+    "description": "dcterms:description",
+    "contactPoint": {
+      "@id": "dcat:contactPoint",
+      "@type": "@id"
+    },
+    "fn": "vcard:fn",
+    "hasEmail": {
+      "@id": "vcard:hasEmail",
+      "@type": "@id"
+    },
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "Distribution": "dcat:Distribution",
+    "distribution": {
+      "@id": "dcat:distribution",
+      "@type": "@id"
+    },
+    "accessURL": {
+      "@id": "dcat:accessURL",
+      "@type": "@id"
+    },
+    "downloadURL": {
+      "@id": "dcat:downloadURL",
+      "@type": "@id"
+    },
+    "modified": {
+      "@id": "dcterms:modified",
+      "@type": "xsd:date"
+    },
+    "version": "dcat:version"
+  },
+  "@id": "https://example.org/catalog",
+  "@type": "Catalog",
+  "dataset": [
+    {
+      "@id": "https://example.org/datasets/asset-001",
+      "@type": "Dataset",
+      "identifier": "asset-001",
+      "title": "Synthetic measurements",
+      "description": "Synthetic measurement metadata.",
+      "contactPoint": {
+        "@type": "Kind",
+        "fn": "Metadata support",
+        "hasEmail": "mailto:metadata@example.org"
+      },
+      "modified": "2026-10-01",
+      "version": "dataset-4",
+      "distribution": [
+        {
+          "@id": "https://example.org/datasets/asset-001/distributions/csv",
+          "@type": "Distribution",
+          "title": "Synthetic CSV",
+          "accessURL": "https://example.org/access",
+          "downloadURL": "https://example.org/measurements.csv"
+        }
+      ]
+    }
+  ]
+}

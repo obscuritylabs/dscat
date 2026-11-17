@@ -1,5 +1,7 @@
 # Standards and tooling research
 
+Current candidate resource closure and executed architecture-only schema/graph evidence MUST follow [standards architecture](architecture-standards.md). This document retains upstream observations; historical pending-resource statements MUST NOT override that revision-specific evidence or imply runtime implementation/approval. [Planning gates](planning-gates.md) owns approval status.
+
 - RES-001 Planning MUST distinguish verified public specification guidance from deployment-specific obligations. Public sources alone MUST NOT be represented as proof that a particular regulation, internal policy, data marking, or sector exchange format applies to this tool.
 - RES-002 [FACT; TOOL_VERIFIED; 2026-11-16] Readers MUST use the following source observations as research evidence, not as approved feature scope. Evidence was obtained by HTTPS retrieval and text/schema inspection on the stated date; mutable URLs MUST be pinned to a release or revision during implementation.
 

@@ -1,0 +1,23 @@
+{
+  "apiVersion": "v3.2.0",
+  "kind": "DataContract",
+  "id": "https://example.org/contracts/asset-001",
+  "version": "2.7.0",
+  "name": "Synthetic measurements",
+  "description": {
+    "customProperties": [
+      {
+        "property": "catalogDescription",
+        "value": "Synthetic measurement metadata."
+      }
+    ]
+  },
+  "team": {
+    "members": [
+      {
+        "username": "metadata@example.org",
+        "name": "Metadata support"
+      }
+    ]
+  }
+}

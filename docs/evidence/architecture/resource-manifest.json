@@ -1,0 +1,272 @@
+{
+  "retrieved": "2026-11-16",
+  "resources": [
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/AccessRestriction.json",
+      "path": "resources/dcat-AccessRestriction.json",
+      "sha256": "86f42cb373dc3df1c870f74847d5b1e2054b0e709f285e051e41491a1f6cc812",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/accessrestriction"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Activity.json",
+      "path": "resources/dcat-Activity.json",
+      "sha256": "9459c82a914555abfc998d57c9e0004b8fefbe8b9c1321a39f05a12247532214",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/activity"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Address.json",
+      "path": "resources/dcat-Address.json",
+      "sha256": "a71eaee3e1cda731d7724bc5b880f1f7285a668f8250e34c7928c0d63503ab4b",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/address"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Agent.json",
+      "path": "resources/dcat-Agent.json",
+      "sha256": "c3a8dd6103a0a72af12bbfcf8d8641df5deb71e505176bb6a6e112d1f3d4b636",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/agent"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Attribution.json",
+      "path": "resources/dcat-Attribution.json",
+      "sha256": "089eabc39498a08b9459bc8c44e5b8696c2e3055d747a58499cf5ae9df3cafd8",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/attribution"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/CUIRestriction.json",
+      "path": "resources/dcat-CUIRestriction.json",
+      "sha256": "c380e6ab8625c2cff2bab522ae47d0d9fe210c100304b81181e6c6e9236a3075",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/cuirestriction"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Catalog.json",
+      "path": "resources/dcat-Catalog.json",
+      "sha256": "d8fd1a1ef46b2d6af3e12a5af75ba4dbd94243d355d58809fb05840cec7181b8",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/catalog"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/CatalogRecord.json",
+      "path": "resources/dcat-CatalogRecord.json",
+      "sha256": "3520e634156fb0045a9735a67ba37f7fe18a295bfb6cbd4e505964c9d25f4205",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/catalogrecord"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Checksum.json",
+      "path": "resources/dcat-Checksum.json",
+      "sha256": "fb2efdbfec4a620f065c1d16bfe3b2681d7a11203f3da7bc1e937bbf5a177a2d",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/checksum"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Concept.json",
+      "path": "resources/dcat-Concept.json",
+      "sha256": "86fa9ce21ed5482df8325b5a99157fbd6592623315e14a734e6326be6aee9b2d",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/concept"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/ConceptScheme.json",
+      "path": "resources/dcat-ConceptScheme.json",
+      "sha256": "52e18b5f0d380f7321346c36688584df5e2cc3f627f17a65d6be631bce657414",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/conceptscheme"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/DataService.json",
+      "path": "resources/dcat-DataService.json",
+      "sha256": "0aef863056fce337af53209cdf89efdd68061c09a9d79d8de480514745a9a428",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/dataservice"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Dataset.json",
+      "path": "resources/dcat-Dataset.json",
+      "sha256": "957f1a33ef25abe0746031b89e91a5914525928617c7ee5259da7241907044a9",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/dataset"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/DatasetSeries.json",
+      "path": "resources/dcat-DatasetSeries.json",
+      "sha256": "d03477c091d60c8eb5509850b5e73eeb79ea5de9f0bb0a3bca108b2ecb2b1396",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/datasetseries"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Distribution.json",
+      "path": "resources/dcat-Distribution.json",
+      "sha256": "c039f69f8e93e1f13b093a42a0310216bc95ae1a7bfefc8975e3a8fcbf9de2a8",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/distribution"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Document.json",
+      "path": "resources/dcat-Document.json",
+      "sha256": "d270d10e2e97524038aaa00bfdabf90db41609940dc2b054e0d0bcf6edab7172",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/document"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Identifier.json",
+      "path": "resources/dcat-Identifier.json",
+      "sha256": "7e8d769d3d6213a63c1bce867e8ab0369c4859d8778e10ce2b0cdab99face543",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/identifier"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Kind.json",
+      "path": "resources/dcat-Kind.json",
+      "sha256": "06c11ceb9b1cd6646ce808676611e0cb4f4fc95f80b9dd3cf3a5f0027a3d6b54",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/kind"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/LICENSE.md",
+      "path": "resources/dcat-LICENSE.md",
+      "sha256": "ca9537e6f5b8bad4fd02670507273a094d12dc5dedd20ecf97e6b4e9927a8be6"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Location.json",
+      "path": "resources/dcat-Location.json",
+      "sha256": "394363091f89b7eaddf33fc00917e825700deafe2d101c534a7631455b5ac830",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/location"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Metric.json",
+      "path": "resources/dcat-Metric.json",
+      "sha256": "f0677522d162a9f89c78981e7617eb53e41a6a54106f5ab0599d05292ff9de58",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/metric"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Organization.json",
+      "path": "resources/dcat-Organization.json",
+      "sha256": "18edc2eaadf8d600d8f1b4e2ec27e46562c2b6404779d92d88f6a65562a5f143",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/organization"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/PeriodOfTime.json",
+      "path": "resources/dcat-PeriodOfTime.json",
+      "sha256": "16c2580806d91791842eed877f5d44053e1295ba0ded389e88491d5ceb58d14b",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/periodoftime"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/QualityMeasurement.json",
+      "path": "resources/dcat-QualityMeasurement.json",
+      "sha256": "b31bdfeaf59e9e087e2e21f1d94f4ff236777a66b75b98a2ea185e89607fcc21",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/qualitymeasurement"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Relationship.json",
+      "path": "resources/dcat-Relationship.json",
+      "sha256": "c2f470e8a900cffff02756e53b6d78c2725f6cba0e7197182da329a433f0b6f2",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/relationship"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/Standard.json",
+      "path": "resources/dcat-Standard.json",
+      "sha256": "17696088895efe91f409a5e27f4cbedce19cc4f0b3a6d2b6b9258489a8d762ca",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/standard"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/GSA/dcat-us/4996591483b52f4ccc0cb72c42e4ec3fe59a4b06/jsonschema/definitions/UseRestriction.json",
+      "path": "resources/dcat-UseRestriction.json",
+      "sha256": "dc32705962486f2170dd515c8f53b2e33e01cc3bc9943b93daa17a2282a8712e",
+      "resolver_uri": "https://resources.data.gov/dcat-us/3.0.0/definitions/userestriction"
+    },
+    {
+      "url": "https://json-schema.org/draft/2019-09/meta/applicator",
+      "path": "resources/meta-draft-2019-09-meta-applicator.json",
+      "sha256": "6b5f4e2fbc326d63cef6f6a3fa53bbfd3da39323116bc2eee866d716afc0e52c",
+      "resolver_uri": "https://json-schema.org/draft/2019-09/meta/applicator"
+    },
+    {
+      "url": "https://json-schema.org/draft/2019-09/meta/content",
+      "path": "resources/meta-draft-2019-09-meta-content.json",
+      "sha256": "9054737ada8e2ffbd9c9487ea406a86af8b57dcfd269543f04aba782936e3385",
+      "resolver_uri": "https://json-schema.org/draft/2019-09/meta/content"
+    },
+    {
+      "url": "https://json-schema.org/draft/2019-09/meta/core",
+      "path": "resources/meta-draft-2019-09-meta-core.json",
+      "sha256": "a6751523406d9ca767032ae97eb1c00c2de6d3cac9fc7d619babb460131cc1cb",
+      "resolver_uri": "https://json-schema.org/draft/2019-09/meta/core"
+    },
+    {
+      "url": "https://json-schema.org/draft/2019-09/meta/format",
+      "path": "resources/meta-draft-2019-09-meta-format.json",
+      "sha256": "a53cf235aab26c7639e70e94656136b20bcc364379c6a129cc06377982f91e96",
+      "resolver_uri": "https://json-schema.org/draft/2019-09/meta/format"
+    },
+    {
+      "url": "https://json-schema.org/draft/2019-09/meta/meta-data",
+      "path": "resources/meta-draft-2019-09-meta-meta-data.json",
+      "sha256": "ebcce1cded976590c75b4e5ee18ac471ffd8d21575a41d3ba05f59946fcbb5ce",
+      "resolver_uri": "https://json-schema.org/draft/2019-09/meta/meta-data"
+    },
+    {
+      "url": "https://json-schema.org/draft/2019-09/meta/validation",
+      "path": "resources/meta-draft-2019-09-meta-validation.json",
+      "sha256": "c83c5121d0afd313846002429cd16b08ab77be022f423c70f0cfb64adc1069b7",
+      "resolver_uri": "https://json-schema.org/draft/2019-09/meta/validation"
+    },
+    {
+      "url": "https://json-schema.org/draft/2019-09/schema",
+      "path": "resources/meta-draft-2019-09-schema.json",
+      "sha256": "7b761b3e121f0a0ca1ea2a0b8e2cc856bcf801604b8268d71bacaa202bc0c13b",
+      "resolver_uri": "https://json-schema.org/draft/2019-09/schema"
+    },
+    {
+      "url": "https://json-schema.org/draft/2020-12/meta/applicator",
+      "path": "resources/meta-draft-2020-12-meta-applicator.json",
+      "sha256": "bf273b26f9f735b93ece78f2b61b36676e1d122ce78ab37ad5a2e45dfa1ca2b1",
+      "resolver_uri": "https://json-schema.org/draft/2020-12/meta/applicator"
+    },
+    {
+      "url": "https://json-schema.org/draft/2020-12/meta/content",
+      "path": "resources/meta-draft-2020-12-meta-content.json",
+      "sha256": "a10456605b2b5bb12a1b4dcfc0300f02f54d3e8bb3646bed7724583866627682",
+      "resolver_uri": "https://json-schema.org/draft/2020-12/meta/content"
+    },
+    {
+      "url": "https://json-schema.org/draft/2020-12/meta/core",
+      "path": "resources/meta-draft-2020-12-meta-core.json",
+      "sha256": "21f79d143fab1f180245c331e5657057045b36794d41fe151e6e4fed65035299",
+      "resolver_uri": "https://json-schema.org/draft/2020-12/meta/core"
+    },
+    {
+      "url": "https://json-schema.org/draft/2020-12/meta/format-annotation",
+      "path": "resources/meta-draft-2020-12-meta-format-annotation.json",
+      "sha256": "5c79404f831dd905c0f40fefac7c6f3e51bf3729b4a876a5c2020178d97f3bcc",
+      "resolver_uri": "https://json-schema.org/draft/2020-12/meta/format-annotation"
+    },
+    {
+      "url": "https://json-schema.org/draft/2020-12/meta/meta-data",
+      "path": "resources/meta-draft-2020-12-meta-meta-data.json",
+      "sha256": "c664d438a84d58889c8edecd248ce2f945a4bc0e3b087323b11303dc136abfbe",
+      "resolver_uri": "https://json-schema.org/draft/2020-12/meta/meta-data"
+    },
+    {
+      "url": "https://json-schema.org/draft/2020-12/meta/unevaluated",
+      "path": "resources/meta-draft-2020-12-meta-unevaluated.json",
+      "sha256": "fc99f32188da41689a9382af174dd42e8b255e4374965c157b8286556b4ab2bc",
+      "resolver_uri": "https://json-schema.org/draft/2020-12/meta/unevaluated"
+    },
+    {
+      "url": "https://json-schema.org/draft/2020-12/meta/validation",
+      "path": "resources/meta-draft-2020-12-meta-validation.json",
+      "sha256": "e921c5b79264d3689af01c1af1ffdf692e09f1c45df90a0f08eb7288c9acdeab",
+      "resolver_uri": "https://json-schema.org/draft/2020-12/meta/validation"
+    },
+    {
+      "url": "https://json-schema.org/draft/2020-12/schema",
+      "path": "resources/meta-draft-2020-12-schema.json",
+      "sha256": "41da76f5afb7ce062d248f762463a92f7ca47e4e0f905b224ba6afeef91ded0f",
+      "resolver_uri": "https://json-schema.org/draft/2020-12/schema"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bitol-io/open-data-contract-standard/f0bdad95346905d500be5ef4b2c2d9b1d95223b7/LICENSE",
+      "path": "resources/odcs-LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bitol-io/open-data-contract-standard/f0bdad95346905d500be5ef4b2c2d9b1d95223b7/schema/odcs-json-schema-v3.2.0.json",
+      "path": "resources/odcs-odcs-json-schema-v3.2.0.json",
+      "sha256": "edb41f33ec46e84780e99872ab2bd67f074959d2bf3e9c9fc54e61f8982b0d93",
+      "resolver_uri": "https://raw.githubusercontent.com/bitol-io/open-data-contract-standard/f0bdad95346905d500be5ef4b2c2d9b1d95223b7/schema/odcs-json-schema-v3.2.0.json"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/json-schema-org/json-schema-spec/4e87b9141e62483383987ddbd27947f1c484b905/LICENSE",
+      "path": "resources/meta-LICENSE",
+      "sha256": "909b25a80d4945b21d3adb2fb17f90bf592e0274bdf117c069c088a8e44dc7b6"
+    }
+  ]
+}
