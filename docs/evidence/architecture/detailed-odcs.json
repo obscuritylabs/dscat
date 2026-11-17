@@ -1,0 +1,76 @@
+{
+  "apiVersion": "v3.2.0",
+  "kind": "DataContract",
+  "id": "https://example.org/contracts/asset-001",
+  "version": "2.7.0",
+  "name": "Synthetic measurements",
+  "description": {
+    "customProperties": [
+      {
+        "property": "catalogDescription",
+        "value": "Synthetic measurement metadata."
+      }
+    ],
+    "usage": "Synthetic evaluation.",
+    "limitations": "Synthetic only.",
+    "authoritativeDefinitions": [
+      {
+        "url": "https://example.org/definitions/measurement",
+        "type": "semanticReference"
+      }
+    ]
+  },
+  "team": {
+    "members": [
+      {
+        "username": "metadata@example.org",
+        "name": "Metadata support"
+      },
+      {
+        "username": "steward@example.org",
+        "name": "Synthetic stewardship",
+        "role": "steward"
+      }
+    ]
+  },
+  "customProperties": [
+    {
+      "property": "datasetVersion",
+      "value": "dataset-4"
+    }
+  ],
+  "schema": [
+    {
+      "name": "measurements",
+      "logicalType": "object",
+      "properties": [
+        {
+          "name": "amount",
+          "logicalType": "number",
+          "description": "Synthetic amount.",
+          "customProperties": [
+            {
+              "property": "canonicalNullable",
+              "value": false
+            }
+          ],
+          "authoritativeDefinitions": [
+            {
+              "url": "https://example.org/definitions/amount",
+              "type": "semanticReference"
+            }
+          ]
+        },
+        {
+          "name": "source_code",
+          "customProperties": [
+            {
+              "property": "catalogFieldType",
+              "value": "opaque-custom-type"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
