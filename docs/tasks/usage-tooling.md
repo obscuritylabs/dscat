@@ -8,7 +8,7 @@ Source commit: `43aea7fa41687d3e26c52b5222f809372e55d443`, with the identified u
 
 The [implementation plan](../usage-tooling-plan.md) governs U1–U4. U1 private capture/migration, U2 receipt merge/metrics/rendering and U3 frozen review/ordinary transport received separate fresh verification PASS on 2026-11-17. U4 implements the explicit CLI, private setup, installed entry points, empty templates, instructions, pinned development tools and tooling-only wheel/sdist. Fresh independent U4 verification PASS on 2026-11-17 for candidate `572eaa6f7fad05f308a6cacf1f319127c81e5ce6bb2b4f20ae9088a4a4738b2c`; the verification manifest SHA-256 is `a2cb371530fa9f08c5babdb4655994fac7961634bdc4f7a48a06d6cea3621381`, and the exact verification evidence SHA-256 is `c8e7e8e25940aeb19e34a50c579874d740c7bd2364706809e1067656a1591120`. The combined security/privacy review and affected documentation QA/reconciliation also PASS on that candidate. Exact source/file digests, commands, artifacts, prior-increment review evidence and private attribution accompany the private handoff; those identities MUST be checked before reuse.
 
-Verification, security/privacy review and affected documentation QA/reconciliation are complete for the exact candidate above. The next gate is protected PR integration; release and downloaded-artifact verification remain pending.
+Verification, security/privacy review and affected documentation QA/reconciliation are complete for the exact candidate above. Protected PR integration completed through PR #25 using the required rebase flow. The exact remote-main commit and tree are recorded in stage 5 below; release and downloaded-artifact verification remain pending.
 
 Ownership: U4 owns CLI/package/templates/user instructions and serialized task/gate/RTM status. Coverage continuations own disjoint test files; their changes MUST be included in final combined checks. No commits or branches were created by U4. Existing ignored tooling/maps remain preserved. Private attribution remains coordinator-owned; no actual maps, history refresh, tracker contributions or publication were performed.
 
@@ -22,8 +22,8 @@ Validation: implemented command-boundary and disposable local-Git tests include 
 | 2 Implementation | PASS implementation/self-check; U1–U4 implemented with task/traceability/package updates |
 | 3 Tests | PASS 129 tests; 2,176/2,176 runtime statements and 576/576 branches covered (100%); Ruff ALL, formatter and error-level typing PASS; 14 annotation-only TYPE_CHECKING lines excluded by default, no custom/runtime waiver |
 | 4 Local acceptance | PASS fresh U4 verification, combined security/privacy review, affected documentation QA and distinct reconciliation on candidate `572eaa6f7fad05f308a6cacf1f319127c81e5ce6bb2b4f20ae9088a4a4738b2c`; verification manifest SHA-256 `a2cb371530fa9f08c5babdb4655994fac7961634bdc4f7a48a06d6cea3621381`; exact verification evidence SHA-256 `c8e7e8e25940aeb19e34a50c579874d740c7bd2364706809e1067656a1591120 |
-| 5 Remote-main PR integration | PENDING |
+| 5 Remote-main PR integration | PASS; PR #25 merged through rebase. `origin/main` is `2d9a62805ceeb2a0cf8a5eb1d36f8b2663fa88b6` with tree `dcf06260b77ba48f1079bbea8054b7323b1aceb2`; the two retained commits are `32be3e651db704dc9cb5fd70fd8bb9d20aa15ac9` and `2d9a62805ceeb2a0cf8a5eb1d36f8b2663fa88b6`. Remote refs and corrected README/workflow content were verified after merge. |
 | 6 Published tooling release | PENDING; standing delegation applies after checks |
 | 7 Downloaded-artifact verification | PENDING; both downloaded artifacts require clean install and synthetic walkthrough |
 
-Next gate: protected PR integration. Stages 5–7 remain PENDING; task incomplete.
+Next gate: release preparation under DEC-045 standing delegation. Stage 5 is PASS; stages 6–7 remain PENDING, so the task is incomplete.
