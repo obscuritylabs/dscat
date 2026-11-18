@@ -6,6 +6,8 @@ This maintenance specification supports CAP-05/NFR-006/NFR-007 and CAP-04/NFR-00
 
 Deliverables MUST comprise reusable tracked core tooling, synthetic tests, empty templates and setup/use instructions. Raw histories, private attribution/configuration/state, credentials, source paths and original identifiers MUST remain outside Git. Existing ignored tooling/maps MUST NOT be overwritten. Actual-history refresh, actual contributions, tracker publication and publication of the wiki protocol revision are excluded. Synthetic local Git end-to-end testing, tooling PR integration and tooling release/download verification are included.
 
+The actual-history refresh exclusion above governs use of the shared tracker workflow; it does not prohibit the standalone [`codex_refresh.py`](../tools/local-usage/codex_refresh.py), a local-only calculator for one agent's private token, estimated-cost, and time snapshots. Running it against that agent's own local history is self-service and does not perform a shared contribution or publication. Its maps and generated data MUST remain private.
+
 ## Acceptance
 
 These task acceptance labels refine the existing supporting requirements; they are not new product requirement IDs.
