@@ -184,7 +184,7 @@ The requested NFR-015 editorial wording focuses on active repository policy and 
 
 ### DEC-037
 
-The full-document QA/QC instruction is implemented by [documentation procedure](documentation-qa.md). Integration evidence: [PR #12](https://github.com/obscuritylabs/dscat/pull/12), main `f77a63193da43f03c2f67ffca7599ce31d21690a`. This is governance authority, not product/release approval.
+The full-document QA/QC instruction is implemented by [documentation procedure](documentation-qa.md). Integration evidence: PR #12, main `f77a63193da43f03c2f67ffca7599ce31d21690a`. This is governance authority, not product/release approval.
 
 ### DEC-038
 
@@ -200,7 +200,7 @@ The human directly requested planning-document reconciliation and recurrence con
 
 ### DEC-041
 
-[FACT; HUMAN_DERIVED; 2026-11-16] The human explicitly approved docs/decisions.md and clarified that approval covers its committed baseline from [PR #15](https://github.com/obscuritylabs/dscat/pull/15) at commit `0b7b82459a7136922bdc2d8439839553114b6905`, excluding subsequent uncommitted changes. Agents MUST record approval of that decision-log baseline separately from verification evidence. Existing proposal and assumption classifications and historical supersession MUST remain intact; baseline approval MUST NOT convert proposals or assumptions into accepted technical decisions or reactivate superseded instructions. This decision MUST supersede prior pending decision-log-review statements only within that scope. Architecture approval, implementation-plan approval, and release authorization MUST remain PENDING; approval MUST NOT extend to other document proposals or authorize dependent product implementation.
+[FACT; HUMAN_DERIVED; 2026-11-16] The human explicitly approved docs/decisions.md and clarified that approval covers its committed baseline from PR #15 at commit `0b7b82459a7136922bdc2d8439839553114b6905`, excluding subsequent uncommitted changes. Agents MUST record approval of that decision-log baseline separately from verification evidence. Existing proposal and assumption classifications and historical supersession MUST remain intact; baseline approval MUST NOT convert proposals or assumptions into accepted technical decisions or reactivate superseded instructions. This decision MUST supersede prior pending decision-log-review statements only within that scope. Architecture approval, implementation-plan approval, and release authorization MUST remain PENDING; approval MUST NOT extend to other document proposals or authorize dependent product implementation.
 
 
 ### DEC-042

@@ -30,4 +30,4 @@ Local cleanup on 2026-11-16: obsolete local refs were removed, all checkout refl
 
 ## Integration evidence boundary
 
-Read-only verification on 2026-11-16 using `gh pr view 2 --json state,mergeCommit` identifies [PR #2](https://github.com/obscuritylabs/dscat/pull/2) as MERGED at ad1b1f6f3149eb5dc436885401bb403f4b1b5fc3. This supports closeout integration only, not a fresh identifying-content scan, secure erasure, or GitHub server-side purge. The historical release exception MUST remain limited to this remediation; later documentation work MUST follow the ordinary completion stages.
+Read-only verification on 2026-11-16 using `gh pr view 2 --json state,mergeCommit` identifies PR #2 as MERGED at ad1b1f6f3149eb5dc436885401bb403f4b1b5fc3. This supports closeout integration only, not a fresh identifying-content scan, secure erasure, or GitHub server-side purge. The historical release exception MUST remain limited to this remediation; later documentation work MUST follow the ordinary completion stages.

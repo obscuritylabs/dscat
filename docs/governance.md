@@ -41,7 +41,7 @@ The standing human instruction recorded in [DEC-045](decisions.md#dec-045) gover
 - Agents MUST inspect staged diffs for private information, secrets, scope, and traceability before committing. Planning artifacts SHOULD be committed now; future issue migration MUST preserve stable IDs, approval history, and local navigation.
 - The initial version MUST be 0.1.0. Pre-1.0 breaking changes MAY occur with documented impacts. From 1.0.0 onward, backward compatibility MUST be preserved within a major version. Breaking major releases MUST be avoided and MUST receive documented compatibility impact analysis and the affected phase readiness dispositions before work requiring them; versioning MUST NOT introduce a separate human approval gate.
 - The approved compatibility contract MUST enumerate CLI commands/options, exit codes, structured outputs, configuration, workbook schemas, persisted data, and any public Python API. Breaking changes MUST NOT be hidden in minor or patch releases after 1.0.0.
-- Agents MUST use judgment to place durable specifications in files and execution tracking in future issues; origin MUST be https://github.com/obscuritylabs/dscat. Repository visibility MUST remain private unless the human explicitly authorizes a change.
+- Agents MUST use judgment to place durable specifications in files and execution tracking in future issues; agents MUST verify that the configured canonical remote identifies the intended private repository without recording its URL. Repository visibility MUST remain private unless the human explicitly authorizes a change.
 
 ## Local verification and distribution
 
