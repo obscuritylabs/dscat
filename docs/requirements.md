@@ -1,7 +1,7 @@
-# Requirements: consolidated decision candidate
+# Requirements and current authority status
 
 - SPEC-001 [FACT; HUMAN_DERIVED] DSCat MUST enable distribution of dataset metadata intake materials, receipt of completed submissions, validation of metadata, and generation of standards-based exports. Excel workbooks SHOULD provide the initial intake mechanism; Excel MUST NOT be a permanent product constraint. A replacement intake mechanism MAY be selected through the affected requirements, architecture, and implementation-plan approvals if workbook completion becomes too burdensome.
-- SPEC-002 The approved baseline remains docs/requirements.md at `00c3535236028197805c0199401321631c709cd0` (2026-11-16, [DEC-039](decisions.md#dec-039)), covering SPEC-001–SPEC-007 and its original 30 FR/NFR requirements. This consolidated revision is PROPOSED under [DEC-042](decisions.md#dec-042), with narrowly approved interview decisions under [DEC-043](decisions.md#dec-043); exact-revision renewed human requirements approval remains PENDING. Unchanged requirements retain their original authority only within that exact baseline scope. New and refined acceptance MUST NOT authorize dependent implementation. Current authority MUST follow [planning gates](planning-gates.md).
+- SPEC-002 The historical approved baseline remains docs/requirements.md at `00c3535236028197805c0199401321631c709cd0` (2026-11-16, [DEC-039](decisions.md#dec-039)), covering SPEC-001–SPEC-007 and its original 30 FR/NFR requirements. The consolidated requirements and research impact package at `69b686a3d0b1da49290ca37d577d46fb8b63dbfb` was approved on 2026-11-17 under [DEC-044](decisions.md#dec-044), covering this document's SPEC-001–SPEC-007, all 42 FR/NFR requirements and acceptance criteria, and the impact package additions, refinements, sequencing, impacts and exclusions. DEC-042 and [DEC-043](decisions.md#dec-043) remain historical preparation and interview-decision provenance; their source-revision PENDING/proposed labels do not describe current requirements status. Unchanged requirements retain their original authority within the exact DEC-039 baseline scope. Requirements approval MUST NOT authorize dependent implementation. Current authority MUST follow [planning gates](planning-gates.md).
 - SPEC-003 [FACT; HUMAN_DERIVED] The project MUST use the following capabilities.
 
 | Capability | Name |
@@ -127,7 +127,7 @@ Local verification and testing MUST be the primary quality gate; GitHub Actions 
 
 ### NFR-017
 
-Approved software MUST be distributed through GitHub Releases in installable form. Post-publication verification MUST demonstrate authenticated asset download, integrity/version checks, clean installation, CLI invocation, applicable acceptance scenarios, and offline runtime behavior using the released artifacts rather than the checkout; human authorization MUST precede publication.
+Approved software MUST be distributed through GitHub Releases in installable form. Under the standing human delegation recorded in [DEC-045](decisions.md#dec-045) (2026-11-17), agents MUST publish project-scope software releases after all applicable scope, verification, security, licensing, and artifact-identity checks; no further human authorization is required for that publication. This delegation does not authorize actual tracker contributions/publication or publication of changes to the external wiki protocol, which remain governed by their existing authority. Post-publication verification MUST demonstrate authenticated asset download, integrity/version checks, clean installation, CLI invocation, applicable acceptance scenarios, and offline runtime behavior using the released artifacts rather than the checkout.
 
 ### NFR-018
 
@@ -139,15 +139,15 @@ Any RDF export MUST use JSON-LD serialization. Acceptance MUST verify valid JSON
 
 - SPEC-004 Requirements and acceptance criteria approval alone MUST NOT authorize implementation; model fields, command names, canonical file layout and schema version policy, exact schema pins, compatibility surface, and security verification procedures MUST be settled through subsequent planning.
 
-- SPEC-005 Under DEC-043, version 0.1.0 MUST deliver DCAT-US 3.0 followed by ODCS 3.2.0, with both required for release. FR-001–FR-008, FR-010/011 and supporting NFRs remain initial capabilities; DEC-042 additions FR-013–FR-018 and NFR-020–NFR-022 remain proposed for that release. FR-012 lineage MUST follow a later, separate W3C DCAT 3 capability (FR-019), then ODPS metadata/export (FR-020), and lastly DCAT-US 1.1 (FR-021). These later capabilities MUST NOT block the first release. Later version numbers and detailed designs remain PENDING; capability ordering MUST NOT imply release authorization. Exact consolidated approval remains PENDING under SPEC-002.
+- SPEC-005 Under DEC-043, version 0.1.0 MUST deliver DCAT-US 3.0 followed by ODCS 3.2.0, with both required for release. FR-001–FR-008, FR-010/011 and supporting NFRs remain initial capabilities; FR-013–FR-018 and NFR-020–NFR-022 were included in the consolidated requirements approved under DEC-044 for that release. FR-012 lineage MUST follow a later, separate W3C DCAT 3 capability (FR-019), then ODPS metadata/export (FR-020), and lastly DCAT-US 1.1 (FR-021). These later capabilities MUST NOT block the first release. Later version numbers and detailed designs remain PENDING; capability ordering MUST NOT imply release authorization. Current requirements approval is recorded under DEC-044 and in [planning gates](planning-gates.md); downstream readiness and evidence remain governed by their applicable gates.
 - SPEC-006 [FACT; HUMAN_DERIVED] DEC-023/024 MUST govern the required intake core and capacity policy. Stable IDs MUST be supplied by submitters. DEC-027 MUST govern validated shared export metadata configuration; defaults MUST NOT invent facts or data-use commitments.
 
 - SPEC-007 [FACT; HUMAN_DERIVED] Per DEC-031/032, Excel SHOULD be the initial intake technology. Requirements describing intake capabilities MUST remain technology-neutral where practical. Technology-specific MUST clauses MUST apply only while that technology is selected and MUST NOT make its selection mandatory. A technology replacement MUST revise or retire its specific clauses and acceptance criteria, preserve applicable technology-neutral obligations, and resolve compatibility impacts through affected planning approvals. This clarification MUST NOT select or authorize another technology now.
 
 
-## Proposed research additions
+## Research additions and refinements
 
-The following requirements and the explicitly marked refinements above are pending renewed requirements approval under SPEC-002. Optional metadata MUST NOT enlarge the FR-006 core. Acceptance applies to version 0.1.0 after approval; detailed encodings and controls MUST pass architecture and planning gates.
+The requirements additions and explicitly marked refinements above were approved as part of the exact consolidated package under [DEC-044](decisions.md#dec-044) on 2026-11-17; the approved source revision is `69b686a3d0b1da49290ca37d577d46fb8b63dbfb`. Their source-revision PENDING/proposed approval wording is historical. Optional metadata MUST NOT enlarge the FR-006 core. Acceptance applies to version 0.1.0; detailed encodings and controls MUST pass architecture and planning gates.
 
 ### FR-013
 
@@ -187,7 +187,7 @@ Secure development planning MUST map the selected final NIST SP 800-218 SSDF 1.1
 
 ## Later capability acceptance
 
-DEC-043 approves the capability scope and sequence below, not this unseen consolidated revision or detailed architecture. Each capability MUST pass applicable requirements, architecture, implementation-plan and release gates before dependent execution.
+DEC-043 approved the capability scope and sequence below before this consolidated revision existed; DEC-044 later approved the exact consolidated requirements package at its recorded source revision and hashes. This current NFR-017 authority clarification relies on DEC-045's explicit human delegation of project-scope release publication after required checks; under the governance prior-approval uniqueness exception, no separate human publication authorization is a valid additional gate. DEC-044 does not approve the revised bytes. First-release architecture and implementation-plan readiness established under DEC-046/047 MUST be freshly re-established against this corrected requirements revision before dependent implementation. Each capability MUST pass applicable requirements, architecture, implementation-plan and release gates before dependent execution.
 
 ### FR-019
 

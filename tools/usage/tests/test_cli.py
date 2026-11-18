@@ -238,7 +238,7 @@ class CliTests(unittest.TestCase):
         ):
             runpy.run_module("dscat_usage", run_name="__main__")
         self.assertEqual(result.exception.code, 0)
-        self.assertIn("0.1.0", output.getvalue())
+        self.assertIn("0.1.1", output.getvalue())
         for arguments, expected in (([], 2), (["check", "--state", str(self.root / "absent")], 3)):
             output = io.StringIO()
             with patch.object(sys, "argv", ["dscat-usage", *arguments]), contextlib.redirect_stdout(output):

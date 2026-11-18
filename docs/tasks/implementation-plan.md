@@ -2,11 +2,11 @@
 
 ## Identity and revision
 
-Phase: PLANNING; fresh invocation `/root/implementation_plan_prepare`; clean source `ecfc15dfee316ece10a2d74c1a3f26fabed9d4db`, tree `8f9f1a109d3992b7873855f9a3fa7aff615a0b7e`. Final commit/tree, dirty status, changed-file SHA-256 and sorted relative-path/NUL/bytes/NUL all-file digest MUST accompany the return and exact-candidate fresh QA. This file MUST NOT embed its own recursive digest.
+Phase: PLANNING; fresh implementation-plan preparation invocation; clean source `ecfc15dfee316ece10a2d74c1a3f26fabed9d4db`, tree `8f9f1a109d3992b7873855f9a3fa7aff615a0b7e`. Final commit/tree, dirty status, changed-file SHA-256 and sorted relative-path/NUL/bytes/NUL all-file digest MUST accompany the return and exact-candidate fresh QA. This file MUST NOT embed its own recursive digest.
 
 ## Scope and authority
 
-DEC-044 approves the unchanged 42 requirements/impact bytes at `69b686a3d0b1da49290ca37d577d46fb8b63dbfb`; DEC-046 supplies moderate-risk first-release architecture readiness, independently reviewed before this planning invocation. DEC-047 supplies agent plan readiness dated 2026-11-17, contingent on fresh full-document QA and distinct reconciliation PASS before future execution; no human plan approval. Exact assessed core/standards/assurance design bytes and resources MUST remain unchanged. Assessed source RTM hashes in the architecture disposition identify their historical architecture baseline; new execution mappings are in the plan and separately reviewed RTM cells, not retroactive architecture hash claims.
+DEC-044 approved the exact 42 requirements/impact bytes at `69b686a3d0b1da49290ca37d577d46fb8b63dbfb`; those original bytes remain preserved in Git history. DEC-046 architecture readiness and DEC-047 plan readiness were established against that source, with exact-candidate QA/reconciliation PASS before future execution; neither disposition is human approval. A later DEC-045-backed NFR-017 authority clarification changes the current requirements source; fresh architecture and plan readiness against the corrected requirements are pending. Exact assessed core/standards/assurance design bytes and resources remain bound to their historical candidate pending fresh assessment. Assessed source RTM hashes in the architecture disposition identify their historical architecture baseline; new execution mappings are in the plan and separately reviewed RTM cells, not retroactive architecture hash claims.
 
 Owned outputs: [implementation plan](../implementation-plan.md), [dependencies](../implementation-dependencies.md) and direct research manifest, [verification/manual arrangements](../implementation-verification.md), reconciled delivery plan/gates/decisions/index/RTM and current architecture task status. All file/symbol/test commands named for product increments are PLANNED, not implemented. No product code/tests/dependency installation, remote policy, publishing or release execution is included. Current work MUST end after architecture/planning and their protected document integration so a subsequent model can take I01 independently.
 
@@ -22,14 +22,14 @@ Fresh reviewers MUST cover every maintained document with exact content/applicab
 
 | Completion stage | Actual status |
 | --- | --- |
-| Planned | Requirements approved; architecture readiness and prior fresh review PASS; plan phase readiness DEC-047, exact candidate `b7214ca0924dc8081bdaee13d93bf11d0341697f` fresh QA/reconciliation PASS |
+| Planned | HISTORICAL PASS for requirements source approved under DEC-044, architecture readiness DEC-046, and plan readiness DEC-047 with exact candidate `b7214ca0924dc8081bdaee13d93bf11d0341697f` fresh QA/reconciliation PASS. Current architecture and plan readiness against the corrected requirements revision are PENDING. |
 | Implemented | Planning documentation only; product implementation excluded/PENDING |
 | Tested | Structural and artifact-identity checks MUST accompany exact return; no product tests executed |
-| Locally verified | Fresh plan semantic QA/reconciliation PASS at `b7214ca0924dc8081bdaee13d93bf11d0341697f`; runtime/platform/manual acceptance PENDING |
-| Remote-main integration | PASS; combined architecture/plan PR #23 is integrated into remote main, with merge and artifact-identity evidence recorded there |
+| Locally verified | HISTORICAL PASS: fresh plan semantic QA/reconciliation at `b7214ca0924dc8081bdaee13d93bf11d0341697f` applies to that earlier candidate only. Fresh current-candidate QA/reconciliation and runtime/platform/manual acceptance are PENDING. |
+| Remote-main integration | HISTORICAL PASS for the earlier combined architecture/plan PR #23; its merge and artifact-identity evidence remain recorded there. The corrected requirements, gate, architecture/plan and handoff candidate is unintegrated; current stage 5 is PENDING. |
 | Published release | PENDING; excluded from current work |
 | Downloaded-artifact verification | PENDING; task/project incomplete |
 
-Exact plan candidate `b7214ca0924dc8081bdaee13d93bf11d0341697f` received full distributed QA and distinct reconciliation PASS. The PR records exact review coverage, artifact identities, reproducible checks and the final merged revision.
+Exact plan candidate `b7214ca0924dc8081bdaee13d93bf11d0341697f` received full distributed QA and distinct reconciliation PASS for the original DEC-044 requirements source. The PR records exact review coverage, artifact identities, reproducible checks and the final merged revision; this historical result does not establish readiness for the corrected requirements revision.
 
-Next gate: future product work requires a subsequent assignment and exact implementation-plan gate PASS; product acceptance, release, and downloaded-artifact evidence remain PENDING.
+Next gate: fresh architecture and plan readiness MUST be re-established against the corrected requirements source, followed by exact-candidate QA and distinct reconciliation, before any subsequent implementation assignment. Product acceptance, release and downloaded-artifact evidence remain PENDING.

@@ -46,7 +46,7 @@ The proposed supported-version and fixture policy MUST follow the [compatibility
 
 ## Draft capacity policy
 
-The detailed proposed Unknown/absent/zero states, units, decimal precision, bounds, dates, observation windows and retention encodings MUST have one authoritative home in [capacity encoding](architecture.md#capacity-encoding). These have agent architecture readiness under DEC-046; product implementation remains PENDING.
+The detailed proposed Unknown/absent/zero states, units, decimal precision, bounds, dates, observation windows and retention encodings MUST have one authoritative home in [capacity encoding](architecture.md#capacity-encoding). DEC-046 included these designs in its historical architecture readiness for the original DEC-044 source; fresh architecture readiness against the corrected requirements revision is PENDING under [planning gates](planning-gates.md). Product implementation remains PENDING.
 
 ## Draft minimum-export demonstration
 

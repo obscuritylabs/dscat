@@ -1,9 +1,9 @@
 # Local usage tools
 
-`dscat-usage` 0.1.0 is a separate maintenance package, proprietary to Obscurity
-Labs. It requires Python 3.14 or later and Git on PATH. It has no Python runtime
-dependencies. It does not implement catalog commands. Its release tag is
-`usage-v0.1.0`.
+`dscat-usage` 0.1.1 is a planned, pending release of a separate maintenance
+package, proprietary to Obscurity Labs. It requires Python 3.14 or later and Git
+on PATH. It has no Python runtime dependencies. It does not implement catalog
+commands. Its planned release tag is `usage-v0.1.1`.
 
 Actual history refresh, real contributions, tracker publication, and migration
 of the published Usage-Refresh protocol are excluded from this release task.
@@ -12,25 +12,32 @@ below explain the supported tooling; use disposable synthetic sources/remotes
 until that transition. The synthetic walkthrough needs no histories, credentials,
 tracker connection, or network access.
 
-Replace `OWNER/REPOSITORY` with the authorized release repository before downloading the authenticated release assets:
+The `usage-v0.1.1` download and rebuild examples below are instructions for use
+after that release exists. Replace `OWNER/REPOSITORY` with the authorized release
+repository before downloading its authenticated assets. The `usage-v0.1.1`
+release MUST publish `RELEASE-NOTES.md` as a release asset and include its digest
+in the published `SHA256SUMS` asset. It MUST publish `SHA256SUMS` and include an
+entry for every other attached release asset, so `sha256sum -c SHA256SUMS`
+succeeds after download.
 
 ```sh
-gh release download usage-v0.1.0 --repo OWNER/REPOSITORY --dir usage-release
+gh release download usage-v0.1.1 --repo OWNER/REPOSITORY --dir usage-release
 cd usage-release
 sha256sum -c SHA256SUMS
-uv tool install --python 3.14 ./dscat_usage-0.1.0-py3-none-any.whl
+uv tool install --python 3.14 ./dscat_usage-0.1.1-py3-none-any.whl
 dscat-usage --version
 dscat-usage --help
 ```
 
-Release publication/download verification are separate gates; these instructions
-do not claim that a release already exists. Keep the downloaded source archive
-for tests and instructions. To rebuild the source package with the frozen
-build dependencies:
+The `usage-v0.1.0` release has been published. The compatible patch release
+`usage-v0.1.1` is planned and pending publication. Downloaded-artifact
+verification is a separate check from publication. Keep the downloaded source
+archive for tests and instructions. To rebuild the source package with the
+frozen build dependencies after `usage-v0.1.1` is published:
 
 ```sh
-tar -xzf dscat_usage-0.1.0.tar.gz
-cd dscat_usage-0.1.0
+tar -xzf dscat_usage-0.1.1.tar.gz
+cd dscat_usage-0.1.1
 uv sync --frozen
 uv build --python .venv/bin/python --no-sources --no-build-isolation
 uv run --frozen python tests/walkthrough.py
