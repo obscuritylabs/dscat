@@ -26,10 +26,10 @@ Fresh reviewers MUST cover every maintained document with exact content/applicab
 | Implemented | Planning documentation only; product implementation excluded/PENDING |
 | Tested | Structural and artifact-identity checks MUST accompany exact return; no product tests executed |
 | Locally verified | Fresh plan semantic QA/reconciliation PASS at `b7214ca0924dc8081bdaee13d93bf11d0341697f`; runtime/platform/manual acceptance PENDING |
-| Remote-main integration | [Combined architecture/plan PR #23](https://github.com/obscuritylabs/dscat/pull/23) is the authoritative integration outcome/evidence pointer; current merge disposition MUST be read there |
+| Remote-main integration | PASS; combined architecture/plan PR #23 is integrated into remote main, with merge and artifact-identity evidence recorded there |
 | Published release | PENDING; excluded from current work |
 | Downloaded-artifact verification | PENDING; task/project incomplete |
 
 Exact plan candidate `b7214ca0924dc8081bdaee13d93bf11d0341697f` received full distributed QA and distinct reconciliation PASS. The PR records exact review coverage, artifact identities, reproducible checks and the final merged revision.
 
-Next gate: affected review and distinct reconciliation of integration-status metadata, then protected combined architecture/plan integration with remote artifact-identity verification. STOP after planning integration. A later implementation assignment MAY route I01 only after exact plan gate PASS; no automatic product execution or release follows this handoff.
+Next gate: future product work requires a subsequent assignment and exact implementation-plan gate PASS; product acceptance, release, and downloaded-artifact evidence remain PENDING.

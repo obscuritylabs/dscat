@@ -30,8 +30,8 @@ The fresh [implementation-planning task](implementation-plan.md) now owns curren
 | Implemented | Architecture and planning documents only; product implementation excluded |
 | Tested | Architecture research/document checks PASS at source; new plan candidate checks in planning handoff; no product tests |
 | Locally verified | Architecture source review/reconciliation PASS; plan candidate fresh QA/reconciliation PASS at `b7214ca0924dc8081bdaee13d93bf11d0341697f` |
-| Remote-main integration | [Combined architecture/plan PR #23](https://github.com/obscuritylabs/dscat/pull/23) owns integration outcome/evidence; current merge disposition MUST be read there |
+| Remote-main integration | PASS; combined architecture/plan PR #23 is integrated into remote main, with merge and artifact-identity evidence recorded there |
 | Published release | PENDING; excluded from current bounded work |
 | Released-artifact verification | PENDING; task/project incomplete |
 
-Next gate: affected review and distinct reconciliation of integration-status metadata, followed by protected combined document integration and remote artifact-identity verification recorded in PR #23, then STOP. Future product work requires a subsequent assignment and exact plan gate PASS. All seven completion stages remain mandatory.
+Next gate: future product work requires a subsequent assignment and exact plan gate PASS. Product implementation, platform/manual acceptance, release publication and downloaded-artifact verification remain pending. All seven completion stages remain mandatory.
