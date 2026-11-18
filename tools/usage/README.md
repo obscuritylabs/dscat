@@ -12,10 +12,10 @@ below explain the supported tooling; use disposable synthetic sources/remotes
 until that transition. The synthetic walkthrough needs no histories, credentials,
 tracker connection, or network access.
 
-Install the authenticated release assets from the private repository:
+Replace `OWNER/REPOSITORY` with the authorized release repository before downloading the authenticated release assets:
 
 ```sh
-gh release download usage-v0.1.0 --repo obscuritylabs/dscat --dir usage-release
+gh release download usage-v0.1.0 --repo OWNER/REPOSITORY --dir usage-release
 cd usage-release
 sha256sum -c SHA256SUMS
 uv tool install --python 3.14 ./dscat_usage-0.1.0-py3-none-any.whl
