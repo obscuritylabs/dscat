@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "purpose": "Instructions only; not an attestation or passing review. Supply actual fresh execution provenance.",
+  "canonical_json": "sorted keys, compact separators, UTF-8, no trailing newline",
+  "review": {
+    "schema": "integer 1",
+    "task": "opaque task label",
+    "generator_invocation": "candidate generator invocation",
+    "reviewer_invocation": "actual distinct fresh reviewer invocation",
+    "candidate_digest": "SHA256(canonical candidate.json)",
+    "tree_digest": "candidate.tree_digest",
+    "input_digest": "candidate.input_digest",
+    "metadata_digest": "candidate.metadata_digest",
+    "parent": "candidate.parent, including null",
+    "timestamp": "aware ISO review timestamp",
+    "disposition": "actual PASS or FAIL",
+    "scope": "complete-candidate",
+    "synthetic": "false for real evidence"
+  },
+  "execution": {
+    "schema": "integer 1",
+    "synthetic": "false for real evidence",
+    "review": "exact review object above",
+    "dispatch": {
+      "event": "fresh-dispatch",
+      "tool": "collaboration.spawn_agent",
+      "coordinator_invocation": "actual distinct coordinator invocation",
+      "task": "review.task",
+      "generator_invocation": "review.generator_invocation",
+      "reviewer_invocation": "review.reviewer_invocation",
+      "fork_turns": "none",
+      "candidate_digest": "review.candidate_digest",
+      "timestamp": "actual dispatch timestamp, at or after candidate.created_at",
+      "record_digest": "SHA256 of retained actual dispatch record"
+    },
+    "return": {
+      "event": "fresh-return",
+      "tool": "collaboration.final_answer",
+      "task": "review.task",
+      "reviewer_invocation": "review.reviewer_invocation",
+      "candidate_digest": "review.candidate_digest",
+      "disposition": "PASS after actual complete review",
+      "scope": "complete-candidate",
+      "timestamp": "actual return timestamp at or after review timestamp",
+      "record_digest": "SHA256 of retained actual return record, distinct from dispatch"
+    }
+  },
+  "attestation": "exact review object plus execution_evidence_digest = SHA256(canonical execution envelope)",
+  "limitations": "Validator checks bindings, not semantic independence; coordinator retains original dispatch and return records privately."
+}
