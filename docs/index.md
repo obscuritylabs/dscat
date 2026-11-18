@@ -4,6 +4,7 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then use the [phase routing ma
 
 | Read when | Document and authoritative content |
 | --- | --- |
+| Refreshing private local usage metrics | [Local calculator](../tools/local-usage/README.md): self-service token, estimated-cost, and time snapshots |
 | Maintaining shared usage tools | [Specification](usage-tooling.md): approved scope and architecture; [task](tasks/usage-tooling.md): current handoff and seven-stage ledger |
 | Coordinating work | [Workflow](workflow.md): phase routes, handoffs, transitions and escalation |
 | Checking authorization | [Planning gates](planning-gates.md): exact human approval or agent authorization scope/revisions and pending deliverables |
