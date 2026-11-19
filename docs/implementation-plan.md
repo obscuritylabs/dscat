@@ -76,7 +76,7 @@ Each row supplements the stable acceptance/design references in [RTM](rtm.md). T
 | NFR-014 | I01/I10/I11 | LICENSE, project license metadata, help/build notices | B12/B13 |
 | NFR-015 | every integration | repository-policy API check, protected PR/main identity | B13 |
 | NFR-016 | I01/I10 | `scripts/verify.py`, one small supplementary Linux CI job | B12 |
-| NFR-017 | I10/I11 | wheel/sdist/checksums/private download guide/release evidence | B12/B13, fresh downloaded verification |
+| NFR-017 | I10/I11 | wheel/sdist/checksums/download guide/release evidence | B12/B13, fresh downloaded verification |
 | NFR-018 | I02/I06 | canonical `schema_version`, storage port, refusal hint | B05/B08 |
 | NFR-019 | I07 | inline finite context, graph fixtures, denying registry | B09 |
 | NFR-020 | I02–I05/I09–I11 | role-contact guidance, minimized diagnostics, public DTOs | B03/B04/B10/B11 |
