@@ -8,7 +8,6 @@
 - Requirements, architecture, and implementation-plan readiness MUST precede dependent product implementation only where a material decision requires new or revised readiness under the [approval policy](docs/governance.md#required-sdlc-and-approval-gates). Agents MUST reuse unchanged applicable approvals and design decisions; a changed file hash alone MUST NOT reopen them.
 - Agents MUST own applicable implementation, checks, commits, PR review, and rebase integration. They MUST NOT directly push, force-push, delete, or bypass protection on main, change repository visibility, or alter remote protection without explicit authorization. Integration MUST follow [repository policy](docs/repository-policy.md).
 - Task completion MUST follow the [definition of done](docs/governance.md#definition-of-done) for its class and requested delivery. Release preparation, publication, and downloaded-artifact verification MUST be tracked separately unless release delivery is explicitly included in the task. Standing release delegation MUST remain subject to required release checks.
-- Routine private local usage refreshes MUST remain self-service. Shared tracker contributions and publication MUST follow [usage tracking checkpoints](docs/workflow.md#usage-tracking-checkpoints); unrelated tasks MUST NOT acquire tracker work.
 
 ## Privacy and authority
 

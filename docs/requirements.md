@@ -127,7 +127,7 @@ Local verification and testing MUST be the primary quality gate; GitHub Actions 
 
 ### NFR-017
 
-Approved software MUST be distributed through GitHub Releases in installable form. Under the standing human delegation recorded in [DEC-045](decisions.md#dec-045) (2026-11-17), agents MUST publish project-scope software releases after all applicable scope, verification, security, licensing, and artifact-identity checks; no further human authorization is required for that publication. This delegation does not authorize actual tracker contributions/publication or publication of changes to the external wiki protocol, which remain governed by their existing authority. Post-publication verification MUST demonstrate authenticated asset download, integrity/version checks, clean installation, CLI invocation, applicable acceptance scenarios, and offline runtime behavior using the released artifacts rather than the checkout.
+Approved software MUST be distributed through GitHub Releases in installable form. Under the standing human delegation recorded in [DEC-045](decisions.md#dec-045) (2026-11-17), agents MUST publish project-scope software releases after all applicable scope, verification, security, licensing, and artifact-identity checks; no further human authorization is required for that publication. Post-publication verification MUST demonstrate authenticated asset download, integrity/version checks, clean installation, CLI invocation, applicable acceptance scenarios, and offline runtime behavior using the released artifacts rather than the checkout.
 
 ### NFR-018
 

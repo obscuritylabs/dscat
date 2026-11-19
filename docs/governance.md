@@ -20,7 +20,6 @@ The human-authorized workflow revision dated 2026-11-19 establishes proportional
 | Task class | Required work | Delivery boundary |
 | --- | --- | --- |
 | Read-only advice/review | Inspect relevant evidence and answer; identify limitations | Answer supplied; no repository writes or delivery gates |
-| Private local refresh | Run the authorized local calculator and inspect its private result | Requested private output verified; no shared publication |
 | Maintenance | Bounded mechanical/docs/tooling changes or low-risk fixes within approved behavior; focused checks and risk-based review | Requested local artifact or protected integration under the definition of done |
 | Approved product implementation | Implement a bounded increment using applicable existing requirements/design; behavior, security, compatibility and integration checks | Verified increment and requested integration; release tracked separately |
 | Material decision | New/changed requirements, acceptance, compatibility promise, security boundary, or architecture; affected readiness before dependent implementation | Concrete decision or authorized implementation scope, as requested |
@@ -65,7 +64,7 @@ This section owns approval requests; [planning gates](planning-gates.md) records
 
 ## Definition of done
 
-Completion MUST match the task class and requested delivery, rather than require every task to ship a release. The scope contract MUST identify a local artifact, remote-main integration, or a release as its delivery boundary. Repository changes SHOULD default to protected remote-main integration unless the user requests local-only work; read-only advice and private refreshes follow their class boundaries above.
+Completion MUST match the task class and requested delivery, rather than require every task to ship a release. The scope contract MUST identify a local artifact, remote-main integration, or a release as its delivery boundary. Repository changes SHOULD default to protected remote-main integration unless the user requests local-only work; read-only advice follows its class boundary above.
 
 For repository changes, agents MUST implement the authorized scope, pass applicable focused checks and acceptance verification, resolve blocking findings, update affected documentation/traceability, and inspect the diff for privacy, secrets, scope, and unrelated changes. Integrated delivery MUST additionally use a protected PR/rebase merge and verify the result on remote main. Local-only delivery MUST accurately identify its uncommitted/committed state and MUST NOT imply integration. One reviewer MAY combine independent verification and review where applicable.
 
