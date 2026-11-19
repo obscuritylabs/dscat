@@ -79,6 +79,7 @@ def test_json_is_one_safe_result_without_help_or_canonical_values(
         ("RESOURCE_GUARD_UNAVAILABLE", 3),
         ("INPUT_LIMIT", 3),
         ("INVALID_CONFIGURATION", 2),
+        ("UNSUPPORTED_VERSION", 2),
         ("INTERNAL_FAILURE", 4),
         ("INTERRUPTED", 130),
     ],
@@ -227,3 +228,15 @@ def test_plain_expected_type_hint_is_closed_and_usable(
                 "expected": "synthetic-sensitive-hint",
             }
         )
+
+
+def test_unsupported_version_keeps_invocation_precedence() -> None:
+    """Unsupported version is2; operational and internal failures still dominate it."""
+    diagnostics = [fail(code="UNSUPPORTED_VERSION").diagnostic]
+    assert cli.validation_exit(diagnostics) == INVOCATION_ERROR
+    diagnostics.append(fail(code="IO_FAILURE").diagnostic)
+    operational = 3
+    assert cli.validation_exit(diagnostics) == operational
+    diagnostics.append(fail(code="INTERNAL_FAILURE").diagnostic)
+    internal = 4
+    assert cli.validation_exit(list(reversed(diagnostics))) == internal

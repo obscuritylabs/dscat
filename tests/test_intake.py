@@ -429,6 +429,16 @@ def test_real_guarded_linux_cli_validation(tmp_path: Path) -> None:
     assert output.assessment is not None
     assert output.assessment.validity == "valid"
     assert all(target.state == "unexamined" for target in output.assessment.targets)
+    future = modify_part(
+        source.read_bytes(), "xl/worksheets/sheet1.xml", b">1.0<", b">9.0<"
+    )
+    source.write_bytes(future)
+    unsupported = CliRunner().invoke(app, ["validate", str(source), "--format", "json"])
+    invocation_error = 2
+    assert unsupported.exit_code == invocation_error, unsupported.stdout
+    report = CommandResult.model_validate_json(unsupported.stdout)
+    assert report.exit_code == invocation_error
+    assert report.diagnostics[0].code == "UNSUPPORTED_VERSION"
 
 
 @pytest.mark.parametrize(
