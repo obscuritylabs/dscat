@@ -2,8 +2,66 @@
 name = "dscat"
 version = "0.1.0"
 description = "Dataset Catalog: workbook intake and standards-based catalog exports."
+requires-python = ">=3.15,<3.16"
 license = "LicenseRef-Proprietary"
 license-files = ["LICENSE"]
+dependencies = ["typer==0.27.3", "pydantic==2.14.2"]
+
+[project.scripts]
+dscat = "dscat.cli:app"
+
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+  "ruff==0.17.3",
+  "ty==0.0.95",
+  "pytest==9.2.0",
+  "coverage==7.17.0",
+  "build==1.6.1",
+  "packaging==26.3",
+  "hatchling==1.33.0",
+]
 
 [tool.uv]
+required-version = "==0.13.6"
 exclude-newer = "14 days"
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
+[tool.ruff]
+target-version = "py315"
+src = ["src"]
+include = ["src/**/*.py", "tests/**/*.py", "scripts/**/*.py", "pyproject.toml"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+# D211/D212 select one of each mutually exclusive docstring style pair.
+# COM812 conflicts with the formatter's trailing comma placement.
+ignore = ["D203", "D213", "COM812"]
+
+[tool.ruff.lint.per-file-ignores]
+# Pytest assertions are executable acceptance checks, never security controls.
+"tests/**/*.py" = ["S101"]
+
+[tool.ty.rules]
+all = "error"
+
+[tool.ty.src]
+include = ["src", "tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["dscat"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
