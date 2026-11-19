@@ -16,8 +16,22 @@ if TYPE_CHECKING:
     from dscat.models.diagnostics import Code, Limit
 
 CHUNK_BYTES = 65536
-MAX_REQUEST_BYTES = 65536
+MAX_REQUEST_BYTES = 32 * 1024**2
 MAX_REPLY_BYTES = 32 * 1024**2
+MESSAGE_KEYS = {
+    "INVALID_CONFIGURATION": "check_configuration",
+    "INVALID_INVOCATION": "check_configuration",
+    "INPUT_LIMIT": "review_scope",
+    "UNEXAMINED_INPUT": "review_scope",
+    "DIAGNOSTICS_TRUNCATED": "review_scope",
+    "UNREADABLE_INPUT": "retry_operation",
+    "WORKER_FAILURE": "retry_operation",
+    "RESOURCE_GUARD_UNAVAILABLE": "retry_operation",
+    "IO_FAILURE": "retry_operation",
+    "PUBLICATION_FAILURE": "retry_operation",
+    "INTERNAL_FAILURE": "retry_operation",
+    "INTERRUPTED": "retry_operation",
+}
 
 
 class Limits(StrictModel):
@@ -34,6 +48,8 @@ class Limits(StrictModel):
     cells: int = 200000
     text: int = 32767
     invocation_expanded: int = 256 * 1024**2
+    datasets: int = 100000
+    snapshot: int = 256 * 1024**2
     diagnostics: int = 10000
     workbook_time: float = 30.0
     invocation_time: float = 300.0
@@ -69,7 +85,7 @@ def fail(
     fields: dict[str, object] = {
         "code": code,
         "severity": "error",
-        "message_key": "correct_metadata",
+        "message_key": MESSAGE_KEYS.get(code, "correct_metadata"),
     }
     if source_token is not None:
         fields["source_token"] = source_token

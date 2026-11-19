@@ -133,7 +133,7 @@ class WorkbookMetadata(StrictModel):
 
 
 class DatasetRow(StrictModel):
-    """A located primary row, retaining incomplete core cells for validation."""
+    """A primary row; owner/steward/maintainer reference located role entry IDs."""
 
     location: SourceLocation
     id: Identifier | None = None
@@ -148,9 +148,9 @@ class DatasetRow(StrictModel):
     metadata_reviewed: CalendarDate | None = None
     dataset_modified: CalendarDate | None = None
     update_frequency: Text | None = None
-    owner: Text | None = None
-    steward: Text | None = None
-    maintainer: Text | None = None
+    owner: Identifier | None = None
+    steward: Identifier | None = None
+    maintainer: Identifier | None = None
 
 
 class FieldRow(StrictModel):
@@ -218,6 +218,7 @@ class IntakeBatch(StrictModel):
     fields: list[FieldRow]
     details: list[DetailRow]
     diagnostics: list[Diagnostic] = Field(default_factory=list)
+    has_errors: bool = False
 
     @model_validator(mode="after")
     def unique_detail_properties(self) -> Self:

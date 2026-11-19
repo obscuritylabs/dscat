@@ -166,7 +166,8 @@ def populate_instructions(workbook: Workbook) -> None:
             "Repeated facts",
             (
                 "Use different entry IDs for repeated consumer values, conflicts, "
-                "assertions, roles, services and distributions."
+                "assertions, roles, services and distributions. Datasets owner/steward/"
+                "maintainer cells reference matching role entry IDs for this dataset."
             ),
         ),
         (
@@ -282,6 +283,26 @@ def populate_instructions(workbook: Workbook) -> None:
         add_list(workbook, column, name, values)
 
 
+def add_role_controls(sheet: Worksheet) -> None:
+    """Explain the optional references without inventing party identities."""
+    for column, role in zip(
+        "MNO", ("accountable_owner", "steward", "maintainer"), strict=True
+    ):
+        add_validation(
+            sheet,
+            column,
+            Control(
+                kind="textLength",
+                formula="0",
+                maximum="128",
+                prompt=(
+                    f"Optional Details_Quality role entry_id for this dataset; "
+                    f"role must be {role}."
+                ),
+            ),
+        )
+
+
 def populate_inputs(workbook: Workbook) -> None:
     """Create ordinary ranges with explicit text cells and reserved feedback."""
     for name, headers in SHEET_HEADERS.items():
@@ -336,6 +357,7 @@ def populate_inputs(workbook: Workbook) -> None:
             prompt="Optional: choose contact or owner; blank does not infer a role.",
         ),
     )
+    add_role_controls(datasets)
     for column in "IJK":
         add_validation(
             datasets,

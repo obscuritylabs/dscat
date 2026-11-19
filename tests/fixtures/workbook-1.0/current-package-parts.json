@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "kind": "dataset-intake",
+  "template_sha256": "61bd85a8d59a3632138c86fbc2cab8df679608eb5765cdf5fbe0943e9e3a3f58",
+  "parts": [
+    "[Content_Types].xml",
+    "_rels/.rels",
+    "docProps/app.xml",
+    "docProps/core.xml",
+    "xl/_rels/workbook.xml.rels",
+    "xl/styles.xml",
+    "xl/theme/theme1.xml",
+    "xl/workbook.xml",
+    "xl/worksheets/sheet1.xml",
+    "xl/worksheets/sheet2.xml",
+    "xl/worksheets/sheet3.xml",
+    "xl/worksheets/sheet4.xml"
+  ],
+  "expanded_bytes": 4293757,
+  "compressed_bytes": 411633,
+  "note": "Current generator includes explicit optional role-reference guidance. Oldest schema1.0 fixture remains template.xlsx; no selected desktop/manual acceptance is claimed."
+}

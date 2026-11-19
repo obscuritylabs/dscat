@@ -167,11 +167,16 @@ def test_template_compatibility_fixture_and_determinism(
 ) -> None:
     """The initial fixture protects output and future intake compatibility."""
     fixture = Path(__file__).parent / "fixtures" / "workbook-1.0"
-    content = (fixture / "template.xlsx").read_bytes()
-    assert content == artifact.content == create_template().content
-    matrix = json.loads((fixture / "package-parts.json").read_text())
-    assert matrix["template_sha256"] == hashlib.sha256(content).hexdigest()
-    assert set(matrix["parts"]) == EXPECTED_PARTS
+    current = (fixture / "current.xlsx").read_bytes()
+    assert current == artifact.content == create_template().content
+    for name, inventory in (
+        ("template.xlsx", "package-parts.json"),
+        ("current.xlsx", "current-package-parts.json"),
+    ):
+        content = (fixture / name).read_bytes()
+        matrix = json.loads((fixture / inventory).read_text())
+        assert matrix["template_sha256"] == hashlib.sha256(content).hexdigest()
+        assert set(matrix["parts"]) == EXPECTED_PARTS
 
 
 @pytest.mark.parametrize(

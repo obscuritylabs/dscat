@@ -100,7 +100,7 @@ def test_archive_inspection_success_and_known_failures(
     good = workers.inspect_archive(request)
     assert not good.has_errors
     assert good.outcomes[0].archive_state == "safe"
-    assert "private-synthetic-name" not in good.model_dump_json()
+    assert "private-synthetic-name" not in good.model_dump_json(exclude_none=True)
     path.write_bytes(b"invalid zip synthetic-sensitive-sentinel")
     request = workers.ArchiveRequest(
         schema_version="1.0",
@@ -111,7 +111,7 @@ def test_archive_inspection_success_and_known_failures(
     bad = workers.inspect_archive(request)
     assert bad.outcomes[0].archive_state == "rejected"
     assert bad.outcomes[0].diagnostics[0].source_token == 1
-    assert "sensitive-sentinel" not in bad.model_dump_json()
+    assert "sensitive-sentinel" not in bad.model_dump_json(exclude_none=True)
     for error in (OSError, MemoryError):
 
         def refused(
@@ -347,7 +347,7 @@ def test_real_pipe_reply_and_malformed_child_output(
             has_errors=False,
             selection_complete=True,
         )
-        .model_dump_json()
+        .model_dump_json(exclude_none=True)
         .encode()
     )
     launch_script(
@@ -440,7 +440,7 @@ def test_native_macos_refuses_unavailable_guard(tmp_path: Path) -> None:
     )
     assert reply.has_errors
     assert reply.diagnostics[0].code == "RESOURCE_GUARD_UNAVAILABLE"
-    assert "sensitive-filename" not in reply.model_dump_json()
+    assert "sensitive-filename" not in reply.model_dump_json(exclude_none=True)
 
 
 @pytest.mark.parametrize("role", ["coordinator", "archive"])
@@ -502,7 +502,7 @@ def test_entry_fixed_failure_categories(
     workers.main()
     reply = workers.WorkerReply.model_validate_json(output.getvalue())
     assert reply.diagnostics[0].code == code
-    assert "sensitive" not in reply.model_dump_json()
+    assert "sensitive" not in reply.model_dump_json(exclude_none=True)
 
 
 def test_entry_rejects_invalid_request_and_signal(
@@ -589,7 +589,7 @@ def test_reply_failure_states(monkeypatch: pytest.MonkeyPatch, flag: str) -> Non
     process = workers.launch_process(coordinator=False)
     process.wait(timeout=5)
     reader = workers.PipeReader(process, coordinator=False, complete=True)
-    reader.content.extend(safe_reply().model_dump_json().encode())
+    reader.content.extend(safe_reply().model_dump_json(exclude_none=True).encode())
     if flag in {"memory_failure", "failed"}:
         setattr(reader, flag, True)
     elif flag == "incomplete":

@@ -27,6 +27,7 @@ Code = Literal[
     "INPUT_LIMIT",
     "UNREADABLE_INPUT",
     "WORKER_FAILURE",
+    "IGNORED_WORKSHEET",
     "UNSAFE_INPUT",
     "INVALID_WORKBOOK",
     "UNSUPPORTED_WORKBOOK_PART",
@@ -42,6 +43,7 @@ Code = Literal[
     "DIAGNOSTICS_TRUNCATED",
     "UNEXAMINED_INPUT",
     "INCOMPARABLE_CAPACITY",
+    "RECORDS_CONFLICT",
     "target_contact_missing",
     "target_contract_identity_missing",
     "target_contract_version_missing",
@@ -123,6 +125,7 @@ class RuleResult(StrictModel):
 
     rule_id: Identifier
     state: CheckState
+    severity: Literal["info", "warning", "error"] = "warning"
 
 
 class ValidationAssessment(StrictModel):

@@ -17,6 +17,8 @@ class XmlGuard:
 
     budget: Budget
     on_start: Callable[[str, dict[str, str], int], None] | None = None
+    on_end: Callable[[str, int], None] | None = None
+    on_text: Callable[[str], None] | None = None
     depth: int = 0
     text_run: int = 0
     string_depth: int = 0
@@ -53,8 +55,10 @@ class XmlGuard:
             self.string_depth = self.depth
             self.string_text = 0
 
-    def end(self, _name: str) -> None:
+    def end(self, name: str) -> None:
         """End one element without retaining content."""
+        if self.on_end is not None:
+            self.on_end(name, self.depth)
         if self.string_depth == self.depth:
             self.string_depth = 0
         self.depth -= 1
@@ -69,6 +73,8 @@ class XmlGuard:
             self.string_text += len(value)
             self.budget.max_text = max(self.budget.max_text, self.string_text)
             self.budget.check("text", self.string_text, self.budget.limits.text)
+        if self.on_text is not None:
+            self.on_text(value)
 
 
 def forbidden(*_args: object) -> int:
@@ -80,10 +86,13 @@ def validate_xml(
     raw: bytes,
     budget: Budget,
     on_start: Callable[[str, dict[str, str], int], None] | None = None,
+    *,
+    on_end: Callable[[str, int], None] | None = None,
+    on_text: Callable[[str], None] | None = None,
 ) -> None:
     """Count actual XML structure and text before semantic interpretation."""
     budget.check("xml", len(raw), budget.limits.xml)
-    guard = XmlGuard(budget, on_start)
+    guard = XmlGuard(budget, on_start, on_end, on_text)
     parser = expat.ParserCreate(namespace_separator="}")
     parser.StartElementHandler = guard.start
     parser.EndElementHandler = guard.end

@@ -33,9 +33,14 @@ from dscat.intake.limits import (
     IntakeError,
     fail,
 )
+from dscat.intake.normalize import LocatedRecord, normalize_batch
 from dscat.models.base import StrictModel
-from dscat.models.diagnostics import Diagnostic
+from dscat.models.catalog import Catalog
+from dscat.models.configuration import AssessmentConfiguration
+from dscat.models.diagnostics import Diagnostic, ValidationAssessment
 from dscat.platform import install_guard
+from dscat.validation import validate_catalog
+from dscat.workbook.parse import parse_workbook
 
 if TYPE_CHECKING:
     from types import FrameType
@@ -47,6 +52,7 @@ class CoordinatorRequest(StrictModel):
     schema_version: Literal["1.0"]
     role: Literal["coordinator"]
     discovery: DiscoveryRequest
+    assessment: AssessmentConfiguration = Field(default_factory=AssessmentConfiguration)
 
 
 class ArchiveRequest(StrictModel):
@@ -69,6 +75,7 @@ class ArchiveOutcome(StrictModel):
     source_token: Annotated[int, Field(ge=1)]
     archive_state: Literal["safe", "rejected", "unexamined"]
     statistics: ArchiveStatistics
+    records: list[LocatedRecord] = Field(default_factory=list, max_length=100000)
     diagnostics: list[Diagnostic] = Field(
         default_factory=list, max_length=DEFAULT_LIMITS.diagnostics
     )
@@ -82,7 +89,7 @@ def outcome_failed(outcome: ArchiveOutcome) -> bool:
 
 
 class WorkerReply(StrictModel):
-    """Fixed-code results without private source associations or content."""
+    """Private typed facts and fixed diagnostics; never render this IPC publicly."""
 
     schema_version: Literal["1.0"]
     role: Literal["coordinator", "archive", "unassigned"]
@@ -91,6 +98,8 @@ class WorkerReply(StrictModel):
     has_errors: bool
     selection_complete: bool
     unexamined_sources: Annotated[int, Field(ge=0)] = 0
+    catalog: Catalog | None = None
+    assessment: ValidationAssessment | None = None
 
     @model_validator(mode="after")
     def truthful_status(self) -> Self:
@@ -152,8 +161,18 @@ def inspect_archive(request: ArchiveRequest) -> WorkerReply:
     budget = Budget(remaining_expanded=request.remaining_expanded)
     diagnostics: list[Diagnostic] = []
     state = "safe"
+    records: list[LocatedRecord] = []
+    semantic_errors = False
     try:
-        read_archive(read_source(request.source, budget), budget)
+        archive = read_archive(read_source(request.source, budget), budget)
+        semantic_budget = Budget()
+        semantic_budget.started = budget.started
+        batch = normalize_batch(
+            parse_workbook(archive, request.source.source_token, semantic_budget)
+        )
+        records = batch.records
+        diagnostics.extend(batch.diagnostics)
+        semantic_errors = batch.has_errors
     except IntakeError as error:
         diagnostics.append(
             error.diagnostic.model_copy(
@@ -182,6 +201,7 @@ def inspect_archive(request: ArchiveRequest) -> WorkerReply:
             "source_token": request.source.source_token,
             "archive_state": state,
             "statistics": budget.statistics(),
+            "records": records,
             "diagnostics": diagnostics,
         }
     )
@@ -189,7 +209,8 @@ def inspect_archive(request: ArchiveRequest) -> WorkerReply:
         schema_version="1.0",
         role="archive",
         outcomes=[outcome],
-        has_errors=bool(diagnostics),
+        has_errors=semantic_errors
+        or any(item.severity == "error" for item in diagnostics),
         selection_complete=True,
         unexamined_sources=1 if state == "unexamined" else 0,
     )
@@ -457,6 +478,49 @@ def expansion_charge(outcome: ArchiveOutcome, remaining: int) -> int:
     )
 
 
+@dataclass
+class CandidateRecords:
+    """Count canonical candidates before retaining them in the guarded coordinator."""
+
+    records: list[LocatedRecord] = field(default_factory=list)
+    serialized_bytes: int = 0
+
+    def retain(
+        self, records: list[LocatedRecord], collector: DiagnosticCollector
+    ) -> bool:
+        """Stop before dataset or deterministic byte limits are exceeded."""
+        for item in records:
+            payload = (
+                json.dumps(
+                    item.record.model_dump(mode="json", exclude_none=True),
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    indent=2,
+                    allow_nan=False,
+                ).encode("utf-8")
+                + b"\n"
+            )
+            limit = (
+                "datasets"
+                if len(self.records) >= DEFAULT_LIMITS.datasets
+                else "snapshot"
+                if self.serialized_bytes + len(payload) > DEFAULT_LIMITS.snapshot
+                else None
+            )
+            if limit is not None:
+                collector.add(
+                    fail(
+                        code="INPUT_LIMIT",
+                        limit=limit,
+                        source_token=item.location.source_token,
+                    ).diagnostic
+                )
+                return False
+            self.serialized_bytes += len(payload)
+            self.records.append(item)
+        return True
+
+
 def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
     """Continue independent sources serially within aggregate bytes/time budgets."""
     started = time.monotonic()
@@ -466,6 +530,7 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
         collector.add(diagnostic)
     outcomes: list[ArchiveOutcome] = []
     child_errors = False
+    candidates = CandidateRecords()
     remaining = DEFAULT_LIMITS.invocation_expanded
     skipped = (
         selection.selected_count - len(selection.sources) - selection.ignored_aliases
@@ -496,7 +561,13 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
             remaining -= expansion_charge(outcome, remaining)
             for diagnostic in (*reply.diagnostics, *outcome.diagnostics):
                 collector.add(diagnostic)
-            outcomes.append(outcome.model_copy(update={"diagnostics": []}))
+            accepted = candidates.retain(outcome.records, collector)
+            outcomes.append(
+                outcome.model_copy(update={"diagnostics": [], "records": []})
+            )
+            if not accepted:
+                skipped += len(selection.sources) - index
+                break
             if outcome.archive_state == "unexamined":
                 skipped += 1
         except IntakeError as error:
@@ -518,12 +589,24 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
                 fail(code="IO_FAILURE", source_token=source.source_token).diagnostic
             )
             skipped += 1
+    validation = validate_catalog(
+        candidates.records,
+        request.assessment,
+        collector.items,
+        invalid=collector.has_errors
+        or child_errors
+        or skipped > 0
+        or not selection.selection_complete,
+    )
     return WorkerReply(
         schema_version="1.0",
         role="coordinator",
         outcomes=outcomes,
-        diagnostics=collector.items,
-        has_errors=collector.has_errors
+        diagnostics=validation.diagnostics,
+        **({"catalog": validation.catalog} if validation.catalog is not None else {}),
+        assessment=validation.assessment,
+        has_errors=validation.assessment.validity != "valid"
+        or collector.has_errors
         or child_errors
         or any(outcome_failed(outcome) for outcome in outcomes),
         selection_complete=selection.selection_complete,
