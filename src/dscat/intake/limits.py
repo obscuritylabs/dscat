@@ -184,7 +184,11 @@ def diagnostic_exit(diagnostic: Diagnostic) -> ExitCode:
         "PUBLICATION_FAILURE",
     }:
         return 3
-    if diagnostic.code in {"INVALID_CONFIGURATION", "INVALID_INVOCATION"}:
+    if diagnostic.code in {
+        "INVALID_CONFIGURATION",
+        "INVALID_INVOCATION",
+        "UNSUPPORTED_VERSION",
+    }:
         return 2
     return 1
 
