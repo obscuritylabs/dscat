@@ -455,6 +455,7 @@ class ContentTypeReader:
             key = attributes["PartName"]
             if (
                 not key.startswith("/")
+                or key == "/[Content_Types].xml"
                 or key[1:] not in self.names
                 or key[1:] in self.overrides
             ):
