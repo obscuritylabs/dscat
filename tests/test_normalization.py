@@ -97,6 +97,12 @@ def test_valid_references(value: str) -> None:
         "https://example.org\\bad",
         "https://example.org/%zz",
         "https://[invalid]/",
+        "https://host<>/",
+        "https://host|x/",
+        "https://example.org/{value}",
+        "https://example.org/array[0]",
+        "https://example.org/?q=[]",
+        "https://example.org/#part#extra",
     ],
 )
 def test_invalid_references(value: str) -> None:
@@ -126,7 +132,7 @@ def test_https_and_namespace_constraints() -> None:
         "https://example.org/?a=b#",
         "https://example.org/fragment#part#",
     ):
-        with pytest.raises(ValueError, match=r"HTTPS|Namespace"):
+        with pytest.raises(ValueError, match=r"HTTPS|Namespace|Reference"):
             normalize_namespace(value)
 
 

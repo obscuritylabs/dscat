@@ -138,6 +138,8 @@ def test_invalid_config(raw: bytes) -> None:
             },
         ),
         (IdentityConfiguration, {"dataset_namespace": "https://u:p@example.org/"}),
+        (IdentityConfiguration, {"dataset_namespace": "https://host<>/"}),
+        (IdentityConfiguration, {"dataset_namespace": "https://host|x/"}),
         (IdentityConfiguration, {"dataset_namespace": "https://example.org/?query#"}),
         (IdentityConfiguration, {"dataset_namespace": "https://example.org/no-suffix"}),
         (IdentityConfiguration, {"contract_identity_rule": "implicit"}),

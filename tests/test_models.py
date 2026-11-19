@@ -98,6 +98,7 @@ def test_full_canonical_round_trip() -> None:
         {"lineage": []},
         {"core_party": {"label": "Support", "owner": True}},
         {"core_party": {"label": "Support", "email": "not-an-email"}},
+        {"core_party": {"label": "Support", "uri": "https://host<>/"}},
         {"core_party": {"label": "Support", "role": "accountable_owner"}},
         {
             "fields": [
@@ -613,3 +614,35 @@ def test_completeness_locations_are_schema_defined() -> None:
     )
     with pytest.raises(ValidationError, match="Unknown canonical"):
         CompletenessResult(path="/synthetic/private-path", state="present")
+
+
+@pytest.mark.parametrize("exit_code", [True, False, 0.0, 1.0, "0", None])
+def test_result_exit_code_never_coerces(exit_code: object) -> None:
+    """Machine-readable exit codes are integer values, never equality-coerced values."""
+    data = {
+        "schema_version": "1.0",
+        "command": "validate",
+        "exit_code": exit_code,
+        "diagnostics": [],
+        "summary": {},
+    }
+    with pytest.raises(ValidationError):
+        CommandResult.model_validate(data)
+    with pytest.raises(ValidationError):
+        CommandResult.model_validate_json(json.dumps(data))
+
+
+@pytest.mark.parametrize("exit_code", [0, 1, 2, 3, 4, 130])
+def test_all_supported_integer_exit_codes(exit_code: int) -> None:
+    """The strict numeric check preserves every supported exit category."""
+    result = CommandResult.model_validate(
+        {
+            "schema_version": "1.0",
+            "command": "validate",
+            "exit_code": exit_code,
+            "diagnostics": [],
+            "summary": {},
+        }
+    )
+    assert type(result.exit_code) is int
+    assert result.exit_code == exit_code
