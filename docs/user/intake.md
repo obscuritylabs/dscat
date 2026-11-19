@@ -1,0 +1,36 @@
+# Completing a dataset workbook
+
+Template generation is implemented. CLI intake and export commands are still in development. The [schema 1.0 template](../../tests/fixtures/workbook-1.0/template.xlsx) is available for inspection; selected Windows Excel and screen-reader acceptance remains pending.
+
+## Start with the required core
+
+Read Instructions, then open Datasets. Enter one dataset per row using these four columns:
+
+| Column | Example | Meaning |
+| --- | --- | --- |
+| `id` | `asset-001` | A stable, case-sensitive identifier: 1–128 ASCII letters, digits, dots, underscores, colons or hyphens, starting with a letter or digit. |
+| `title` | `Synthetic measurements` | A short dataset title. |
+| `description` | `Synthetic measurement metadata.` | A description of the dataset. |
+| `core_party` | `Metadata support` | The supplied contact or owner label. Prefer a role contact rather than unnecessary personal information. |
+
+The optional `core_role` dropdown offers `contact` and `owner`. A blank role means unspecified contact/owner. A label alone establishes neither accountable ownership nor an export-ready contact association. Leave other absent values blank; do not substitute zero or `Unknown` into ordinary text fields.
+
+## Add optional details
+
+Fields describes an ordered field schema. Supply `dataset_id`, `object_name`, `field_name` and `type`; description, nullable and semantic reference are optional. Use `Yes` or `No` for a supplied nullable value. A blank nullable cell means absent.
+
+Details_Quality uses one scalar per row. Choose a section and property, repeat the dataset ID, and use a stable `entry_id` to group properties belonging to the same object. Single-value dataset properties use `dataset`; repeated roles, services, distributions, assertions, consumer values and records conflicts use distinct entry IDs. Repeating a property in one group is an error, even if its values agree. The visible lists on Instructions show the supported vocabulary.
+
+Capacity uses explicit size or ingestion kind, known/unknown state and measurement context. A known quantity needs decimal text, one of the supplied byte units, logical/physical basis and a measurement date. Ingestion also needs an explicitly offset start/end window. Unknown is distinct from a known zero; unknown quantities have no invented unit, date or window. Retention uses whole days, indefinite or unknown. It does not establish records disposition authority.
+
+Use `YYYY-MM-DD` date text. Input cells use text formatting to preserve identifiers and date spelling. References remain descriptive text; the template creates no hyperlinks or live connections.
+
+## Navigate and correct entries
+
+In Windows Excel, use Ctrl+PageDown or Ctrl+PageUp to change sheets, Tab or Shift+Tab to move between cells, and Alt+Down to open a dropdown. Instructions comes first; the input sheets have a frozen header and key columns, with no merged, hidden or protected input cells.
+
+Read the `feedback` column for missing fields, duplicate IDs, unsupported choices, date errors and invalid day counts. These messages work without color. `Ready for CLI validation` describes preliminary workbook feedback, not completed validation or export readiness. Keep feedback cells separate from input cells; they are never catalog facts.
+
+The first 1,000 input rows include controls and feedback. Excel copy/fill can extend them; the CLI will independently enforce overall resource limits. Spreadsheet controls provide prompts and preliminary checks. Full type/precision validation, cross-file conflicts, reference resolution, supplied authority and target readiness belong to CLI validation. Bypassing or removing a spreadsheet control does not authorize invalid metadata.
+
+Keep the schema/kind markers unchanged. Do not add formulas to input cells, macros, external relationships, embedded objects or unsupported semantic sections. Lineage is outside workbook schema 1.0. Use only synthetic materials for testing the template.

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "kind": "dataset-intake",
+  "template_sha256": "99ce7e8b7a1708ef20cf8b04e63b34ca7397b14706c5b81b2c5921e5acb4f1b8",
+  "parts": [
+    "[Content_Types].xml",
+    "_rels/.rels",
+    "docProps/app.xml",
+    "docProps/core.xml",
+    "xl/_rels/workbook.xml.rels",
+    "xl/styles.xml",
+    "xl/theme/theme1.xml",
+    "xl/workbook.xml",
+    "xl/worksheets/sheet1.xml",
+    "xl/worksheets/sheet2.xml",
+    "xl/worksheets/sheet3.xml",
+    "xl/worksheets/sheet4.xml"
+  ],
+  "expanded_bytes": 4292252,
+  "compressed_bytes": 411445,
+  "note": "Observed output from pinned openpyxl generator; no desktop/manual acceptance is claimed."
+}
