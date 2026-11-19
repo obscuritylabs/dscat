@@ -34,6 +34,10 @@ Human instruction, 2026-11-19: implement the proportional workflow remedies and 
 
 This revision supersedes generic universal full-review, fresh-phase, seven-stage, and recursive metadata-review instructions in earlier task records. Existing technical scope/acceptance and explicit release deliverables remain binding. A changed policy/status hash alone MUST NOT reopen unchanged product design readiness; exact prior evidence MUST remain attributed to its original content. Existing release failures MUST remain failures of their release tasks. Current policy MUST determine whether stages apply without requiring a new task-scoped exception for ordinary maintenance. Actual checks, reviewer disposition, and integration identity MUST be retained outside the reviewed candidate in the change PR.
 
+## Implementation execution
+
+Human instruction, 2026-11-19, authorizes project execution through completion, including implementation, protected integration and applicable release delivery. The integrated reconciliation at `0b5088e087afd150ad6c781ba6dbcda19ba89f8b` supplies the retained DEC-046/047 readiness. Execution MUST follow the [ordered increments](implementation-plan.md#ordered-small-increments) and later milestone gates. [RTM](rtm.md) owns implementation/test mappings; exact check and independent review evidence MUST remain in the relevant change PR. I01 toolchain/package work is in progress; dependent product increments and release evidence remain PENDING. This assignment MUST NOT waive manual/platform/security gates or authorize remote protection changes.
+
 ## Required gate deliverables
 
 The following table specifies gate completeness, not additional product features. Drafts MAY be prepared before disposition; dependent implementation MUST wait for requirements disposition, architecture risk assessment/disposition and agent implementation-plan readiness in that order under the approval policy. These evidence gates MUST NOT introduce additional human approval requests.
