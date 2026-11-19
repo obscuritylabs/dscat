@@ -791,3 +791,17 @@ def test_member_ceiling_precedes_closed_part_allocation() -> None:
     with pytest.raises(IntakeError) as caught:
         directory_bounds(oversized, Budget())
     assert caught.value.diagnostic.limit == "members"
+
+
+@pytest.mark.parametrize("mime", ["application/x-unknown-active", "application/xml"])
+def test_content_types_cannot_declare_its_own_type(
+    parts: dict[str, bytes], mime: str
+) -> None:
+    """The package's content-type control part cannot override its own type."""
+    part = "[Content_Types].xml"
+    declaration = (
+        '<Override PartName="/[Content_Types].xml" ContentType="' + mime + '"/>'
+    ).encode()
+    changed = parts[part].replace(b"</Types>", declaration + b"</Types>")
+    with pytest.raises(IntakeError, match="UNSUPPORTED_WORKBOOK_PART"):
+        read_archive(archive_bytes(parts | {part: changed}), Budget())
