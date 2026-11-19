@@ -4,13 +4,19 @@
 from typing import TYPE_CHECKING
 
 import pytest
+from pydantic import ValidationError
 from typer.testing import CliRunner
 
 from dscat import cli
 from dscat.intake.limits import ArchiveStatistics, fail
 from dscat.intake.worker import ArchiveOutcome, WorkerReply
 from dscat.models.catalog import Catalog, DatasetRecord, PartyReference
-from dscat.models.diagnostics import CommandResult, ValidationAssessment
+from dscat.models.diagnostics import (
+    CommandResult,
+    Diagnostic,
+    OperationSummary,
+    ValidationAssessment,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -164,3 +170,60 @@ def test_invalid_format_and_text_location_guidance(
     assert result.exit_code == 1
     assert "source 1 Datasets row 2 column 3" in result.stdout
     assert "Correct the metadata" in result.stdout
+
+
+def test_truncated_errors_keep_nonzero_status_without_growing_the_report() -> None:
+    """A retained warning cannot turn an explicit failed result into success."""
+    notice = Diagnostic(
+        code="DIAGNOSTICS_TRUNCATED",
+        severity="warning",
+        message_key="review_scope",
+        check_state="unperformed",
+    )
+    reply = WorkerReply(
+        schema_version="1.0",
+        role="coordinator",
+        diagnostics=[notice],
+        has_errors=True,
+        selection_complete=True,
+        assessment=ValidationAssessment(validity="invalid"),
+    )
+    result = cli.validation_result(reply)
+    assert result.exit_code == 1
+    assert len(result.diagnostics) == 1
+
+
+def test_plain_expected_type_hint_is_closed_and_usable(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Type guidance is authored text, never an exception message or submitted value."""
+    result = CommandResult(
+        schema_version="1.0",
+        command="validate",
+        diagnostics=[
+            Diagnostic(
+                code="INVALID_METADATA",
+                severity="error",
+                message_key="correct_metadata",
+                expected="date",
+                source_token=1,
+                sheet="Datasets",
+                row=2,
+            )
+        ],
+        summary=OperationSummary(),
+        exit_code=1,
+    )
+    cli.render_validation(result, "text")
+    output = capsys.readouterr().out
+    assert "YYYY-MM-DD" in output
+    assert "Intake validity:" not in output
+    with pytest.raises(ValidationError):
+        Diagnostic.model_validate(
+            {
+                "code": "INVALID_METADATA",
+                "severity": "error",
+                "message_key": "correct_metadata",
+                "expected": "synthetic-sensitive-hint",
+            }
+        )

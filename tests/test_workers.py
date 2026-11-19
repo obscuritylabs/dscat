@@ -13,10 +13,13 @@ import pytest
 from pydantic import ValidationError
 
 import dscat.intake.worker as workers
+from dscat.cli import validation_result
 from dscat.intake.discovery import DiscoveryRequest, SourceDescriptor, discover
 from dscat.intake.limits import ArchiveStatistics, Budget, IntakeError, Limits, fail
-from dscat.models.diagnostics import Diagnostic
+from dscat.models.catalog import Catalog
+from dscat.models.diagnostics import Diagnostic, ValidationAssessment
 
+OPERATIONAL_ERROR = 3
 FIXTURE = Path(__file__).parent / "fixtures" / "workbook-1.0" / "template.xlsx"
 
 
@@ -195,6 +198,8 @@ def test_archive_outcome_matching_and_known_guard_refusal() -> None:
         workers.WorkerReply(
             schema_version="1.0",
             role="coordinator",
+            catalog=Catalog(schema_version="1.0", datasets=[]),
+            assessment=ValidationAssessment(validity="valid"),
             has_errors=False,
             selection_complete=True,
         ),
@@ -255,7 +260,7 @@ def test_aggregate_expansion_exhaustion_and_spawn_io_failure(
     assert reply.has_errors
     assert reply.unexamined_sources == len([0, 1, 2])
 
-    assert reply.diagnostics[-1].limit == "expanded"
+    assert any(item.limit == "expanded" for item in reply.diagnostics)
 
     def unavailable(
         _request: workers.CoordinatorRequest | workers.ArchiveRequest, _timeout: float
@@ -265,7 +270,9 @@ def test_aggregate_expansion_exhaustion_and_spawn_io_failure(
 
     monkeypatch.setattr(workers, "invoke", unavailable)
     reply = workers.inspect_selection(request_at(tmp_path))
-    assert all(d.code == "IO_FAILURE" for d in reply.diagnostics)
+    assert all(
+        d.code == "IO_FAILURE" for d in reply.diagnostics if d.severity == "error"
+    )
     assert reply.unexamined_sources == len([0, 1, 2])
 
 
@@ -343,6 +350,8 @@ def test_real_pipe_reply_and_malformed_child_output(
         workers.WorkerReply(
             schema_version="1.0",
             role="coordinator",
+            catalog=Catalog(schema_version="1.0", datasets=[]),
+            assessment=ValidationAssessment(validity="valid"),
             outcomes=safe_reply().outcomes,
             has_errors=False,
             selection_complete=True,
@@ -960,4 +969,108 @@ def test_worker_reply_cannot_bypass_aggregate_diagnostic_cap() -> None:
             archive_state="rejected",
             statistics=ArchiveStatistics(),
             diagnostics=[diagnostic] * (maximum + 1),
+        )
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {},
+        {"assessment": ValidationAssessment(validity="valid")},
+        {
+            "catalog": Catalog(schema_version="1.0", datasets=[]),
+            "assessment": ValidationAssessment(validity="unexamined"),
+        },
+        {
+            "catalog": Catalog(schema_version="1.0", datasets=[]),
+            "assessment": ValidationAssessment(validity="invalid"),
+            "has_errors": True,
+        },
+    ],
+)
+def test_coordinator_cannot_claim_success_without_validated_facts(
+    change: dict[str, object],
+) -> None:
+    """Incomplete and invalid semantic outputs cannot pass as successful validation."""
+    with pytest.raises(ValidationError):
+        workers.WorkerReply.model_validate(
+            {
+                "schema_version": "1.0",
+                "role": "coordinator",
+                "has_errors": False,
+                "selection_complete": True,
+            }
+            | change
+        )
+
+
+def test_catalog_and_invalid_assessment_cannot_escape_their_protocol_role() -> None:
+    """Wrong-role facts and a false error flag fail structured output validation."""
+    base = safe_reply().model_dump(exclude_none=True)
+    with pytest.raises(ValidationError, match="valid coordinator assessment"):
+        workers.WorkerReply.model_validate(
+            base
+            | {
+                "catalog": Catalog(schema_version="1.0", datasets=[]),
+                "assessment": ValidationAssessment(validity="valid"),
+            }
+        )
+    with pytest.raises(ValidationError, match="Invalid intake"):
+        workers.WorkerReply.model_validate(
+            base | {"assessment": ValidationAssessment(validity="invalid")}
+        )
+
+
+def test_operational_exit_survives_truncation_across_source_results(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The shared cap preserves failure category as well as the error flag."""
+    for name in ("a.xlsx", "b.xlsx"):
+        (tmp_path / name).touch()
+    notice = Diagnostic(
+        code="IGNORED_WORKSHEET",
+        severity="warning",
+        message_key="review_scope",
+        check_state="unperformed",
+    )
+    selection = discover(DiscoveryRequest(input=tmp_path))
+    selection = selection.model_copy(update={"diagnostics": [notice] * 9999})
+    monkeypatch.setattr(workers, "discover", lambda _request: selection)
+
+    def execute(
+        request: workers.CoordinatorRequest | workers.ArchiveRequest, _timeout: float
+    ) -> workers.WorkerReply:
+        assert isinstance(request, workers.ArchiveRequest)
+        failed = request.source.source_token == 1
+        outcome = workers.ArchiveOutcome(
+            source_token=request.source.source_token,
+            archive_state="unexamined" if failed else "safe",
+            statistics=ArchiveStatistics(),
+            diagnostics=[fail(code="UNREADABLE_INPUT").diagnostic]
+            if failed
+            else [notice],
+        )
+        return workers.WorkerReply(
+            schema_version="1.0",
+            role="archive",
+            outcomes=[outcome],
+            has_errors=failed,
+            selection_complete=True,
+            unexamined_sources=1 if failed else 0,
+        )
+
+    monkeypatch.setattr(workers, "invoke", execute)
+    result = workers.inspect_selection(request_at(tmp_path))
+    assert result.has_errors
+    assert not any(item.severity == "error" for item in result.diagnostics)
+    assert result.diagnostics[-1].code == "DIAGNOSTICS_TRUNCATED"
+    assert result.failure_exit == OPERATIONAL_ERROR
+    assert validation_result(result).exit_code == OPERATIONAL_ERROR
+
+
+def test_failure_category_cannot_accompany_a_success_flag() -> None:
+    """The private typed result rejects a contradictory failure precedence flag."""
+    with pytest.raises(ValidationError, match="Failure status"):
+        workers.WorkerReply.model_validate(
+            safe_reply().model_dump(exclude_none=True) | {"failure_exit": 3}
         )

@@ -10,7 +10,7 @@ from pydantic import Field, ValidationError
 from dscat.intake.limits import Budget, DiagnosticCollector, fail
 from dscat.intake.xml import validate_xml
 from dscat.models.base import StrictModel
-from dscat.models.diagnostics import Diagnostic
+from dscat.models.diagnostics import Diagnostic, Expected
 from dscat.models.intake import (
     DatasetRow,
     DetailRow,
@@ -25,14 +25,26 @@ from dscat.workbook.layout import (
     DETAIL_HEADERS,
     FEEDBACK_HEADER,
     FIELD_HEADERS,
-    TEMPLATE_ROWS,
-    feedback_formula,
 )
 
 if TYPE_CHECKING:
     from dscat.intake.archive import SafeArchive, XmlPart
     from dscat.models.diagnostics import Sheet
 
+
+FIELD_EXPECTED: dict[str, Expected] = {
+    "id": "identifier",
+    "dataset_id": "identifier",
+    "entry_id": "identifier",
+    "core_role": "core_role",
+    "nullable": "nullable",
+    "inventory_added": "date",
+    "metadata_reviewed": "date",
+    "dataset_modified": "date",
+    "owner": "role_reference",
+    "steward": "role_reference",
+    "maintainer": "role_reference",
+}
 
 MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 OFFICE_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
@@ -137,7 +149,7 @@ class WorkbookEvents:
             if (
                 marker in self.names
                 or "localSheetId" in attributes
-                or attributes.get("hidden", "0") != "0"
+                or attributes.get("hidden", "0") not in {"0", "false"}
             ):
                 raise fail(code="INVALID_WORKBOOK")
             self.active_name = marker
@@ -147,7 +159,13 @@ class WorkbookEvents:
         """Retain only explicitly recognized marker targets."""
         self.path.pop()
         if name == MAIN + "definedName" and self.active_name is not None:
-            self.names[self.active_name] = "".join(self.fragments)
+            target = "".join(self.fragments)
+            expected = SCHEMA_NAMES[self.active_name]
+            self.names[self.active_name] = (
+                expected
+                if target == expected.replace("'Instructions'", "Instructions")
+                else target
+            )
             self.active_name = None
 
     def text(self, value: str) -> None:
@@ -163,6 +181,7 @@ class StringEvents:
     strings: list[str] = field(default_factory=list)
     fragments: list[str] = field(default_factory=list)
     in_text: bool = False
+    phonetic_depth: int = 0
 
     def start(self, name: str, _attributes: dict[str, str], depth: int) -> None:
         """Require the shared-string root and collect text runs only."""
@@ -170,10 +189,14 @@ class StringEvents:
             raise fail(code="INVALID_WORKBOOK")
         if name == MAIN + "si":
             self.fragments = []
-        self.in_text = name == MAIN + "t"
+        if name == MAIN + "rPh":
+            self.phonetic_depth += 1
+        self.in_text = name == MAIN + "t" and self.phonetic_depth == 0
 
     def end(self, name: str, _depth: int) -> None:
         """Combine rich runs into one scalar in their explicit order."""
+        if name == MAIN + "rPh":
+            self.phonetic_depth -= 1
         if name == MAIN + "si":
             self.strings.append("".join(self.fragments))
         self.in_text = False
@@ -231,8 +254,6 @@ class WorksheetEvents:
                 MAIN + "c",
             ]:
                 raise fail(code="INVALID_WORKBOOK")
-            if self.active is not None:
-                raise fail(code="INVALID_WORKBOOK")
             row, column = coordinate(attributes.get("r", ""))
             if (self.row_number is not None and row != self.row_number) or (
                 row,
@@ -256,6 +277,9 @@ class WorksheetEvents:
             self.seen_formula = True
             self.collecting = "formula"
         elif name in {MAIN + "v", MAIN + "t"}:
+            if MAIN + "rPh" in self.path:
+                self.collecting = ""
+                return
             if (
                 name == MAIN + "v" and (self.seen_value or self.kind == "inlineStr")
             ) or (name == MAIN + "t" and self.kind != "inlineStr"):
@@ -368,18 +392,6 @@ def data_rows(
             continue
         header = headers.get(column)
         if header == FEEDBACK_HEADER:
-            valid = row <= TEMPLATE_ROWS + 1 and cell.formula in {
-                None,
-                feedback_formula(sheet, row).removeprefix("="),
-            }
-            if not valid:
-                collector.add(
-                    fail(
-                        code="INVALID_WORKBOOK", source_token=source_token
-                    ).diagnostic.model_copy(
-                        update={"sheet": sheet, "row": row, "column": column}
-                    )
-                )
             continue
         if cell.formula is not None or cell.error or (cell.text and header is None):
             collector.add(
@@ -411,7 +423,18 @@ def located_rows[T: (DatasetRow, FieldRow, DetailRow)](
     if not headers:
         return []
     result: list[T] = []
-    for location, values in data_rows(cells, headers, sheet, source_token, collector):
+    for row_location, values in data_rows(
+        cells, headers, sheet, source_token, collector
+    ):
+        location = row_location
+        if model is DetailRow:
+            location = location.model_copy(
+                update={
+                    "column": next(
+                        column for column, name in headers.items() if name == "value"
+                    )
+                }
+            )
         if model is FieldRow and "nullable" in values:
             raw = values["nullable"]
             values["nullable"] = (
@@ -428,7 +451,14 @@ def located_rows[T: (DatasetRow, FieldRow, DetailRow)](
                     (column for column, name in headers.items() if name == field_name),
                     None,
                 )
-                fields: dict[str, object] = {"sheet": sheet, "row": location.row}
+                expected = FIELD_EXPECTED.get(
+                    str(field_name), "detail_property" if model is DetailRow else "text"
+                )
+                fields: dict[str, object] = {
+                    "sheet": sheet,
+                    "row": location.row,
+                    "expected": expected,
+                }
                 if column is not None:
                     fields["column"] = column
                 collector.add(

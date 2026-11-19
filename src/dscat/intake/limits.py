@@ -13,7 +13,7 @@ from dscat.models.diagnostics import Diagnostic
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from dscat.models.diagnostics import Code, Limit
+    from dscat.models.diagnostics import Code, ExitCode, Limit
 
 CHUNK_BYTES = 65536
 MAX_REQUEST_BYTES = 32 * 1024**2
@@ -159,6 +159,36 @@ class Budget:
         )
 
 
+EXIT_PRIORITY = {0: 0, 1: 1, 2: 2, 3: 3, 130: 4, 4: 5}
+
+
+def dominant_exit(first: ExitCode, second: ExitCode) -> ExitCode:
+    """Retain failure precedence independently of diagnostic truncation."""
+    return first if EXIT_PRIORITY[first] >= EXIT_PRIORITY[second] else second
+
+
+def diagnostic_exit(diagnostic: Diagnostic) -> ExitCode:
+    """Classify one fixed-code diagnostic without interpreting submitted text."""
+    if diagnostic.severity != "error":
+        return 0
+    if diagnostic.code == "INTERNAL_FAILURE":
+        return 4
+    if diagnostic.code == "INTERRUPTED":
+        return 130
+    if diagnostic.code in {
+        "INPUT_LIMIT",
+        "UNREADABLE_INPUT",
+        "WORKER_FAILURE",
+        "RESOURCE_GUARD_UNAVAILABLE",
+        "IO_FAILURE",
+        "PUBLICATION_FAILURE",
+    }:
+        return 3
+    if diagnostic.code in {"INVALID_CONFIGURATION", "INVALID_INVOCATION"}:
+        return 2
+    return 1
+
+
 @dataclass
 class DiagnosticCollector:
     """Keep error state even when diagnostics must be truncated."""
@@ -167,10 +197,20 @@ class DiagnosticCollector:
     items: list[Diagnostic] = field(default_factory=list)
     suppressed: int = 0
     has_errors: bool = False
+    exit_code: ExitCode = 0
+
+    def merge_exit(self, value: ExitCode) -> None:
+        """Keep a child failure category even if its diagnostic was suppressed."""
+        self.exit_code = dominant_exit(self.exit_code, value)
+
+    def exit_status(self) -> ExitCode:
+        """Return the typed retained failure category."""
+        return self.exit_code
 
     def add(self, diagnostic: Diagnostic) -> None:
         """Bound retained diagnostics and preserve a fixed truncation summary."""
         self.has_errors |= diagnostic.severity == "error"
+        self.exit_code = dominant_exit(self.exit_code, diagnostic_exit(diagnostic))
         if len(self.items) < self.maximum:
             self.items.append(diagnostic)
         elif not self.suppressed:

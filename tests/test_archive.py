@@ -712,7 +712,7 @@ def test_guarded_exact_aggregate_expansion(
         == 256 * 1024**2
     )
     assert reply.unexamined_sources == 1
-    assert reply.diagnostics[-1].limit == "expanded"
+    assert any(item.limit == "expanded" for item in reply.diagnostics)
     (tmp_path / "c.xlsx").unlink()
     positive = invoke(
         CoordinatorRequest(

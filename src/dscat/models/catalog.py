@@ -426,7 +426,9 @@ class DatasetRecord(StrictModel):
         return (
             None
             if value is None
-            else sorted(value, key=lambda item: (item.party_id, item.role))
+            else sorted(
+                value, key=lambda item: (item.party_id, item.role, item.reference_kind)
+            )
         )
 
     @field_validator("capacity")
@@ -496,7 +498,7 @@ class Catalog(StrictModel):
     """Versioned dataset aggregate without source paths or derived assessments."""
 
     schema_version: Literal["1.0"]
-    datasets: list[DatasetRecord]
+    datasets: list[DatasetRecord] = Field(max_length=100000)
 
     @field_validator("datasets")
     @classmethod

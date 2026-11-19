@@ -3,8 +3,10 @@
 
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Self
 
 import pytest
+from pydantic import ValidationError, model_validator
 
 from dscat.intake.normalize import LocatedRecord
 from dscat.models.catalog import Catalog, DatasetRecord
@@ -230,3 +232,161 @@ def test_missing_rule_operands_and_unperformed_scope() -> None:
     assert invalid.assessment.validity == "invalid"
     assert invalid.assessment.rules[0].state == "unperformed"
     assert scalar_value(datetime(2026, 1, 1, tzinfo=UTC)) == "2026-01-01T00:00:00Z"
+
+
+def test_reference_kind_ties_do_not_make_role_order_depend_on_input_order() -> None:
+    """Distinct explicitly tagged party references receive a stable set order."""
+    role = {
+        "party_id": "urn:example:party",
+        "role": "contact",
+        "label": "Metadata support",
+    }
+    roles = [role | {"reference_kind": kind} for kind in ("local", "external")]
+    first = DatasetRecord.model_validate(
+        minimum().model_dump(exclude_none=True) | {"roles": roles}
+    )
+    second = DatasetRecord.model_validate(
+        minimum().model_dump(exclude_none=True) | {"roles": list(reversed(roles))}
+    )
+    assert first == second
+    result = validate_catalog(
+        [located(first), located(second, 2)], AssessmentConfiguration()
+    )
+    assert result.catalog is not None
+    assert result.diagnostics[0].code == "DUPLICATE_IDENTICAL"
+
+
+def test_scalar_dates_severity_and_known_zero_use_explicit_types() -> None:
+    """Date encodings compare canonically, and bool is distinct from integer zero."""
+    record = DatasetRecord.model_validate(
+        minimum().model_dump(exclude_none=True)
+        | {
+            "inventory_added": "2026-01-01",
+            "capacity_retention": {"state": "known", "days": 0},
+        }
+    )
+    catalog = Catalog(schema_version="1.0", datasets=[record])
+    date_rule = LocalRule(
+        id="date", path="inventory_added", operator="equals", operand="2026-01-01"
+    )
+    wrong = LocalRule(
+        id="zero",
+        path="capacity_retention.days",
+        operator="equals",
+        operand=False,
+        severity="error",
+    )
+    assert rule_state(catalog, date_rule) == "conforms"
+    assert rule_state(catalog, wrong) == "does_not_conform"
+    assessment = assess(catalog, AssessmentConfiguration(rules=[date_rule, wrong]))
+    assert assessment.validity == "valid"
+    assert assessment.rules[-1].severity == "error"
+    assert catalog.datasets[0].publication is None
+
+
+def test_incomparable_rates_and_records_conflicts_remain_descriptive() -> None:
+    """A low peak in another basis/window is not an invented comparable measurement."""
+    detailed = DatasetRecord.model_validate_json(
+        (FIXTURES / "detailed.json").read_bytes()
+    )
+    data = detailed.model_dump(mode="json", exclude_none=True)
+    observations = data["capacity"]
+    for observation in observations:
+        if observation["kind"] == "peak_ingestion":
+            observation.update(
+                {"basis": "physical", "value": "1", "normalized_bytes": 1000000}
+            )
+    record = DatasetRecord.model_validate(data)
+    result = validate_catalog([located(record)], AssessmentConfiguration())
+    assert result.catalog is not None
+    assert {item.code for item in result.diagnostics} == {
+        "INCOMPARABLE_CAPACITY",
+        "RECORDS_CONFLICT",
+    }
+    assert all(item.severity != "error" for item in result.diagnostics)
+    assert result.catalog.datasets[0].records == detailed.records
+
+
+def test_assessment_never_evaluates_unknown_objects_or_missing_children() -> None:
+    """Only schema models participate in pure path traversal."""
+    from dscat.validation import MISSING, field_values  # noqa: PLC0415 -- focused helper acceptance.
+
+    assert field_values("text", ["unsupported"]) == [MISSING]
+    assert (
+        completeness(
+            Catalog(schema_version="1.0", datasets=[minimum()]), "roles.email"
+        ).state
+        == "absent"
+    )
+    external = DatasetRecord.model_validate(
+        minimum().model_dump(exclude_none=True)
+        | {
+            "roles": [
+                {
+                    "reference_kind": "external",
+                    "party_id": "urn:example:party",
+                    "role": "contact",
+                    "label": "Metadata support",
+                }
+            ]
+        }
+    )
+    assert (
+        validate_catalog([located(external)], AssessmentConfiguration()).catalog
+        is not None
+    )
+
+
+def test_catalog_object_count_has_the_approved_hard_bound() -> None:
+    """Structured catalog input cannot bypass the invocation's100,000 record ceiling."""
+    with pytest.raises(ValidationError, match="100000"):
+        Catalog(schema_version="1.0", datasets=[minimum()] * 100001)
+
+
+def test_dependent_references_are_unperformed_for_incomplete_validated_inputs() -> None:
+    """An omitted invalid target record does not fabricate a dangling local-ID error."""
+    record = DatasetRecord.model_validate(
+        minimum().model_dump(exclude_none=True)
+        | {
+            "services": [
+                {
+                    "id": "service",
+                    "served_datasets": [
+                        {"reference_kind": "local", "id": "unexamined-target"}
+                    ],
+                }
+            ]
+        }
+    )
+    result = validate_catalog(
+        [located(record)], AssessmentConfiguration(), invalid=True
+    )
+    assert result.catalog is None
+    assert result.assessment.validity == "invalid"
+    assert not any(item.code == "UNRESOLVED_REFERENCE" for item in result.diagnostics)
+    assert result.diagnostics[0].code == "REFERENCE_CHECK_UNPERFORMED"
+    assert result.diagnostics[0].check_state == "unperformed"
+
+
+def test_output_schema_rejection_withholds_a_partial_catalog(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """An injected aggregate constraint cannot create a successful partial output."""
+
+    class RejectingCatalog(Catalog):
+        """Reject valid facts with a synthetic final aggregate constraint."""
+
+        @model_validator(mode="after")
+        def reject(self) -> Self:
+            """Reject with synthetic text that must not appear in public diagnostics."""
+            msg = "synthetic-sensitive-schema-rejection"
+            raise ValueError(msg)
+
+    record = minimum()
+    original = record.model_dump_json(exclude_none=True)
+    monkeypatch.setattr("dscat.validation.Catalog", RejectingCatalog)
+    result = validate_catalog([located(record)], AssessmentConfiguration())
+    assert result.catalog is None
+    assert result.assessment.validity == "invalid"
+    assert "sensitive-schema" not in result.model_dump_json()
+    assert record.model_dump_json(exclude_none=True) == original

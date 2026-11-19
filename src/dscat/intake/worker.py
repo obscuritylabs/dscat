@@ -37,7 +37,7 @@ from dscat.intake.normalize import LocatedRecord, normalize_batch
 from dscat.models.base import StrictModel
 from dscat.models.catalog import Catalog
 from dscat.models.configuration import AssessmentConfiguration
-from dscat.models.diagnostics import Diagnostic, ValidationAssessment
+from dscat.models.diagnostics import Diagnostic, ExitCode, ValidationAssessment
 from dscat.platform import install_guard
 from dscat.validation import validate_catalog
 from dscat.workbook.parse import parse_workbook
@@ -96,6 +96,7 @@ class WorkerReply(StrictModel):
     outcomes: list[ArchiveOutcome] = Field(default_factory=list, max_length=1000)
     diagnostics: list[Diagnostic] = Field(default_factory=list, max_length=10000)
     has_errors: bool
+    failure_exit: ExitCode = 0
     selection_complete: bool
     unexamined_sources: Annotated[int, Field(ge=0)] = 0
     catalog: Catalog | None = None
@@ -110,6 +111,9 @@ class WorkerReply(StrictModel):
         if retained > DEFAULT_LIMITS.diagnostics:
             msg = "Worker result exceeds the invocation diagnostic limit."
             raise ValueError(msg)
+        if self.failure_exit != 0 and not self.has_errors:
+            msg = "Failure status cannot claim an error-free result."
+            raise ValueError(msg)
         incomplete = not self.selection_complete or self.unexamined_sources > 0
         failed = any(item.severity == "error" for item in self.diagnostics) or any(
             outcome_failed(item) for item in self.outcomes
@@ -122,7 +126,30 @@ class WorkerReply(StrictModel):
         ):
             msg = "Worker result does not match its protocol role."
             raise ValueError(msg)
+        self.semantic_status()
         return self
+
+    def semantic_status(self) -> None:
+        """Require validated catalog facts and assessment for coordinator success."""
+        present = self.catalog is not None and self.assessment is not None
+        valid = self.assessment is not None and self.assessment.validity == "valid"
+        if (
+            self.role == "coordinator"
+            and not self.has_errors
+            and not (present and valid)
+        ):
+            msg = "Successful coordinator requires valid canonical results."
+            raise ValueError(msg)
+        if self.catalog is not None and (self.role != "coordinator" or not valid):
+            msg = "Catalog facts require a valid coordinator assessment."
+            raise ValueError(msg)
+        if (
+            self.assessment is not None
+            and self.assessment.validity == "invalid"
+            and not self.has_errors
+        ):
+            msg = "Invalid intake cannot claim an error-free result."
+            raise ValueError(msg)
 
 
 def read_source(source: SourceDescriptor, budget: Budget) -> bytes:
@@ -557,6 +584,7 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
                 min(DEFAULT_LIMITS.workbook_time, seconds),
             )
             child_errors |= reply.has_errors
+            collector.merge_exit(reply.failure_exit)
             outcome = archive_outcome(reply, source.source_token)
             remaining -= expansion_charge(outcome, remaining)
             for diagnostic in (*reply.diagnostics, *outcome.diagnostics):
@@ -566,7 +594,7 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
                 outcome.model_copy(update={"diagnostics": [], "records": []})
             )
             if not accepted:
-                skipped += len(selection.sources) - index
+                skipped += len(selection.sources) - index - 1
                 break
             if outcome.archive_state == "unexamined":
                 skipped += 1
@@ -603,6 +631,7 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
         role="coordinator",
         outcomes=outcomes,
         diagnostics=validation.diagnostics,
+        failure_exit=collector.exit_status(),
         **({"catalog": validation.catalog} if validation.catalog is not None else {}),
         assessment=validation.assessment,
         has_errors=validation.assessment.validity != "valid"

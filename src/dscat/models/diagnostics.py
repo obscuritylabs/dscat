@@ -35,6 +35,7 @@ Code = Literal[
     "DUPLICATE_CONFLICT",
     "DUPLICATE_IDENTICAL",
     "UNRESOLVED_REFERENCE",
+    "REFERENCE_CHECK_UNPERFORMED",
     "RESOURCE_GUARD_UNAVAILABLE",
     "IO_FAILURE",
     "PUBLICATION_FAILURE",
@@ -74,6 +75,28 @@ Limit = Literal[
 ]
 
 
+Expected = Literal[
+    "core",
+    "identifier",
+    "text",
+    "date",
+    "email",
+    "https_reference",
+    "reference",
+    "core_role",
+    "nullable",
+    "detail_property",
+    "detail_group",
+    "quantity",
+    "days",
+    "capacity",
+    "role_reference",
+    "service_reference",
+    "workbook_schema",
+    "dataset_reference",
+]
+
+
 class Diagnostic(StrictModel):
     """Fixed codes and ordinal locations cannot echo untrusted input values."""
 
@@ -94,6 +117,7 @@ class Diagnostic(StrictModel):
     target: Target | None = None
     check_state: CheckState = "does_not_conform"
     limit: Limit | None = None
+    expected: Expected | None = None
 
 
 class TargetReadiness(StrictModel):
