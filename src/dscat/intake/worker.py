@@ -69,7 +69,9 @@ class ArchiveOutcome(StrictModel):
     source_token: Annotated[int, Field(ge=1)]
     archive_state: Literal["safe", "rejected", "unexamined"]
     statistics: ArchiveStatistics
-    diagnostics: list[Diagnostic] = Field(default_factory=list)
+    diagnostics: list[Diagnostic] = Field(
+        default_factory=list, max_length=DEFAULT_LIMITS.diagnostics
+    )
 
 
 def outcome_failed(outcome: ArchiveOutcome) -> bool:
@@ -93,6 +95,12 @@ class WorkerReply(StrictModel):
     @model_validator(mode="after")
     def truthful_status(self) -> Self:
         """Reject false success for errors, incomplete scope or unexamined sources."""
+        retained = len(self.diagnostics) + sum(
+            len(outcome.diagnostics) for outcome in self.outcomes
+        )
+        if retained > DEFAULT_LIMITS.diagnostics:
+            msg = "Worker result exceeds the invocation diagnostic limit."
+            raise ValueError(msg)
         incomplete = not self.selection_complete or self.unexamined_sources > 0
         failed = any(item.severity == "error" for item in self.diagnostics) or any(
             outcome_failed(item) for item in self.outcomes
@@ -486,7 +494,9 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
             child_errors |= reply.has_errors
             outcome = archive_outcome(reply, source.source_token)
             remaining -= expansion_charge(outcome, remaining)
-            outcomes.append(outcome)
+            for diagnostic in (*reply.diagnostics, *outcome.diagnostics):
+                collector.add(diagnostic)
+            outcomes.append(outcome.model_copy(update={"diagnostics": []}))
             if outcome.archive_state == "unexamined":
                 skipped += 1
         except IntakeError as error:
