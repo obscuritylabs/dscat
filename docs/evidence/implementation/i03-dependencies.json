@@ -1,0 +1,39 @@
+{
+  "observed_on": "2026-11-19",
+  "predecessor": "e9173017cb9a104e44574195265bc54faddf0ee2",
+  "lock_sha256": "b5b6ea7fa548e05ce0bbf50d7127f57fc3fa0349a72d5220e4d2c6a98dc6e5e7",
+  "cutoff_utc": "2026-11-05T21:00:18.582787+00:00",
+  "packages": [
+    {
+      "name": "et-xmlfile",
+      "version": "2.0.0",
+      "artifact_count": 2,
+      "license_expression": null,
+      "license": "MIT",
+      "source_notices": [
+        {
+          "path": "LICENCE.python",
+          "sha256": "4ccdaaebc0f44b83720ec0399bb7ab329adce067dd62f73c5535a2dc05628ab2"
+        },
+        {
+          "path": "LICENCE.rst",
+          "sha256": "0c84bb42f5d367e5ebf9fc2dde35b16141df5ee0fdc189250858bc6c5560f69e"
+        }
+      ]
+    },
+    {
+      "name": "openpyxl",
+      "version": "3.1.5",
+      "artifact_count": 2,
+      "license_expression": null,
+      "license": "MIT",
+      "source_notices": [
+        {
+          "path": "LICENCE.rst",
+          "sha256": "0c84bb42f5d367e5ebf9fc2dde35b16141df5ee0fdc189250858bc6c5560f69e"
+        }
+      ]
+    }
+  ],
+  "status": "Added dependency source, hash, non-yanked and artifact age checks passed. Generator runs on CPython 3.15.2; no vulnerability-safety or desktop-acceptance claim."
+}
