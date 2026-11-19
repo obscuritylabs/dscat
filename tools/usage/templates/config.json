@@ -1,1 +1,0 @@
-{"schema":1,"source_root":"/absolute/private/history","project_selector":"/absolute/project","map_path":"/absolute/private/map.json","rates_path":"/absolute/private/rates.json","vocabulary_path":"/absolute/private/vocabulary.json","secret_file":"/absolute/private/secret.bin","limits":{"file_bytes":67108864,"total_bytes":536870912,"records":1000000,"diagnostics":100}}

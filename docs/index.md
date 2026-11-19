@@ -4,8 +4,6 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then classify the task under [
 
 | Read when | Document and authoritative content |
 | --- | --- |
-| Refreshing private local usage metrics | [Local calculator](../tools/local-usage/README.md): self-service token, estimated-cost, and time snapshots |
-| Maintaining shared usage tools | [Specification](usage-tooling.md): approved scope and architecture; [task](tasks/usage-tooling.md): current handoff and task/release evidence |
 | Coordinating work | [Governance](governance.md#task-scope-and-proportionality): task classes and stopping conditions; [workflow](workflow.md): applicable routes, bounded handoffs and risk-based review |
 | Checking authorization | [Planning gates](planning-gates.md): exact human approval or agent authorization scope/revisions and pending deliverables |
 | Planning or changing behavior | [Requirements](requirements.md): capabilities and stable acceptance criteria; [RTM](rtm.md): artifact/evidence mappings |

@@ -1,1 +1,0 @@
-"""Synthetic maintenance-tool tests."""
