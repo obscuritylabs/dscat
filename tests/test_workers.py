@@ -892,3 +892,72 @@ def test_request_write_broken_pipe_is_closed(monkeypatch: pytest.MonkeyPatch) ->
     if process.stdout is not None:
         process.stdout.close()
     assert processes[0].poll() is not None
+
+
+def test_one_shared_diagnostic_budget_across_discovery_and_workers(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Worker diagnostics share the discovery cap and retain truncation/error state."""
+    path = tmp_path / "one.xlsx"
+    path.touch()
+    selection = discover(DiscoveryRequest(input=tmp_path))
+    maximum = 10000
+    selection = selection.model_copy(
+        update={
+            "diagnostics": [fail(code="UNREADABLE_INPUT").diagnostic] * maximum,
+            "has_errors": True,
+        }
+    )
+    monkeypatch.setattr(workers, "discover", lambda _request: selection)
+    outcome = workers.ArchiveOutcome(
+        source_token=1,
+        archive_state="rejected",
+        statistics=ArchiveStatistics(),
+        diagnostics=[fail(code="INVALID_WORKBOOK", source_token=1).diagnostic],
+    )
+    reply = workers.WorkerReply(
+        schema_version="1.0",
+        role="archive",
+        outcomes=[outcome],
+        has_errors=True,
+        selection_complete=True,
+    )
+    monkeypatch.setattr(workers, "invoke", lambda *_args: reply)
+    result = workers.inspect_selection(request_at(tmp_path))
+    retained = len(result.diagnostics) + sum(
+        len(item.diagnostics) for item in result.outcomes
+    )
+    assert retained == maximum
+    assert result.has_errors
+    assert result.diagnostics[-1].code == "DIAGNOSTICS_TRUNCATED"
+    assert result.diagnostics[-1].check_state == "unperformed"
+    assert result.outcomes[0].archive_state == "rejected"
+    assert result.outcomes[0].diagnostics == []
+
+
+def test_worker_reply_cannot_bypass_aggregate_diagnostic_cap() -> None:
+    """Nested diagnostic lists cannot independently consume full invocation budgets."""
+    maximum = 10000
+    diagnostic = fail(code="INVALID_WORKBOOK").diagnostic
+    outcome = workers.ArchiveOutcome(
+        source_token=1,
+        archive_state="rejected",
+        statistics=ArchiveStatistics(),
+        diagnostics=[diagnostic],
+    )
+    with pytest.raises(ValidationError, match="invocation diagnostic limit"):
+        workers.WorkerReply(
+            schema_version="1.0",
+            role="archive",
+            outcomes=[outcome],
+            diagnostics=[diagnostic] * maximum,
+            has_errors=True,
+            selection_complete=True,
+        )
+    with pytest.raises(ValidationError):
+        workers.ArchiveOutcome(
+            source_token=1,
+            archive_state="rejected",
+            statistics=ArchiveStatistics(),
+            diagnostics=[diagnostic] * (maximum + 1),
+        )
