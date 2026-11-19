@@ -1,12 +1,12 @@
 # Documentation index
 
-Agents MUST start with [AGENTS.md](../AGENTS.md), then use the [phase routing manifest](workflow.md#phase-routing). This index is navigation, not a requirement to load every linked document. [Planning gates](planning-gates.md) are authoritative for current approval status.
+Agents MUST start with [AGENTS.md](../AGENTS.md), then classify the task under [scope and proportionality](governance.md#task-scope-and-proportionality) and use only applicable [phase routes](workflow.md#phase-routing). This index is navigation, not a requirement to load every linked document. [Planning gates](planning-gates.md) are authoritative for current approval status.
 
 | Read when | Document and authoritative content |
 | --- | --- |
 | Refreshing private local usage metrics | [Local calculator](../tools/local-usage/README.md): self-service token, estimated-cost, and time snapshots |
-| Maintaining shared usage tools | [Specification](usage-tooling.md): approved scope and architecture; [task](tasks/usage-tooling.md): current handoff and seven-stage ledger |
-| Coordinating work | [Workflow](workflow.md): phase routes, handoffs, transitions and escalation |
+| Maintaining shared usage tools | [Specification](usage-tooling.md): approved scope and architecture; [task](tasks/usage-tooling.md): current handoff and task/release evidence |
+| Coordinating work | [Governance](governance.md#task-scope-and-proportionality): task classes and stopping conditions; [workflow](workflow.md): applicable routes, bounded handoffs and risk-based review |
 | Checking authorization | [Planning gates](planning-gates.md): exact human approval or agent authorization scope/revisions and pending deliverables |
 | Planning or changing behavior | [Requirements](requirements.md): capabilities and stable acceptance criteria; [RTM](rtm.md): artifact/evidence mappings |
 | Resolving current decisions or rationale | [Decisions](decisions.md): current decisions and necessary provenance; older wording through Git |

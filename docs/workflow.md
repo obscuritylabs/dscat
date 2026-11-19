@@ -2,27 +2,17 @@
 
 ## Coordinator boundary
 
-The coordinator MUST read [AGENTS.md](../AGENTS.md), [index.md](index.md), this workflow, the applicable rows and approval records in [planning-gates.md](planning-gates.md), and the current task record. It MUST route work and report evidence and gates; it MUST NOT perform phase analysis, implementation, verification, or review itself. Detailed policy MUST be loaded by the responsible phase agent through [governance.md](governance.md), [engineering.md](engineering.md), and its phase file. The coordinator MUST route missing decisions under the [approval policy](governance.md#required-sdlc-and-approval-gates), using concrete phase-agent decision packages only for ordinary requirements approval or agent-assessed high-risk architecture approval.
+Agents MUST classify work using [task scope and proportionality](governance.md#task-scope-and-proportionality) and its completion condition before dispatch. One implementer MAY complete ordinary maintenance or approved implementation directly. A coordinator is OPTIONAL; when used, it MAY also implement and run checks, but MUST NOT claim independent review of its own work.
 
-Each phase and each implementation increment MUST use a distinct fresh agent invocation with `fork_turns="none"`. The coordinator MUST provide the bounded handoff below, without inherited transcript, conversational summaries, or unrelated private context. A later phase MUST independently read its cited artifacts rather than treat a previous agent's conclusions as proof. An implementation agent MUST NOT serve as its own verification or independent-review agent. A retry after substantive correction MUST use fresh phase agents and updated revision/evidence references.
+Fresh phase agents with `fork_turns="none"` MUST be used only for material requirements, architecture, and implementation-plan decisions, and required independent review or release verification. Routine increments and corrections MAY retain their implementer. Reviewers MUST independently inspect relevant artifacts; they MUST NOT inherit an implementer's conclusions as proof. One independent reviewer MAY perform acceptance verification, semantic review, and cross-document reconciliation for a bounded change.
 
-If fresh-agent tooling is unavailable or capacity prevents dispatch, the coordinator MUST report the affected phase as blocked and retain the next gate. It MUST NOT simulate freshness through role switching, context-reset claims, or a second pass by the same agent. It MAY resume dispatch when capacity becomes available; a human MAY explicitly revise the workflow, but missing tooling MUST NOT silently waive it.
+Unavailable fresh-agent tooling MUST block only the phase that requires independence. Other authorized work MAY continue. Agents MUST report unavailable independent evidence rather than simulate it. Read-only questions and routine low-risk edits MUST NOT be blocked on fresh-agent capacity.
 
 ## Bounded handoff
 
-Each dispatch and return MUST identify the following sections in the task record or a linked handoff artifact. Handoffs MUST contain only routing context and artifact references plus concise unresolved decisions; full documents and transcripts MUST NOT be copied into them.
+A handoff is REQUIRED only when work crosses agent ownership. It MUST state the requested outcome, included/excluded scope, source revision or relevant file identities, allowed mutations, acceptance checks, known blocking findings, and the next completion condition. Existing applicable requirements/design authority MUST be linked where relevant. Conversation transcripts and unrelated private context MUST NOT be copied.
 
-| Section | Required content |
-| --- | --- |
-| Identity and revision | Task/increment, phase, exact source commit, dirty state and content digest where applicable |
-| Scope and authority | Requirement/capability IDs, acceptance anchors, included work, excluded work, approved or agent-authorized document revisions, decision references and dates; unavailable dispositions explicitly PENDING |
-| Required reading | Exact document paths and section anchors needed for this phase, including the phase file and shared policy |
-| Ownership | Allowed files/symbols, shared-file constraints, assigned agent/invocation identity, permitted mutations |
-| Inputs and outputs | Source artifacts, required deliverables, locations, exact artifact hashes and reproducible evidence commands/results or PENDING; private attribution and checkpoint status under [usage tracking](#usage-tracking-checkpoints) |
-| Findings and disposition | Failures, limitations, unresolved assumptions, superseded evidence and affected gates; privacy-sensitive findings only where authorized |
-| Next gate | Pass/fail/blocked result, actual completion stage, next phase, applicable requirements/high-risk architecture decision or autonomous readiness gate |
-
-The receiving agent MUST verify the revision and authority scope before dependent work and reject an incomplete or stale handoff. A dirty-tree digest MUST identify all relevant inputs; a commit alone MUST NOT stand for concurrent uncommitted edits.
+A concise dispatch message or PR MAY supply the handoff; an additional repository task record MUST NOT be required for ordinary work. A committed candidate SHOULD use its commit identity. Uncommitted review inputs MUST use a digest of the relevant files, not the entire unrelated dirty tree. A stale affected input MUST invalidate only the evidence that depends on it. Read-only advice MAY describe the observed working state without an exact-candidate readiness claim.
 
 ## Usage tracking checkpoints
 
@@ -40,26 +30,32 @@ Each checkpoint MUST capture available closed prior work and report measured/pub
 
 ## Phase routing
 
-The coordinator MUST use the following routing table. Each phase MUST return its handoff before the next dependent phase starts. Existing approvals MAY be reused only for their recorded scope and revision; routing MUST NOT reopen unchanged approved product decisions merely to satisfy a phase name.
+The task class determines applicable phases; this table is navigation, not a checklist requiring every task to execute every phase. Read-only advice ends with an answer. Maintenance uses implementation, applicable checks/review, and the requested delivery. Approved product implementation reuses existing requirements and design readiness. A material decision enters only the earliest affected phase below; unaffected phases and approvals MUST NOT reopen.
 
-| Phase | Agent instructions | Exit and next gate |
+| Phase | Agent instructions | Applicable exit |
 | --- | --- | --- |
-| Requirements | [requirements](phases/requirements.md) | Exact scope and acceptance ready for requirements disposition under the approval policy |
-| Architecture | [architecture](phases/architecture.md) | Requirements disposition satisfied; exact design risk assessment and architecture disposition |
-| Planning | [planning](phases/planning.md) | Architecture disposition satisfied; increments ready for agent plan authorization |
-| Implementation | [implementation](phases/implementation.md) | One agent-authorized increment implemented and self-tested; fresh verification |
-| Verification | [verification](phases/verification.md) | Acceptance evidence for exact increment; fresh review when due, then integration |
-| Review | [review](phases/review.md) | Independent findings/disposition or existing explicitly scoped waiver; integration when applicable checks pass |
-| Integration | [integration](phases/integration.md) | PR/rebase merge verified on remote main; release preparation |
-| Release preparation | [release](phases/release.md) | Verified candidate and recorded standing-delegation exercise before publishing |
-| Post-release verification | [release](phases/release.md) in a separate fresh invocation | Downloaded released artifacts verified; completion only after all seven stages |
+| Requirements | [requirements](phases/requirements.md) | Material scope/acceptance decision receives the disposition required by approval policy |
+| Architecture | [architecture](phases/architecture.md) | Material design decision receives risk assessment and disposition |
+| Planning | [planning](phases/planning.md) | Material new/revised execution plan is ready under existing scope |
+| Implementation | [implementation](phases/implementation.md) | Bounded change and applicable self-checks complete |
+| Verification | [verification](phases/verification.md) | Applicable acceptance checks pass; MAY be combined with independent review |
+| Review | [review](phases/review.md) | Required independent findings resolved for the affected candidate |
+| Integration | [integration](phases/integration.md) | Requested protected PR/rebase delivery verified on remote main |
+| Release preparation | [release](phases/release.md) | Separate release task has verified assets and standing-delegation evidence |
+| Post-release verification | [release](phases/release.md) | Independent verification of downloaded released artifacts completes that release task |
 
-Independent review SHOULD occur periodically under [governance.md](governance.md). Review routing MUST record whether review is required for this increment, already satisfied for the exact applicable content, or covered by an existing explicit human waiver. The coordinator MUST NOT invent a waiver or call self-review independent review.
+## Review applicability
+
+Independent review MUST cover changes to security/privacy controls, destructive or persistent data behavior, supported compatibility contracts, substantive governance policy, and release artifacts. One fresh reviewer MAY cover all applicable concerns for an ordinary bounded change. Mechanical edits and low-risk fixes within approved behavior MAY use self-review plus focused checks; agents MUST identify that review accurately. Broader or specialist review SHOULD be used only for a concrete risk or explicit acceptance requirement.
+
+A review finding MUST identify an unmet authorized criterion, a concrete defect introduced or exposed by the change, or a material security/compatibility dependency. Suggestions and unrelated defects MUST remain nonblocking follow-ups. Reviewers MUST NOT add acceptance criteria or reopen approved decisions merely to satisfy a phase name. Corrections MUST receive affected rechecks; a new reviewer is REQUIRED only if independence was lost or specialist expertise is needed, not for every retry.
 
 ## Failure, reopening, and shared state
 
-A failed verification or review MUST return the affected increment to implementation; changes to scope, acceptance, architecture, or plan MUST first return to the earliest affected phase gate with impact analysis under the approval policy. Corrections MUST invalidate affected downstream evidence. Integration conflicts or changed artifacts MUST trigger affected verification again. Release or post-release failure MUST leave the task incomplete, follow the approved failure policy, and route corrections through implementation, verification, integration, and a new verified release under standing delegation as applicable. Historical evidence MUST remain attributed rather than rewritten as current success.
+A failed check MUST return only the affected work to correction. Material changes to scope, acceptance, compatibility, or security design MUST receive impact analysis and route to the earliest affected decision under the approval policy. Editorial changes, factual status updates, unrelated dirty files, and commit/hash changes alone MUST NOT restart planning or invalidate unchanged evidence. Agents MUST rerun affected checks after a correction or integration conflict; successful checks MUST NOT be repeated without changed inputs or a concrete unresolved concern.
 
-Agents share the filesystem. The coordinator MUST serialize dependent mutations and shared-file writes, assign disjoint ownership before parallel work, preserve unrelated human changes, and recheck Git status/revision at handoff. It MUST NOT change branches or integrate while another agent relies on the same checkout state. Parallel reads MAY proceed against a stable identified revision; concurrent disjoint writes MUST be reconciled and verified as one identified result before dependent work.
+Agents MUST stop expanding scope once the requested acceptance and delivery conditions are satisfied. After two unsuccessful correction/review cycles for the same blocker, they MUST identify the root cause and either make a concrete bounded correction or report the exact blocker and completed work. They MUST NOT repeat the same approach, invent gates, or claim success. A time or iteration budget MUST NOT waive security or acceptance criteria. Unrelated findings MUST remain separate follow-ups; agents MUST obtain a scope decision only when a genuine dependency prevents the requested outcome.
 
-All tasks, including documentation tasks, MUST retain the seven completion stages in [governance.md](governance.md): planning readiness, implementation, tests, local acceptance verification, remote-main PR integration, authorized published release, and verification from downloaded released artifacts. A phase pass, merge, or draft release MUST NOT mean completion. Human approval requests MUST follow only the requirements and high-risk architecture rules; implementation-plan and all other SDLC readiness gates MUST remain autonomous.
+Agents share the filesystem. Dependent mutations and shared-file writes MUST be serialized, unrelated changes preserved, and affected inputs rechecked before handoff or integration. Agents MUST NOT change another worker's checkout state; isolated branches/worktrees SHOULD be used for concurrent work. Disjoint changes MAY proceed independently. Read-only diagnosis MUST NOT chase unrelated concurrent edits through repeated digest gates.
+
+The [definition of done](governance.md#definition-of-done) owns task and release completion. Existing phase/task records MUST be read under this current routing policy: historical full-review, fresh-phase, seven-stage, and metadata-review instructions MUST NOT reintroduce superseded universal obligations. Explicit product acceptance criteria, actual release commitments, failed checks, and privacy/security constraints MUST remain in force. Existing records MUST NOT be mass-rewritten or relabeled PASS merely to apply the new policy.

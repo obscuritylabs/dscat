@@ -34,4 +34,4 @@ The [implementation-planning task](implementation-plan.md) records the original 
 | Published release | PENDING; excluded from current bounded work |
 | Released-artifact verification | PENDING; task/project incomplete |
 
-Next gate: fresh architecture and plan readiness against the corrected requirements source, followed by affected semantic QA and distinct reconciliation, are required before a subsequent product implementation assignment. Integration of the corrected documentation candidate is PENDING. Product implementation, platform/manual acceptance, release publication and downloaded-artifact verification remain pending. All seven completion stages remain mandatory.
+Next gate: fresh architecture and plan readiness against the corrected requirements source, followed by affected semantic QA and distinct reconciliation, are required before a subsequent product implementation assignment. Integration of the corrected documentation candidate is PENDING. Product implementation, platform/manual acceptance, release publication and downloaded-artifact verification remain pending. Applicable task completion and separate release work follow current governance.
