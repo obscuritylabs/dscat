@@ -28,6 +28,12 @@ This is the authoritative current human-approval and agent-authorization status 
 
 A human approval or agent readiness disposition MUST identify an exact document revision or commit, scope, date/reference, affected requirements and authority type. Subsequent evidence or editorial corrections MUST NOT inherit human approval of new technical choices. A permitted requirements or high-risk architecture approval request MUST identify changes since the last approved revision and their requirement, compatibility, security and acceptance impacts. Agent authorization MUST NOT be mislabeled human approval.
 
+## Proportional workflow maintenance
+
+Human instruction, 2026-11-19: implement the proportional workflow remedies and apply them during this work. [Governance](governance.md#task-scope-and-proportionality) owns task classes and completion; [workflow](workflow.md) owns routing and scope discipline; [documentation QA](documentation-qa.md) owns focused review and the evidence stopping rule. [The maintenance scope](tasks/documentation-workflow.md) identifies acceptance and the protected-integration delivery boundary. This is explicit authority for policy changes, including the NFR-006 execution-policy reconciliation; it does not approve new product behavior or claim any check passed.
+
+This revision supersedes generic universal full-review, fresh-phase, seven-stage, and recursive metadata-review instructions in earlier task records. Existing technical scope/acceptance and explicit release deliverables remain binding. A changed policy/status hash alone MUST NOT reopen unchanged product design readiness; exact prior evidence MUST remain attributed to its original content. Existing release failures MUST remain failures of their release tasks. Current policy MUST determine whether stages apply without requiring a new task-scoped exception for ordinary maintenance. Actual checks, reviewer disposition, and integration identity MUST be retained outside the reviewed candidate in the change PR.
+
 ## Required gate deliverables
 
 The following table specifies gate completeness, not additional product features. Drafts MAY be prepared before disposition; dependent implementation MUST wait for requirements disposition, architecture risk assessment/disposition and agent implementation-plan readiness in that order under the approval policy. These evidence gates MUST NOT introduce additional human approval requests.

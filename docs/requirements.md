@@ -83,7 +83,7 @@ Security MUST cover supply-chain vulnerabilities and untrusted intake input; rel
 
 ### NFR-006
 
-Delivery MUST follow planning gates, complete traceability, semantic versioning, and atomic Conventional Commits. Agents MUST own implementation, testing, local verification, and routine PR review/merging within approved scope without human PR review; a delivery review MUST find no unjustified implementation artifact. Every task MUST remain incomplete until planned, implemented, tested, locally verified, merged into remote main, released, and verified from the released version, with evidence for each stage.
+Delivery MUST follow applicable planning gates, complete traceability for changed behavior, semantic versioning, and atomic Conventional Commits. Agents MUST own implementation, testing, local verification, and routine PR review/merging within approved scope without human PR review. Completion MUST follow the [task-class and delivery conditions](governance.md#definition-of-done). Ordinary source/documentation tasks MUST NOT require release publication or downloaded-release verification unless release delivery is explicitly included; release tasks MUST retain all applicable release acceptance and independent downloaded-artifact checks. Maintenance MUST NOT invent product requirements or reopen unchanged approved decisions.
 
 ### NFR-007
 
