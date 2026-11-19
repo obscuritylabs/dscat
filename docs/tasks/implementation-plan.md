@@ -12,6 +12,6 @@ NFR-006 changes task completion policy; NFR-017 applies standing publication del
 
 Required checks: `python3 docs/evidence/architecture/verify_documents.py`, `git diff --check`, historical content comparisons, and privacy/secrets/scope inspection. Resource or runtime checks MUST NOT be represented as newly executed. Product execution, platform/manual checks and release/downloaded-artifact evidence remain PENDING at their respective gates.
 
-## Next handoff
+## Execution handoff
 
-The [I01 handoff](../implementation-plan.md#first-independent-implementation-handoff) is the next product increment after readiness reconciliation, protected integration and a subsequent implementation assignment. No product work is included here. Completion requires reviewed documentation and protected remote-main integration; any integration blocker MUST remain explicit in planning gates and the return.
+The [ordered increment plan](../implementation-plan.md#ordered-small-increments) and [current execution status](../planning-gates.md#implementation-execution) govern the subsequent implementation assignment. The documentation-only reconciliation boundary above remains attributed to that completed assignment; implementation, runtime verification and release results MUST follow their own exact-candidate evidence.

@@ -1,0 +1,8 @@
+{
+  "id": "asset-001",
+  "title": "Synthetic measurements",
+  "description": "Synthetic metadata.",
+  "core_party": {
+    "label": "Metadata support"
+  }
+}

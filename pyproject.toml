@@ -5,7 +5,11 @@ description = "Dataset Catalog: workbook intake and standards-based catalog expo
 requires-python = ">=3.15,<3.16"
 license = "LicenseRef-Proprietary"
 license-files = ["LICENSE"]
-dependencies = ["typer==0.27.3", "pydantic==2.14.2"]
+dependencies = [
+    "typer==0.27.3",
+    "pydantic==2.14.2",
+    "email-validator==2.3.0",
+]
 
 [project.scripts]
 dscat = "dscat.cli:app"
@@ -48,6 +52,10 @@ ignore = ["D203", "D213", "COM812"]
 [tool.ruff.lint.per-file-ignores]
 # Pytest assertions are executable acceptance checks, never security controls.
 "tests/**/*.py" = ["S101"]
+
+[tool.ruff.lint.flake8-type-checking]
+# Pydantic resolves these annotations at runtime to construct strict schemas.
+runtime-evaluated-base-classes = ["pydantic.BaseModel", "dscat.models.base.StrictModel"]
 
 [tool.ty.rules]
 all = "error"

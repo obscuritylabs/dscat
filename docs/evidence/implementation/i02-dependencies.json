@@ -1,0 +1,48 @@
+{
+  "observed_on": "2026-11-19",
+  "predecessor": "1341bff926ee49cbfe8790aebb78b5fc88885e22",
+  "lock_sha256": "4b445d1090f2b2592f584b5e8834d937fd5bb900d04c70a909cef5f6fbf54a55",
+  "cutoff_utc": "2026-11-05T20:41:53.019618+00:00",
+  "packages": [
+    {
+      "name": "dnspython",
+      "version": "2.9.2",
+      "artifact_count": 2,
+      "license_expression": "ISC",
+      "license": null,
+      "source_notices": [
+        {
+          "path": "LICENSE",
+          "sha256": "c3ea3ff5654b329c19d3bc5f7481af623c3dded4a6145585499f843ad3d741cd"
+        }
+      ]
+    },
+    {
+      "name": "email-validator",
+      "version": "2.3.0",
+      "artifact_count": 2,
+      "license_expression": null,
+      "license": "Unlicense",
+      "source_notices": [
+        {
+          "path": "LICENSE",
+          "sha256": "672179752e109134a3fb2bdd0780b29fdb7a03974f0f586a13aead5129562d4c"
+        }
+      ]
+    },
+    {
+      "name": "idna",
+      "version": "3.20",
+      "artifact_count": 2,
+      "license_expression": "BSD-3-Clause",
+      "license": null,
+      "source_notices": [
+        {
+          "path": "LICENSE.md",
+          "sha256": "1a9a4f0e3d479a27240ddd59a9137a66ab4a0f9dfdc8ca6188cc0bfd85187f04"
+        }
+      ]
+    }
+  ],
+  "status": "Added dependency source, hash, non-yanked and artifact age checks passed. No vulnerability-safety claim."
+}
