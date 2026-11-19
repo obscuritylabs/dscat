@@ -1,6 +1,6 @@
 # Completing a dataset workbook
 
-Template generation is implemented. CLI intake and export commands are still in development. The [schema 1.0 template](../../tests/fixtures/workbook-1.0/template.xlsx) is available for inspection; selected Windows Excel and screen-reader acceptance remains pending.
+Template generation and workbook validation are implemented in this development build. Catalog persistence and standards exports are still in development. The [current schema 1.0 template](../../tests/fixtures/workbook-1.0/current.xlsx) is available for inspection; selected Windows Excel and screen-reader acceptance remains pending. Native macOS intake currently refuses to run because the required memory guard is unavailable.
 
 ## Start with the required core
 
@@ -36,3 +36,12 @@ Read the `feedback` column for missing fields, duplicate IDs, unsupported choice
 The first 1,000 input rows include controls and feedback. Excel copy/fill can extend them; the CLI will independently enforce overall resource limits. Spreadsheet controls provide prompts and preliminary checks. Full type/precision validation, cross-file conflicts, reference resolution, supplied authority and target readiness belong to CLI validation. Bypassing or removing a spreadsheet control does not authorize invalid metadata.
 
 Keep the schema/kind markers unchanged. Do not add formulas to input cells, macros, external relationships, embedded objects or unsupported semantic sections. Lineage is outside workbook schema 1.0. Use only synthetic materials for testing the template.
+
+
+## Validate a completed workbook
+
+Run `dscat validate intake.xlsx --format json` for a structured assessment, or omit `--format json` for plain text. Use `--recursive` only when you want to include nested directories; an explicitly supplied `--config settings.toml` is checked before any workbook processing. Validation reads submissions without modifying them and publishes no catalog artifacts.
+
+Reports identify sources by deterministic discovery ordinal and known worksheet, row and column locations. Correct the reported type, vocabulary or reference errors and retry. Checks that depend on unreadable or invalid inputs remain explicitly unperformed; they do not create guessed dangling-reference errors.
+
+Structural validity, optional completeness and declared local conformity remain separate results. Review and publication remain supplied decisions. Target readiness is explicitly unexamined while standards exporters are in development.

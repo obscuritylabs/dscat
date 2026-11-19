@@ -16,9 +16,47 @@ from dscat.models.catalog import (
     PublicationApproval,
     RoleAssignment,
 )
-from dscat.models.diagnostics import Code, Diagnostic
+from dscat.models.diagnostics import Code, Diagnostic, Expected
 from dscat.models.intake import DatasetRow, DetailRow, IntakeBatch, SourceLocation
 from dscat.normalization import normalize_identifier, normalize_quantity
+
+GROUP_EXPECTED: dict[str, Expected] = {
+    "dates": "date",
+    "capacity": "capacity",
+    "capacity_retention": "days",
+    "role": "role_reference",
+    "service": "service_reference",
+    "service_dataset": "service_reference",
+}
+
+RECORD_EXPECTED: dict[str, Expected] = {
+    "capacity": "capacity",
+    "capacity_retention": "days",
+    "services": "service_reference",
+    "roles": "role_reference",
+}
+
+SCALAR_EXPECTED: dict[str, Expected] = {
+    "id": "identifier",
+    "email": "email",
+    "uri": "https_reference",
+    "inventory_added": "date",
+    "metadata_reviewed": "date",
+    "dataset_modified": "date",
+    "determined_on": "date",
+    "reviewed_on": "date",
+    "approved_on": "date",
+    "measured_on": "date",
+    "days": "days",
+    "duration_days": "days",
+    "normalized_bytes": "quantity",
+    "semantic_references": "reference",
+    "reference": "reference",
+    "product_reference": "reference",
+    "access_url": "https_reference",
+    "download_url": "https_reference",
+    "endpoint_url": "https_reference",
+}
 
 MAX_DAY_DIGITS = len(str(2**31 - 1))
 CONSUMER_FIELDS = {
@@ -51,7 +89,10 @@ class NormalizedBatch(StrictModel):
 
 
 def located_error(
-    location: SourceLocation, *, code: Code = "INVALID_METADATA"
+    location: SourceLocation,
+    *,
+    code: Code = "INVALID_METADATA",
+    expected: Expected | None = None,
 ) -> Diagnostic:
     """Construct a fixed diagnostic from typed, invocation-local coordinates."""
     fields = location.model_dump(exclude_none=True)
@@ -59,24 +100,49 @@ def located_error(
         {"code": code, "severity": "error", "message_key": "correct_metadata"}
     )
 
+    fields["expected"] = expected or (
+        "role_reference"
+        if code == "UNRESOLVED_REFERENCE"
+        else "core"
+        if location.sheet == "Datasets"
+        else "detail_group"
+    )
+    return Diagnostic.model_validate(fields)
+
+
+def unperformed_references(location: SourceLocation | None = None) -> Diagnostic:
+    """Report dependent reference checks without inventing dangling-ID failures."""
+    fields: dict[str, object] = {
+        "code": "REFERENCE_CHECK_UNPERFORMED",
+        "severity": "info",
+        "message_key": "review_scope",
+        "check_state": "unperformed",
+    }
+    if location is not None:
+        fields.update(location.model_dump(exclude_none=True))
     return Diagnostic.model_validate(fields)
 
 
 def integer_days(value: str) -> int:
     """Convert only the explicit nonnegative whole-day grammar, never locale text."""
+    normalized = value.lstrip("0") or "0"
     if (
-        len(value) > MAX_DAY_DIGITS
+        len(normalized) > MAX_DAY_DIGITS
         or re.fullmatch(r"[0-9]+", value) is None
-        or int(value) > 2**31 - 1
+        or int(normalized) > 2**31 - 1
     ):
         raise fail(code="INVALID_METADATA")
-    return int(value)
+    return int(normalized)
 
 
 def group_properties(rows: list[DetailRow]) -> dict[str, object]:
     """Retain one property value and only its supported auxiliary facts."""
     values: dict[str, object] = {}
+    properties: set[str] = set()
     for row in rows:
+        if row.property in properties:
+            raise fail(code="INVALID_METADATA")
+        properties.add(row.property)
         additions: dict[str, object] = {row.property: row.value}
         if row.unit is not None:
             additions["unit"] = row.unit
@@ -145,6 +211,7 @@ class RecordBuilder:
         for detail in details:
             self.groups[detail.section, detail.entry_id].append(detail)
         self.collections: dict[str, list[object]] = defaultdict(list)
+        self.collection_rows: dict[str, list[list[DetailRow]]] = defaultdict(list)
         self.consumer: dict[str, list[str]] = defaultdict(list)
         self.records: dict[str, object] = {}
         self.conflicts: list[str] = []
@@ -178,13 +245,13 @@ class RecordBuilder:
         elif section in {"distribution", "commitment", "capacity"}:
             if section == "commitment":
                 values["id"] = entry
-            self.collections[
-                {
-                    "distribution": "distributions",
-                    "commitment": "commitments",
-                    "capacity": "capacity",
-                }[section]
-            ].append(values)
+            collection = {
+                "distribution": "distributions",
+                "commitment": "commitments",
+                "capacity": "capacity",
+            }[section]
+            self.collections[collection].append(values)
+            self.collection_rows[collection].append(rows)
         else:
             self.add_complex(section, entry, values)
 
@@ -236,6 +303,8 @@ class RecordBuilder:
                 merge_facts(self.publication, {"state": state})
             if values:
                 self.approvals.append(PublicationApproval.model_validate(values))
+        else:
+            raise fail(code="INVALID_METADATA")
 
     def finish_services(self) -> None:
         """Require explicit single-link or grouped-link form, never mix either."""
@@ -282,6 +351,83 @@ class RecordBuilder:
         return DatasetRecord.model_validate(self.values)
 
 
+def collect_group_errors(
+    error: ValidationError,
+    rows: list[DetailRow],
+    section: str,
+    collector: DiagnosticCollector,
+) -> None:
+    """Bind model failures to supported property rows without reflecting error text."""
+    for detail in error.errors(include_input=False, include_context=False):
+        property_name = str(detail["loc"][0]) if detail["loc"] else ""
+        location = next(
+            (row.location for row in rows if row.property == property_name),
+            rows[0].location,
+        )
+        expected = (
+            GROUP_EXPECTED.get(section, "detail_group")
+            if detail["type"] == "missing"
+            else SCALAR_EXPECTED.get(
+                property_name, GROUP_EXPECTED.get(section, "detail_group")
+            )
+        )
+        collector.add(located_error(location, expected=expected))
+
+
+def canonical_error_location(
+    builder: RecordBuilder, path: tuple[int | str, ...]
+) -> SourceLocation:
+    """Locate a canonical field failure in its original supported detail group."""
+    if not path:
+        return builder.row.location
+    field = str(path[0])
+    section = {
+        "distributions": "distribution",
+        "services": "service",
+        "commitments": "commitment",
+    }.get(field, field)
+    groups = builder.collection_rows.get(field, []) or [
+        rows
+        for (name, _entry), rows in sorted(builder.groups.items())
+        if name == section
+    ]
+    if not groups:
+        return builder.row.location
+    index = path[1] if len(path) > 1 and isinstance(path[1], int) else 0
+    rows = groups[index] if 0 <= index < len(groups) else groups[0]
+    return next(
+        (row.location for row in rows if row.property == str(path[-1])),
+        rows[0].location,
+    )
+
+
+def finish_record(
+    builder: RecordBuilder, collector: DiagnosticCollector
+) -> DatasetRecord | None:
+    """Translate all final canonical validation failures to safe source diagnostics."""
+    try:
+        return builder.finish()
+    except IntakeError as error:
+        collector.add(located_error(builder.row.location, code=error.diagnostic.code))
+    except ValidationError as error:
+        for detail in error.errors(include_input=False, include_context=False):
+            key = str(detail["loc"][0]) if detail["loc"] else ""
+            leaf = str(detail["loc"][-1]) if detail["loc"] else ""
+            expected = SCALAR_EXPECTED.get(
+                leaf,
+                RECORD_EXPECTED.get(
+                    key,
+                    "detail_group" if builder.groups or builder.collections else "core",
+                ),
+            )
+            collector.add(
+                located_error(
+                    canonical_error_location(builder, detail["loc"]), expected=expected
+                )
+            )
+    return None
+
+
 def normalize_record(
     row: DatasetRow,
     details: list[DetailRow],
@@ -294,41 +440,51 @@ def normalize_record(
     for (section, entry), rows in sorted(builder.groups.items()):
         try:
             builder.add_group(section, entry, rows)
-        except ValidationError, ValueError, IntakeError:
-            collector.add(located_error(rows[0].location))
+        except ValidationError as error:
+            collect_group_errors(error, rows, section, collector)
+            invalid = True
+        except ValueError, IntakeError:
+            collector.add(
+                located_error(
+                    rows[0].location,
+                    expected=GROUP_EXPECTED.get(section, "detail_group"),
+                )
+            )
             invalid = True
     if fields:
         builder.collections["fields"] = list(fields)
-    try:
-        record = builder.finish()
-    except IntakeError as error:
-        collector.add(located_error(row.location, code=error.diagnostic.code))
-    except ValidationError, ValueError:
-        collector.add(located_error(row.location))
-    else:
-        if not invalid:
-            return LocatedRecord(record=record, location=row.location)
+    record = finish_record(builder, collector)
+    if record is not None and not invalid:
+        return LocatedRecord(record=record, location=row.location)
     return None
 
 
-def normalize_batch(batch: IntakeBatch) -> NormalizedBatch:
-    """Validate all independent records and report orphan/invalid detail groups."""
-    collector = DiagnosticCollector()
-    for diagnostic in batch.diagnostics:
-        collector.add(diagnostic)
-    collector.has_errors |= batch.has_errors
-    dataset_ids = {row.id for row in batch.datasets if row.id is not None}
-    details: dict[str, list[DetailRow]] = defaultdict(list)
+def convert_fields(
+    batch: IntakeBatch,
+    dataset_ids: set[str],
+    *,
+    complete_ids: bool,
+    collector: DiagnosticCollector,
+) -> dict[str, list[FieldDefinition]]:
+    """Keep ordered fields and locate duplicate keys and invalid semantic references."""
     fields: dict[str, list[FieldDefinition]] = defaultdict(list)
-    for detail in batch.details:
-        if detail.dataset_id not in dataset_ids:
-            collector.add(located_error(detail.location, code="UNRESOLVED_REFERENCE"))
-        else:
-            details[detail.dataset_id].append(detail)
+    seen: set[tuple[str, str, str]] = set()
     for row in batch.fields:
         if row.dataset_id not in dataset_ids:
-            collector.add(located_error(row.location, code="UNRESOLVED_REFERENCE"))
+            collector.add(
+                located_error(
+                    row.location,
+                    code="UNRESOLVED_REFERENCE",
+                    expected="dataset_reference",
+                )
+                if complete_ids
+                else unperformed_references(row.location)
+            )
             continue
+        key = row.dataset_id, row.object_name, row.field_name
+        if key in seen:
+            collector.add(located_error(row.location, expected="detail_group"))
+        seen.add(key)
         values = row.model_dump(
             exclude_none=True, exclude={"location", "dataset_id", "semantic_reference"}
         )
@@ -337,7 +493,38 @@ def normalize_batch(batch: IntakeBatch) -> NormalizedBatch:
         try:
             fields[row.dataset_id].append(FieldDefinition.model_validate(values))
         except ValidationError:
-            collector.add(located_error(row.location))
+            collector.add(located_error(row.location, expected="reference"))
+    return fields
+
+
+def normalize_batch(batch: IntakeBatch) -> NormalizedBatch:
+    """Validate all independent records and report orphan/invalid detail groups."""
+    collector = DiagnosticCollector()
+    for diagnostic in batch.diagnostics:
+        collector.add(diagnostic)
+    collector.has_errors |= batch.has_errors
+    complete_ids = not any(
+        item.severity == "error" and item.sheet in {None, "Datasets"}
+        for item in batch.diagnostics
+    )
+    dataset_ids = {row.id for row in batch.datasets if row.id is not None}
+    details: dict[str, list[DetailRow]] = defaultdict(list)
+    for detail in batch.details:
+        if detail.dataset_id not in dataset_ids:
+            collector.add(
+                located_error(
+                    detail.location,
+                    code="UNRESOLVED_REFERENCE",
+                    expected="dataset_reference",
+                )
+                if complete_ids
+                else unperformed_references(detail.location)
+            )
+        else:
+            details[detail.dataset_id].append(detail)
+    fields = convert_fields(
+        batch, dataset_ids, complete_ids=complete_ids, collector=collector
+    )
     records: list[LocatedRecord] = []
     for row in batch.datasets:
         record = normalize_record(

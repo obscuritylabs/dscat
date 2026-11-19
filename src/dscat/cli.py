@@ -9,7 +9,7 @@ import typer
 from dscat import __version__
 from dscat.configuration import MAX_CONFIG_BYTES, parse_configuration
 from dscat.intake.discovery import DiscoveryRequest, reject_links
-from dscat.intake.limits import IntakeError, fail
+from dscat.intake.limits import IntakeError, diagnostic_exit, dominant_exit, fail
 from dscat.intake.worker import CoordinatorRequest, WorkerReply, invoke
 from dscat.models.configuration import AssessmentConfiguration, ExportConfiguration
 from dscat.models.diagnostics import (
@@ -54,22 +54,10 @@ def main(
 
 def validation_exit(diagnostics: list[Diagnostic]) -> ExitCode:
     """Apply fixed failure precedence without inspecting arbitrary message text."""
-    codes = {item.code for item in diagnostics if item.severity == "error"}
-    if "INTERNAL_FAILURE" in codes:
-        return 4
-    if "INTERRUPTED" in codes:
-        return 130
-    if codes & {
-        "INPUT_LIMIT",
-        "UNREADABLE_INPUT",
-        "WORKER_FAILURE",
-        "RESOURCE_GUARD_UNAVAILABLE",
-        "IO_FAILURE",
-    }:
-        return 3
-    if codes & {"INVALID_CONFIGURATION", "INVALID_INVOCATION"}:
-        return 2
-    return 1 if codes else 0
+    result: ExitCode = 0
+    for diagnostic in diagnostics:
+        result = dominant_exit(result, diagnostic_exit(diagnostic))
+    return result
 
 
 def load_explicit_configuration(path: Path | None) -> ExportConfiguration:
@@ -90,7 +78,7 @@ def validation_result(reply: WorkerReply) -> CommandResult:
     diagnostics = list(reply.diagnostics)
     for outcome in reply.outcomes:
         diagnostics.extend(outcome.diagnostics)
-    exit_code = validation_exit(diagnostics)
+    exit_code = dominant_exit(reply.failure_exit, validation_exit(diagnostics))
     if reply.has_errors and exit_code == 0:
         exit_code = 1
     assessment = reply.assessment or assess(None, AssessmentConfiguration())
@@ -138,10 +126,69 @@ def render_validation(result: CommandResult, output_format: str) -> None:
             "review_readiness": "Supply the facts required by the selected target.",
             "review_scope": "Review incomplete checks and the selected input scope.",
         }
-        typer.echo(
-            f"{diagnostic.severity}: {diagnostic.code}{location}. "
-            f"{actions[diagnostic.message_key]}"
+        expected_actions = {
+            "dataset_reference": (
+                "Use a dataset ID declared in this workbook; "
+                "complete all inputs before checking catalog links."
+            ),
+            "core": (
+                "Complete id, title, description and the contact/owner "
+                "label using the supported types."
+            ),
+            "identifier": (
+                "Use 1-128 case-sensitive ASCII ID characters, starting "
+                "with a letter or digit."
+            ),
+            "text": "Supply nonempty text in this field.",
+            "date": "Use a valid Gregorian YYYY-MM-DD date.",
+            "email": "Supply a syntactically valid role email address.",
+            "https_reference": (
+                "Supply an absolute HTTPS reference without credentials."
+            ),
+            "reference": (
+                "Supply an absolute HTTPS or URN reference without credentials."
+            ),
+            "core_role": "Choose contact or owner, or leave the optional role blank.",
+            "nullable": "Choose Yes or No, or leave the optional nullable value blank.",
+            "detail_property": (
+                "Choose a supported section/property and its permitted "
+                "unit/reference cells."
+            ),
+            "detail_group": (
+                "Complete the supported properties of this detail "
+                "group; avoid repeated or conflicting facts."
+            ),
+            "quantity": (
+                "Use nonnegative decimal text and a supported byte "
+                "unit; normalized bytes must be integral."
+            ),
+            "days": (
+                "Use whole days from zero through 2147483647, unknown "
+                "or indefinite as applicable."
+            ),
+            "capacity": (
+                "Use a supported kind/state, decimal value, byte unit, "
+                "basis, date and applicable rate window."
+            ),
+            "role_reference": (
+                "Supply a complete explicit role group and reference "
+                "its matching entry_id for this dataset."
+            ),
+            "service_reference": (
+                "Supply valid service IDs and explicit local/external "
+                "references using one link form."
+            ),
+            "workbook_schema": (
+                "Restore the supported worksheet headers and visible "
+                "schema/kind markers."
+            ),
+        }
+        action = (
+            expected_actions[diagnostic.expected]
+            if diagnostic.expected is not None
+            else actions[diagnostic.message_key]
         )
+        typer.echo(f"{diagnostic.severity}: {diagnostic.code}{location}. {action}")
 
 
 def check_output_format(value: str) -> None:

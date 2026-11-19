@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel, ValidationError
 
 from dscat.intake.limits import DiagnosticCollector
-from dscat.intake.normalize import LocatedRecord, located_error
+from dscat.intake.normalize import LocatedRecord, located_error, unperformed_references
 from dscat.models.base import StrictModel
 from dscat.models.catalog import Catalog, KnownCapacity
 from dscat.models.diagnostics import (
@@ -190,7 +190,11 @@ def validate_references(
             for reference in service.served_datasets or []:
                 if reference.reference_kind == "local" and reference.id not in ids:
                     collector.add(
-                        located_error(item.location, code="UNRESOLVED_REFERENCE")
+                        located_error(
+                            item.location,
+                            code="UNRESOLVED_REFERENCE",
+                            expected="service_reference",
+                        )
                     )
         for role in item.record.roles or []:
             if role.reference_kind != "local":
@@ -277,7 +281,10 @@ def validate_catalog(
         collector.add(diagnostic)
     collector.has_errors |= invalid
     unique = deduplicate(records, collector)
-    validate_references(unique, collector)
+    if collector.has_errors:
+        collector.add(unperformed_references())
+    else:
+        validate_references(unique, collector)
     informative_assessments(unique, collector)
     catalog = None
     if not collector.has_errors:
