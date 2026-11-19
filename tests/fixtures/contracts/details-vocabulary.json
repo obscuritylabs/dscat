@@ -1,0 +1,506 @@
+[
+  {
+    "section": "identity",
+    "property": "dataset_version",
+    "entry_id": "dataset",
+    "value": "2026-Q1"
+  },
+  {
+    "section": "identity",
+    "property": "contract_id",
+    "entry_id": "dataset",
+    "value": "contract-001"
+  },
+  {
+    "section": "identity",
+    "property": "contract_version",
+    "entry_id": "dataset",
+    "value": "2.7.0"
+  },
+  {
+    "section": "identity",
+    "property": "product_reference",
+    "entry_id": "dataset",
+    "value": "urn:example:product-001"
+  },
+  {
+    "section": "dates",
+    "property": "inventory_added",
+    "entry_id": "dataset",
+    "value": "2026-01-01"
+  },
+  {
+    "section": "dates",
+    "property": "metadata_reviewed",
+    "entry_id": "dataset",
+    "value": "2026-01-02"
+  },
+  {
+    "section": "dates",
+    "property": "dataset_modified",
+    "entry_id": "dataset",
+    "value": "2026-01-03"
+  },
+  {
+    "section": "dates",
+    "property": "update_frequency",
+    "entry_id": "dataset",
+    "value": "Weekly"
+  },
+  {
+    "section": "role",
+    "property": "party_id",
+    "entry_id": "entry-001",
+    "value": "support"
+  },
+  {
+    "section": "role",
+    "property": "role",
+    "entry_id": "entry-001",
+    "value": "contact"
+  },
+  {
+    "section": "role",
+    "property": "label",
+    "entry_id": "entry-001",
+    "value": "Metadata support"
+  },
+  {
+    "section": "role",
+    "property": "email",
+    "entry_id": "entry-001",
+    "value": "metadata@example.org"
+  },
+  {
+    "section": "role",
+    "property": "uri",
+    "entry_id": "entry-001",
+    "value": "https://example.org/support/"
+  },
+  {
+    "section": "role",
+    "property": "reference_kind",
+    "entry_id": "entry-001",
+    "value": "local"
+  },
+  {
+    "section": "domain",
+    "property": "id",
+    "entry_id": "dataset",
+    "value": "service-001"
+  },
+  {
+    "section": "domain",
+    "property": "reference",
+    "entry_id": "dataset",
+    "value": "urn:example:reference"
+  },
+  {
+    "section": "distribution",
+    "property": "id",
+    "entry_id": "entry-001",
+    "value": "service-001"
+  },
+  {
+    "section": "distribution",
+    "property": "title",
+    "entry_id": "entry-001",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "distribution",
+    "property": "access_url",
+    "entry_id": "entry-001",
+    "value": "https://example.org/access/"
+  },
+  {
+    "section": "distribution",
+    "property": "download_url",
+    "entry_id": "entry-001",
+    "value": "https://example.org/download/"
+  },
+  {
+    "section": "distribution",
+    "property": "media_type",
+    "entry_id": "entry-001",
+    "value": "text/csv"
+  },
+  {
+    "section": "distribution",
+    "property": "format",
+    "entry_id": "entry-001",
+    "value": "CSV"
+  },
+  {
+    "section": "service",
+    "property": "id",
+    "entry_id": "entry-001",
+    "value": "service-001"
+  },
+  {
+    "section": "service",
+    "property": "title",
+    "entry_id": "entry-001",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "service",
+    "property": "endpoint_url",
+    "entry_id": "entry-001",
+    "value": "https://example.org/api/"
+  },
+  {
+    "section": "service",
+    "property": "endpoint_description",
+    "entry_id": "entry-001",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "service",
+    "property": "served_dataset_id",
+    "entry_id": "entry-001",
+    "value": "asset-001"
+  },
+  {
+    "section": "service",
+    "property": "reference_kind",
+    "entry_id": "entry-001",
+    "value": "local"
+  },
+  {
+    "section": "service_dataset",
+    "property": "service_id",
+    "entry_id": "entry-001",
+    "value": "service-001"
+  },
+  {
+    "section": "service_dataset",
+    "property": "dataset_id",
+    "entry_id": "entry-001",
+    "value": "asset-001"
+  },
+  {
+    "section": "service_dataset",
+    "property": "reference_kind",
+    "entry_id": "entry-001",
+    "value": "local"
+  },
+  {
+    "section": "consumer",
+    "property": "intended_use",
+    "entry_id": "entry-001",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "consumer",
+    "property": "limitation",
+    "entry_id": "entry-001",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "consumer",
+    "property": "access_instruction",
+    "entry_id": "entry-001",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "consumer",
+    "property": "provenance",
+    "entry_id": "entry-001",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "consumer",
+    "property": "semantic_reference",
+    "entry_id": "entry-001",
+    "value": "urn:example:meaning"
+  },
+  {
+    "section": "commitment",
+    "property": "kind",
+    "entry_id": "entry-001",
+    "value": "quality"
+  },
+  {
+    "section": "commitment",
+    "property": "subject",
+    "entry_id": "entry-001",
+    "value": "measurements.reading"
+  },
+  {
+    "section": "commitment",
+    "property": "description",
+    "entry_id": "entry-001",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "commitment",
+    "property": "value",
+    "entry_id": "entry-001",
+    "value": "1"
+  },
+  {
+    "section": "commitment",
+    "property": "unit",
+    "entry_id": "entry-001",
+    "value": "percent"
+  },
+  {
+    "section": "commitment",
+    "property": "reference",
+    "entry_id": "entry-001",
+    "value": "urn:example:reference"
+  },
+  {
+    "section": "access_determination",
+    "property": "state",
+    "entry_id": "dataset",
+    "value": "unknown"
+  },
+  {
+    "section": "access_determination",
+    "property": "authority",
+    "entry_id": "dataset",
+    "value": "Synthetic authority"
+  },
+  {
+    "section": "access_determination",
+    "property": "reference",
+    "entry_id": "dataset",
+    "value": "urn:example:reference"
+  },
+  {
+    "section": "access_determination",
+    "property": "rationale",
+    "entry_id": "dataset",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "access_determination",
+    "property": "determined_on",
+    "entry_id": "dataset",
+    "value": "2026-01-01"
+  },
+  {
+    "section": "access_determination",
+    "property": "review_status",
+    "entry_id": "dataset",
+    "value": "not_reviewed"
+  },
+  {
+    "section": "disclosure_determination",
+    "property": "state",
+    "entry_id": "dataset",
+    "value": "unknown"
+  },
+  {
+    "section": "disclosure_determination",
+    "property": "authority",
+    "entry_id": "dataset",
+    "value": "Synthetic authority"
+  },
+  {
+    "section": "disclosure_determination",
+    "property": "reference",
+    "entry_id": "dataset",
+    "value": "urn:example:reference"
+  },
+  {
+    "section": "disclosure_determination",
+    "property": "rationale",
+    "entry_id": "dataset",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "disclosure_determination",
+    "property": "determined_on",
+    "entry_id": "dataset",
+    "value": "2026-01-01"
+  },
+  {
+    "section": "disclosure_determination",
+    "property": "review_status",
+    "entry_id": "dataset",
+    "value": "not_reviewed"
+  },
+  {
+    "section": "metadata_review",
+    "property": "state",
+    "entry_id": "dataset",
+    "value": "not_reviewed"
+  },
+  {
+    "section": "metadata_review",
+    "property": "authority",
+    "entry_id": "dataset",
+    "value": "Synthetic authority"
+  },
+  {
+    "section": "metadata_review",
+    "property": "reference",
+    "entry_id": "dataset",
+    "value": "urn:example:reference"
+  },
+  {
+    "section": "metadata_review",
+    "property": "reviewed_on",
+    "entry_id": "dataset",
+    "value": "2026-01-01"
+  },
+  {
+    "section": "publication",
+    "property": "state",
+    "entry_id": "entry-001",
+    "value": "unknown"
+  },
+  {
+    "section": "publication",
+    "property": "authority",
+    "entry_id": "entry-001",
+    "value": "Synthetic authority"
+  },
+  {
+    "section": "publication",
+    "property": "approved_on",
+    "entry_id": "entry-001",
+    "value": "2026-01-01"
+  },
+  {
+    "section": "publication",
+    "property": "policy_version",
+    "entry_id": "entry-001",
+    "value": "1.0"
+  },
+  {
+    "section": "publication",
+    "property": "subject_kind",
+    "entry_id": "entry-001",
+    "value": "canonical"
+  },
+  {
+    "section": "publication",
+    "property": "subject_id",
+    "entry_id": "entry-001",
+    "value": "title"
+  },
+  {
+    "section": "publication",
+    "property": "target",
+    "entry_id": "entry-001",
+    "value": "dcat-us-3"
+  },
+  {
+    "section": "publication",
+    "property": "approved_value_sha256",
+    "entry_id": "entry-001",
+    "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "section": "records",
+    "property": "authority",
+    "entry_id": "dataset",
+    "value": "Synthetic authority"
+  },
+  {
+    "section": "records",
+    "property": "reference",
+    "entry_id": "dataset",
+    "value": "urn:example:reference"
+  },
+  {
+    "section": "records",
+    "property": "trigger",
+    "entry_id": "dataset",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "records",
+    "property": "duration_days",
+    "entry_id": "dataset",
+    "value": "0"
+  },
+  {
+    "section": "records",
+    "property": "instruction",
+    "entry_id": "dataset",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "records",
+    "property": "hold_state",
+    "entry_id": "dataset",
+    "value": "unknown"
+  },
+  {
+    "section": "records",
+    "property": "review_state",
+    "entry_id": "dataset",
+    "value": "active"
+  },
+  {
+    "section": "records",
+    "property": "conflict",
+    "entry_id": "dataset",
+    "value": "Synthetic supplied text"
+  },
+  {
+    "section": "capacity",
+    "property": "kind",
+    "entry_id": "entry-001",
+    "value": "average_ingestion"
+  },
+  {
+    "section": "capacity",
+    "property": "state",
+    "entry_id": "entry-001",
+    "value": "known"
+  },
+  {
+    "section": "capacity",
+    "property": "value",
+    "entry_id": "entry-001",
+    "value": "1"
+  },
+  {
+    "section": "capacity",
+    "property": "unit",
+    "entry_id": "entry-001",
+    "value": "B"
+  },
+  {
+    "section": "capacity",
+    "property": "basis",
+    "entry_id": "entry-001",
+    "value": "logical"
+  },
+  {
+    "section": "capacity",
+    "property": "measured_on",
+    "entry_id": "entry-001",
+    "value": "2026-01-01"
+  },
+  {
+    "section": "capacity",
+    "property": "window_start",
+    "entry_id": "entry-001",
+    "value": "2026-01-01T00:00:00Z"
+  },
+  {
+    "section": "capacity",
+    "property": "window_end",
+    "entry_id": "entry-001",
+    "value": "2026-01-02T00:00:00Z"
+  },
+  {
+    "section": "capacity_retention",
+    "property": "state",
+    "entry_id": "dataset",
+    "value": "known"
+  },
+  {
+    "section": "capacity_retention",
+    "property": "days",
+    "entry_id": "dataset",
+    "value": "0"
+  }
+]

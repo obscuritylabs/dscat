@@ -1,0 +1,183 @@
+{
+  "id": "asset-001",
+  "title": "Synthetic measurements",
+  "description": "Synthetic metadata.",
+  "core_party": {
+    "label": "Metadata support"
+  },
+  "dataset_version": "2026-Q1",
+  "contract_id": "contract-001",
+  "contract_version": "2.7.0",
+  "product_reference": "urn:example:product-001",
+  "roles": [
+    {
+      "party_id": "support",
+      "reference_kind": "local",
+      "role": "contact",
+      "label": "Metadata support",
+      "email": "metadata@example.org"
+    },
+    {
+      "party_id": "steward",
+      "reference_kind": "local",
+      "role": "steward",
+      "label": "Metadata stewardship",
+      "uri": "https://example.org/stewards/"
+    }
+  ],
+  "domain": {
+    "id": "measurement",
+    "reference": "urn:example:measurement"
+  },
+  "inventory_added": "2026-01-01",
+  "metadata_reviewed": "2026-01-02",
+  "dataset_modified": "2026-01-03",
+  "update_frequency": "Weekly",
+  "distributions": [
+    {
+      "id": "download",
+      "title": "Synthetic download",
+      "access_url": "https://example.org/access/",
+      "download_url": "https://example.org/download/",
+      "media_type": "text/csv",
+      "format": "CSV"
+    }
+  ],
+  "services": [
+    {
+      "id": "service-001",
+      "title": "Synthetic service",
+      "endpoint_url": "https://example.org/api/",
+      "endpoint_description": "Descriptive endpoint metadata.",
+      "served_datasets": [
+        {
+          "reference_kind": "local",
+          "id": "asset-001"
+        },
+        {
+          "reference_kind": "external",
+          "id": "urn:example:external-001"
+        }
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "object_name": "measurements",
+      "field_name": "reading",
+      "type": "number",
+      "description": "Synthetic reading field.",
+      "nullable": false,
+      "semantic_references": [
+        "urn:example:reading"
+      ]
+    },
+    {
+      "object_name": "measurements",
+      "field_name": "unit",
+      "type": "string"
+    }
+  ],
+  "consumer": {
+    "intended_uses": [
+      "Synthetic evaluation"
+    ],
+    "limitations": [
+      "Synthetic data only"
+    ],
+    "access_instructions": [
+      "Use the described access route."
+    ],
+    "provenance": [
+      "Synthetic fixture"
+    ],
+    "semantic_references": [
+      "urn:example:measurement"
+    ]
+  },
+  "commitments": [
+    {
+      "id": "quality-001",
+      "kind": "quality",
+      "subject": "measurements.reading",
+      "description": "Supplied assertion only.",
+      "value": "99",
+      "unit": "percent",
+      "reference": "urn:example:assertion"
+    }
+  ],
+  "access_determination": {
+    "state": "partially_restricted",
+    "authority": "Synthetic authority",
+    "reference": "urn:example:access",
+    "rationale": "Synthetic restriction",
+    "determined_on": "2026-01-02",
+    "review_status": "in_review"
+  },
+  "disclosure_determination": {
+    "state": "unknown"
+  },
+  "metadata_review": {
+    "state": "not_reviewed",
+    "authority": "Synthetic review",
+    "reference": "urn:example:review",
+    "reviewed_on": "2026-01-02"
+  },
+  "publication": {
+    "state": "unknown",
+    "approvals": [
+      {
+        "subject_kind": "canonical",
+        "subject_id": "title",
+        "target": "dcat-us-3",
+        "approved_value_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "policy_version": "1.0",
+        "authority": "Synthetic authority",
+        "approved_on": "2026-01-02"
+      }
+    ]
+  },
+  "records": {
+    "authority": "Synthetic authority",
+    "reference": "urn:example:records",
+    "trigger": "Supplied trigger",
+    "duration_days": 0,
+    "instruction": "Supplied instruction",
+    "hold_state": "unknown",
+    "review_state": "active",
+    "conflicts": [
+      "Synthetic competing instruction"
+    ]
+  },
+  "capacity": [
+    {
+      "kind": "size",
+      "state": "unknown"
+    },
+    {
+      "kind": "average_ingestion",
+      "state": "known",
+      "value": "2",
+      "unit": "MB",
+      "normalized_bytes": 2000000,
+      "basis": "logical",
+      "measured_on": "2026-01-03",
+      "window_start": "2026-01-01T02:00:00+02:00",
+      "window_end": "2026-01-02T02:00:00+02:00"
+    },
+    {
+      "kind": "peak_ingestion",
+      "state": "known",
+      "value": "3",
+      "unit": "MB",
+      "normalized_bytes": 3000000,
+      "basis": "logical",
+      "measured_on": "2026-01-03",
+      "window_start": "2026-01-01T00:00:00Z",
+      "window_end": "2026-01-02T00:00:00Z"
+    }
+  ],
+  "capacity_retention": {
+    "state": "indefinite"
+  }
+}
