@@ -56,10 +56,22 @@ def normalize_reference(value: object) -> str:
     if any(c.isspace() or unicodedata.category(c).startswith("C") for c in result):
         msg = "Reference contains unsupported whitespace or controls."
         raise ValueError(msg)
-    if "\\" in result or re.search(r"%(?![0-9A-Fa-f]{2})", result):
+    if any(char in '<>"{}|\\^`' for char in result) or re.search(
+        r"%(?![0-9A-Fa-f]{2})", result
+    ):
         msg = "Reference contains invalid URI characters."
         raise ValueError(msg)
     parts = urlsplit(result)
+    if (
+        any(
+            char in "[]"
+            for component in (parts.path, parts.query, parts.fragment)
+            for char in component
+        )
+        or "#" in parts.fragment
+    ):
+        msg = "Reference contains invalid component delimiters."
+        raise ValueError(msg)
     if (
         parts.scheme == "https"
         and bool(parts.hostname)

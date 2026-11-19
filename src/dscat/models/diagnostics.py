@@ -3,12 +3,23 @@
 
 from typing import Annotated, Literal
 
-from pydantic import Field, field_validator
+from pydantic import BeforeValidator, Field, field_validator
 
 from dscat.models.base import Identifier, Sha256, StrictModel, Target
 from dscat.models.configuration import canonical_paths
 
 CheckState = Literal["conforms", "does_not_conform", "unperformed"]
+
+
+def require_integer(value: object) -> int:
+    """Reject bool/float equality coercion before numeric Literal validation."""
+    if type(value) is not int:
+        msg = "Expected an integer exit code without coercion."
+        raise ValueError(msg)
+    return value
+
+
+ExitCode = Annotated[Literal[0, 1, 2, 3, 4, 130], BeforeValidator(require_integer)]
 Code = Literal[
     "INVALID_INVOCATION",
     "INVALID_CONFIGURATION",
@@ -151,6 +162,6 @@ class CommandResult(DiagnosticReport):
     """Exactly one structured result can be rendered for a command invocation."""
 
     command: Literal["template", "validate", "build", "export"]
-    exit_code: Literal[0, 1, 2, 3, 4, 130]
+    exit_code: ExitCode
     assessment: ValidationAssessment | None = None
     receipt: OutputReceipt | None = None
