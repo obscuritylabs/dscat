@@ -63,7 +63,7 @@ After the separate W3C DCAT 3 capability in SPEC-005, DSCat MUST support OPTIONA
 
 ### NFR-001
 
-DSCat MUST be a uv-managed Python package using the latest stable Python selected at initial implementation and a Typer entrypoint; Windows, macOS, and Linux MUST be portability targets using ordinary cross-platform Python tooling and standard packaging (DEC-028). Installation MUST use uv tool install with GitHub Release artifacts, with authenticated download when needed; specialized installers MUST NOT be required. Verification MUST record platforms actually tested rather than claim a verified matrix.
+DSCat MUST be an OS-agnostic, uv-managed Python package using the latest stable Python selected at initial implementation and a Typer entrypoint, with macOS as its primary target. Windows and Linux MUST remain portability targets using ordinary cross-platform Python tooling and standard packaging (DEC-028). Installation MUST use uv tool install with GitHub Release artifacts, with authenticated download when needed; specialized installers MUST NOT be required. First-release acceptance MUST demonstrate successful native macOS installation and the supported end-to-end workflow, including intake, canonical persistence and both mandatory exports. Verification MUST identify the operating systems, versions and environments actually tested and their limitations; Windows/Linux portability targets MUST NOT imply a mandatory verified-platform matrix or verified support without evidence.
 
 ### NFR-002
 
