@@ -23,6 +23,20 @@ class ProjectIdentity(StrictModel):
     requirements: list[Text]
 
 
+class InstalledAcceptance(StrictModel):
+    """Observed installed CLI results include proof that network denial was active."""
+
+    schema_version: Literal["1.0"]
+    state: Literal["pass"]
+    cli_cases: Literal[9]
+    guard_probe_denied: Literal[True]
+    workflow_network_attempts: Literal[0]
+    unknown_reference_denied: Literal[True]
+    template_sha256: Sha256
+    canonical_generation: Sha256
+    public_generation: Sha256
+
+
 def utc_timestamp(value: str) -> str:
     """Require an explicit UTC instant without silently assigning a timezone."""
     try:

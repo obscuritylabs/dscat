@@ -1,7 +1,12 @@
 # Copyright (c) 2026 Obscurity Labs. All rights reserved.
 """Artifact-bound release readiness; this tool never publishes a release."""
 
+import argparse
+import hashlib
+import os
+import sys
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import TYPE_CHECKING, get_args
 
 from scripts.evidence_models import (
@@ -11,6 +16,7 @@ from scripts.evidence_models import (
     ReleaseEvidence,
     ReleaseReadiness,
 )
+from scripts.processes import ToolExecutionError
 
 if TYPE_CHECKING:
     from scripts.evidence_models import Feed, Finding, Gate
@@ -154,3 +160,64 @@ def assess_release(
             "warnings": sorted(set(warnings)),
         }
     )
+
+
+def collect_command(arguments: argparse.Namespace) -> ReleaseReadiness:
+    """Collect actual observations and retain a blocked result for missing gates."""
+    from dscat.storage.io import read_file, write_file  # noqa: PLC0415 -- Keep assessment independent of collection I/O.
+    from scripts.candidate_collection import (  # noqa: PLC0415 -- Collection is an explicit network-dependent command.
+        Claims,
+        collect_candidate,
+        write_json,
+    )
+    from scripts.sbom import DOCUMENT_BYTES  # noqa: PLC0415 -- Input size boundary.
+
+    claims = (
+        Claims(schema_version="1.0")
+        if arguments.claims is None
+        else Claims.model_validate_json(read_file(arguments.claims, DOCUMENT_BYTES))
+    )
+    candidate = collect_candidate(
+        arguments.project, arguments.output, arguments.uv, claims
+    )
+    readiness = assess_release(
+        candidate.evidence,
+        candidate.actual,
+        now=datetime.now(UTC),
+        kev_cves=candidate.kev_cves,
+    )
+    assets = arguments.output.resolve() / "assets"
+    write_json(assets / "readiness.json", readiness.model_dump(mode="json"))
+    checksums = "".join(
+        f"{hashlib.sha256(read_file(path, DOCUMENT_BYTES)).hexdigest()}  {path.name}\n"
+        for path in sorted(assets.iterdir())
+    )
+    write_file(assets / "SHA256SUMS", checksums.encode())
+    return readiness
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Collect evidence without tags, publication or inferred manual approvals."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--project", type=Path, default=Path.cwd())
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--claims", type=Path)
+    parser.add_argument("--uv", default=os.environ.get("UV", "uv"))
+    arguments = parser.parse_args(argv)
+    try:
+        readiness = collect_command(arguments)
+    except ToolExecutionError as error:
+        sys.stderr.write(f"Release evidence collection failed: {error.label}.\n")
+        return 2
+    except OSError, ValueError, TypeError:
+        sys.stderr.write("Release evidence collection failed: invalid input or I/O.\n")
+        return 2
+    except KeyboardInterrupt:
+        sys.stderr.write("Release evidence collection interrupted.\n")
+        return 130
+    sys.stdout.write(readiness.model_dump_json() + "\n")
+    return 0 if readiness.state == "ready" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
