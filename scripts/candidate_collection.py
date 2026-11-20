@@ -300,9 +300,15 @@ def export_requirements(collection: Collection) -> dict[str, Path]:
                 "--frozen",
                 *flags,
                 "--no-emit-project",
+                "--no-header",
+                "--no-annotate",
                 "--output-file",
                 str(destination),
             ],
+        )
+        write_file(
+            collection.assets / f"{scope}-requirements.txt",
+            read_file(destination, DOCUMENT_BYTES),
         )
         paths[scope] = destination
     return paths
