@@ -5,6 +5,7 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then classify the task under [
 | Read when | Document and authoritative content |
 | --- | --- |
 | Installing a verified candidate or release | [Installation guide](user/installation.md): asset checks, pinned installation and offline use; [compatibility](user/compatibility.md): formats, command outcomes and platform limits |
+| Verifying a candidate | [Verification walkthrough](user/verification.md): synthetic fixtures, expected outcomes, controlled failures and selected macOS desktop observations |
 | Completing or inspecting a generated workbook | [Intake guide](user/intake.md): current template layout, optional detail entry, keyboard navigation and correction guidance |
 | Building or recovering a canonical bundle | [Storage guide](user/storage.md): canonical build, target export, public projection, private reports and recovery |
 | Coordinating work | [Governance](governance.md#task-scope-and-proportionality): task classes and stopping conditions; [workflow](workflow.md): applicable routes, bounded handoffs and risk-based review |
