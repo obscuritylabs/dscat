@@ -168,7 +168,24 @@ def test_template_compatibility_fixture_and_determinism(
     """The initial fixture protects output and future intake compatibility."""
     fixture = Path(__file__).parent / "fixtures" / "workbook-1.0"
     current = (fixture / "current.xlsx").read_bytes()
-    assert current == artifact.content == create_template().content
+    assert artifact.content == create_template().content
+    # Development tools can install openpyxl's optional XML backend. Namespace
+    # prefixes and empty-tag spelling differ; every XML value must still match.
+    with (
+        zipfile.ZipFile(io.BytesIO(current)) as expected,
+        zipfile.ZipFile(io.BytesIO(artifact.content)) as generated,
+    ):
+        assert expected.namelist() == generated.namelist()
+        for part in expected.namelist():
+            assert ET.canonicalize(
+                expected.read(part),
+                rewrite_prefixes=True,
+                qname_aware_attrs={"{http://www.w3.org/2001/XMLSchema-instance}type"},
+            ) == ET.canonicalize(
+                generated.read(part),
+                rewrite_prefixes=True,
+                qname_aware_attrs={"{http://www.w3.org/2001/XMLSchema-instance}type"},
+            )
     for name, inventory in (
         ("template.xlsx", "package-parts.json"),
         ("current.xlsx", "current-package-parts.json"),
