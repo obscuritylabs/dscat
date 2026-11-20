@@ -234,9 +234,6 @@ class Finding(StrictModel):
 
 GateName = Literal[
     "native_macos",
-    "excel_voiceover",
-    "terminal_voiceover",
-    "safari_voiceover",
     "confidential_reporting",
     "triage_rehearsal",
     "privacy_review",
@@ -295,7 +292,7 @@ class ReleaseEvidence(StrictModel):
     development: Inventory
     feeds: Annotated[list[Feed], Field(max_length=5)]
     findings: Annotated[list[Finding], Field(max_length=10000)]
-    gates: Annotated[list[Gate], Field(max_length=9)]
+    gates: Annotated[list[Gate], Field(max_length=6)]
 
     @model_validator(mode="after")
     def unique_claims(self) -> Self:

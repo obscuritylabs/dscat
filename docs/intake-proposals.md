@@ -42,7 +42,7 @@ The proposed field controls, examples and feedback MUST follow the [versioned in
 
 ### INTAKE-013
 
-The proposed supported-version and fixture policy MUST follow the [compatibility contract](architecture.md#initial-compatibility-contract). Workbook verification MUST retain actual application/version and accessibility evidence under [assurance](architecture-assurance.md).
+The proposed supported-version and fixture policy MUST follow the [compatibility contract](architecture.md#initial-compatibility-contract). Workbook verification MUST retain applicable compatibility evidence under [the compatibility contract](architecture.md#initial-compatibility-contract).
 
 ## Draft capacity policy
 

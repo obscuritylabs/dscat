@@ -6,7 +6,7 @@ This is the first-release architecture dispositioned against the 42 requirements
 
 The [architecture risk assessment and disposition](architecture-disposition.md) covers the [first-release supplied-commitment omission limitation](architecture-standards.md#optional-mappings-and-loss-matrix): both initial targets intentionally omit even explicitly supplied quality/service commitments, preserve them canonically and report loss. This bounded mapping loss is agent-dispositioned under DEC-046; it MUST NOT be treated as blanket first-release conformance or a human waiver. DEC-045 supplies no human approval of this technical choice.
 
-Version 0.1.0 MUST implement Excel intake, canonical persistence, DCAT-US 3.0, then ODCS 3.2.0, including FR-013–FR-018 and NFR-020–NFR-022. A separate W3C DCAT 3 capability, manual PROV-O lineage, ODPS product/lifecycle/ports, then DCAT-US 1.1 MUST follow in that order. Their reserved boundaries below MUST NOT enlarge the first release. The full detailed later-capability design gates MUST precede their own implementation; unverified later resources MUST NOT be described as pinned runtime resources.
+Version 0.1.0 MUST implement Excel intake, canonical persistence, DCAT-US 3.0, then ODCS 3.2.0, including FR-013–FR-018, NFR-020 and NFR-022. A separate W3C DCAT 3 capability, manual PROV-O lineage, ODPS product/lifecycle/ports, then DCAT-US 1.1 MUST follow in that order. Their reserved boundaries below MUST NOT enlarge the first release. The full detailed later-capability design gates MUST precede their own implementation; unverified later resources MUST NOT be described as pinned runtime resources.
 
 ## Typed boundaries
 

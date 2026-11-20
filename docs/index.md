@@ -5,7 +5,7 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then classify the task under [
 | Read when | Document and authoritative content |
 | --- | --- |
 | Installing a verified candidate or release | [Installation guide](user/installation.md): asset checks, pinned installation and offline use; [compatibility](user/compatibility.md): formats, command outcomes and platform limits |
-| Verifying a candidate | [Verification walkthrough](user/verification.md): synthetic fixtures, expected outcomes, controlled failures and selected macOS desktop observations |
+| Verifying a candidate | [Verification walkthrough](user/verification.md): synthetic fixtures, expected outcomes, controlled failures |
 | Completing or inspecting a generated workbook | [Intake guide](user/intake.md): current template layout, optional detail entry, keyboard navigation and correction guidance |
 | Building or recovering a canonical bundle | [Storage guide](user/storage.md): canonical build, target export, public projection, private reports and recovery |
 | Coordinating work | [Governance](governance.md#task-scope-and-proportionality): task classes and stopping conditions; [workflow](workflow.md): applicable routes, bounded handoffs and risk-based review |
@@ -14,8 +14,8 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then classify the task under [
 | Resolving current decisions or rationale | [Decisions](decisions.md): current decisions and necessary provenance; older wording through Git |
 | Designing or verifying product behavior | [Engineering](engineering.md): toolchain, security, catalog and licensing constraints |
 | Maintaining planning or delivery records | [Governance](governance.md): authority conventions, traceability, versioning and completion obligations |
-| Reviewing architecture and disposition | [Architecture](architecture.md): typed model, intake, storage and compatibility; [standards](architecture-standards.md): offline closure and mappings; [assurance](architecture-assurance.md): threats, privacy and accessibility; [architecture task](tasks/architecture.md): current gate handoff |
-| Executing approved first-release scope | [Implementation plan](implementation-plan.md): increments/all42 mappings and I01 handoff; [dependencies](implementation-dependencies.md): verified direct pins/provenance; [verification](implementation-verification.md): boundaries/manual/platform hard gates; [planning task](tasks/implementation-plan.md): exact candidate and review status |
+| Reviewing architecture and disposition | [Architecture](architecture.md): typed model, intake, storage and compatibility; [standards](architecture-standards.md): offline closure and mappings; [assurance](architecture-assurance.md): threats, privacy and secure development; [architecture task](tasks/architecture.md): current gate handoff |
+| Executing approved first-release scope | [Implementation plan](implementation-plan.md): increments/active requirement mappings and I01 handoff; [dependencies](implementation-dependencies.md): verified direct pins/provenance; [verification](implementation-verification.md): boundaries/manual/platform hard gates; [planning task](tasks/implementation-plan.md): exact candidate and review status |
 | Designing intake | [Intake proposals](intake-proposals.md): versioned detailed policies and minimum-export demonstration |
 | Designing persistence, lineage or parsing | [Canonical model](canonical-model.md): storage, migration, RDF, lineage and security proposals |
 | Assessing consolidated research scope | [Research additions](research-additions.md): consolidated impact and explicit exclusions; [research task](tasks/research-additions.md): historical integration evidence; [scope decisions](tasks/scope-decisions.md): current requirements decision handoff |

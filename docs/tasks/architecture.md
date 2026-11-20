@@ -8,7 +8,7 @@ The 2026-11-19 explicit user direction selects OS agnostic/macOS primary behavio
 
 [Native platform design](../architecture-platform.md) owns the selected kernel-scoped observer, finite map-growth guard, existing finite allocation graph/IPC and required failure evidence. [Architecture disposition](../architecture-disposition.md#native-platform-decision) assesses moderate residual risk and records agent architecture readiness for fresh affected planning, subject to exact-candidate independent review. No strict physical-memory ceiling or product verification PASS is claimed. Existing DEC-044 exact approval and unchanged DEC-046/047 technical decisions remain applicable; affected plan and review status MUST follow [planning gates](../planning-gates.md#macos-primary-readiness).
 
-Required documentation checks: repository-wide structural/identifier/RTM/negative-control checker, whitespace check, focused semantic/dependent review and privacy/scope inspection. Independent evidence MUST identify final candidate bytes and remain outside them. Small synthetic native guard/ABI observations MUST remain distinguished from installed-product tests. NFR-005 failure/preservation/retry and NFR-021 keyboard/assistive acceptance remain mandatory.
+Required documentation checks: repository-wide structural/identifier/RTM/negative-control checker, whitespace check, focused semantic/dependent review and privacy/scope inspection. Independent evidence MUST identify final candidate bytes and remain outside them. Small synthetic native guard/ABI observations MUST remain distinguished from installed-product tests. NFR-005 failure/preservation/retry remains mandatory.
 
 ## Next handoff
 

@@ -1,6 +1,6 @@
 # Completing a dataset workbook
 
-Template generation, workbook validation and [canonical catalog persistence](storage.md) are implemented in this development build. DCAT-US 3.0 and ODCS 3.2.0 exports are implemented with separate readiness checks. The [current schema 1.0 template](../../tests/fixtures/workbook-1.0/current.xlsx) is available for inspection; native macOS intake is implemented with resource checks and bounded process cleanup. Complete export workflow and manual accessibility acceptance remain pending. Implementation availability does not establish first-release acceptance.
+Template generation, workbook validation and [canonical catalog persistence](storage.md) are implemented in this development build. DCAT-US 3.0 and ODCS 3.2.0 exports are implemented with separate readiness checks. The [current schema 1.0 template](../../tests/fixtures/workbook-1.0/current.xlsx) is available for inspection; native macOS intake is implemented with resource checks and bounded process cleanup. Final candidate acceptance remains pending. Implementation availability does not establish first-release acceptance.
 
 ## Start with the required core
 
@@ -31,7 +31,7 @@ Use `YYYY-MM-DD` date text. Input cells use text formatting to preserve identifi
 
 ## Navigate and correct entries
 
-Use the completion application's keyboard commands to change sheets and open dropdowns, and Tab or Shift+Tab to move between input cells. macOS is the primary target; exact application and assistive-technology versions and observed keyboard behavior are recorded during manual acceptance. Instructions comes first; the input sheets have a frozen header and key columns, with no merged, hidden or protected input cells.
+Use the completion application's keyboard commands to change sheets and open dropdowns, and Tab or Shift+Tab to move between input cells. macOS is the primary target. Instructions comes first; the input sheets have a frozen header and key columns, with no merged, hidden or protected input cells.
 
 Read the `feedback` column for missing fields, duplicate IDs, unsupported choices, date errors and invalid day counts. These messages work without color. `Ready for CLI validation` describes preliminary workbook feedback, not completed validation or export readiness. Keep feedback cells separate from input cells; they are never catalog facts.
 
