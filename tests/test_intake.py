@@ -428,7 +428,14 @@ def test_real_guarded_linux_cli_validation(tmp_path: Path) -> None:
     assert output.summary.valid_records == 1
     assert output.assessment is not None
     assert output.assessment.validity == "valid"
-    assert all(target.state == "unexamined" for target in output.assessment.targets)
+    assert output.assessment.targets[0].target == "dcat-us-3"
+    assert output.assessment.targets[0].state == "blocked"
+    assert output.assessment.targets[0].reasons == [
+        "target_contact_missing",
+        "target_unrepresentable",
+    ]
+    assert output.assessment.targets[1].target == "odcs-3.2"
+    assert output.assessment.targets[1].state == "unexamined"
     future = modify_part(
         source.read_bytes(), "xl/worksheets/sheet1.xml", b">1.0<", b">9.0<"
     )
