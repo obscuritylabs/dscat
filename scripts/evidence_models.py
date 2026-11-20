@@ -235,7 +235,6 @@ class Finding(StrictModel):
 GateName = Literal[
     "native_macos",
     "confidential_reporting",
-    "triage_rehearsal",
     "privacy_review",
     "license_review",
     "independent_acceptance",
@@ -263,10 +262,6 @@ class Gate(StrictModel):
                 in {"privacy_review", "license_review", "independent_acceptance"}
                 and self.executor_role != "independent"
             )
-            or (
-                self.name in {"confidential_reporting", "triage_rehearsal"}
-                and self.executor_role != "operator"
-            )
         ):
             msg = "Passing gates require the applicable evidence and independence."
             raise ValueError(msg)
@@ -292,7 +287,7 @@ class ReleaseEvidence(StrictModel):
     development: Inventory
     feeds: Annotated[list[Feed], Field(max_length=5)]
     findings: Annotated[list[Finding], Field(max_length=10000)]
-    gates: Annotated[list[Gate], Field(max_length=6)]
+    gates: Annotated[list[Gate], Field(max_length=5)]
 
     @model_validator(mode="after")
     def unique_claims(self) -> Self:

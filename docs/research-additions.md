@@ -20,7 +20,7 @@ DEC-042 metadata additions below are approved 0.1.0 requirements scope under DEC
 | Addition: privacy minimization and diagnostics | NFR-020; CAP-04 | Role contacts, no samples/secrets, synthetic nested leakage and safe diagnostics cases; no perfect secret-detection claim. |
 | Refinement: machine-readable SBOM | NFR-011; CAP-04 | Selected standard/version, transitive dependency reconciliation, source/artifact bindings, generator provenance and explicit unknowns. |
 | Refinement: known exploitation | NFR-012; CAP-04 | Independent release block regardless of severity with artifact applicability evidence; High/Critical gate preserved, no runtime feeds. |
-| Addition: secure-development/support policy | NFR-022; CAP-04 | Final SSDF 1.1 practice mapping and reporting, remediation/disclosure, support/version policy; synthetic report exercise. |
+| Addition: security reporting policy | NFR-022; CAP-04 | GitHub Private Vulnerability Reporting route, pre-release enablement/link verification and brief assessment/remediation/coordinated disclosure policy; current authority follows [planning gates](planning-gates.md#confidential-reporting-readiness). |
 
 The previous 30 requirements remain with stable IDs; nine research additions brought that revision to 39. DEC-043 adds three later-capability requirements, bringing this consolidated candidate to 42. No ID is reused; FR-009 remains absent under DEC-034. Earlier acceptance is preserved except for the explicit DEC-043 sequencing and scope changes and proposed research refinements. RTM design, implementation, tests, and verification remain PENDING where not performed.
 

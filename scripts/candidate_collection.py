@@ -59,11 +59,11 @@ PYTHON_VERSION = "3.15.2"
 
 
 class Claims(StrictModel):
-    """Only explicit reviewed manual claims can replace pending acceptance gates."""
+    """Only explicit observed claims can replace pending acceptance gates."""
 
     schema_version: Literal["1.0"]
     findings: list[Finding] = Field(default_factory=list, max_length=10000)
-    gates: list[Gate] = Field(default_factory=list, max_length=6)
+    gates: list[Gate] = Field(default_factory=list, max_length=5)
 
 
 @dataclass
