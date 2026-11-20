@@ -297,6 +297,7 @@ def execute_catalog(request: CommandRequest) -> CommandResult:
             ),
             replace=request.replace,
             assessment=configuration.assessment,
+            configuration=configuration,
         ),
         300.0,
     )

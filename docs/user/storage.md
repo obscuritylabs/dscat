@@ -4,7 +4,7 @@ Canonical storage is implemented in this development build. Standards exports re
 
 Run `dscat build intake.xlsx --output catalog --format json` to validate a workbook and publish an internal canonical bundle. You can select a directory instead; use `--recursive` to include nested directories and `--config settings.toml` for explicitly selected configuration. An empty directory creates a valid empty catalog. Inputs and output must be separate, with neither inside the other.
 
-Without a target option, the build contains canonical facts only. It makes no export-readiness or publication-authority claim. Invalid, unreadable or resource-limited input prevents publication. The structured command result contains fixed diagnostics, counts, assessment and the generation hash; it does not print canonical values or local paths.
+Without a target option, the build contains canonical facts only. It contains no standards document and grants no publication authority. The separate assessment reports readiness for implemented targets. Invalid, unreadable or resource-limited input prevents publication. The structured command result contains fixed diagnostics, counts, assessment and the generation hash; it does not print canonical values or local paths.
 
 ## Read the bundle
 

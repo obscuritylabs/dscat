@@ -44,4 +44,4 @@ Run `dscat validate intake.xlsx --format json` for a structured assessment, or o
 
 Reports identify sources by deterministic discovery ordinal and known worksheet, row and column locations. Correct the reported type, vocabulary or reference errors and retry. Checks that depend on unreadable or invalid inputs remain explicitly unperformed; they do not create guessed dangling-reference errors.
 
-Structural validity, optional completeness and declared local conformity remain separate results. Review and publication remain supplied decisions. Target readiness is explicitly unexamined while standards exporters are in development.
+Structural validity, optional completeness and declared local conformity remain separate results. Review and publication remain supplied decisions. DCAT-US 3.0 readiness requires an explicit dataset namespace, catalog identity and resolved contact association/email; missing target facts do not invalidate otherwise valid intake. Per-record contact facts and configured facts must agree. ODCS readiness remains unexamined while that exporter is in development. A ready assessment does not publish a standards document or authorize disclosure.
