@@ -40,6 +40,17 @@ Directly inspected [ty 0.0.95 configuration](https://raw.githubusercontent.com/a
 
 No dependency metadata query establishes vulnerability safety. I10/R MUST execute the [delivery security gate](delivery-plan.md#release-security-sbom-and-support-evidence), including advisory freshness and known exploitation independent of severity. No product runtime MUST require feeds or contact a reference URL.
 
+### I10 supplementary CI action pins
+
+TOOL_VERIFIED, 2026-11-20: the upstream latest-release APIs and tag refs select the immutable action revisions below. Their release dates precede selection by more than 14 days. These actions run only in the single supplementary Linux PR job; they are not application runtime dependencies or release artifacts. Actual hosted execution remains PENDING until a PR run completes.
+
+| Action | Selected release / publication | Immutable revision and inspected interface |
+| --- | --- | --- |
+| Source checkout | [v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1), 2026-07-20 | [`3d3c42e5aac5ba805825da76410c181273ba90b1`](https://github.com/actions/checkout/blob/3d3c42e5aac5ba805825da76410c181273ba90b1/action.yml); credentials persistence explicitly disabled |
+| uv setup | [v10.3.3](https://github.com/astral-sh/setup-uv/releases/tag/v10.3.3), 2026-10-28 | [`68559e99cc807c1eb7e9238fd43a15bba460eec2`](https://github.com/astral-sh/setup-uv/blob/68559e99cc807c1eb7e9238fd43a15bba460eec2/action.yml); explicit uv 0.13.6/Python 3.15.2 and caching disabled |
+
+The workflow MUST use read-only contents permission, run for every main-targeting PR without path filters, and cancel superseded runs. The stable job name is `Verify`. It MUST remain supplementary to the full local gate and MUST NOT publish releases. Required-status enforcement remains subject to [REPO-006](repository-policy.md): an observed successful hosted check and explicit authorization MUST precede any remote ruleset change.
+
 ## Reproduction and resolution gate
 
 The following standard-library research procedure identifies an exact metadata/artifact pair; rerunning a mutable metadata endpoint MUST compare version, timestamps and returned artifact hash rather than assume response-byte stability. All output MUST remain neutral package facts.
