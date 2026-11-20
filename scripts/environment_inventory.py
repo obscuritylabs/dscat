@@ -35,6 +35,10 @@ def observe() -> dict[str, object]:
     distributions: list[dict[str, object]] = []
     for installed in importlib.metadata.distributions():
         metadata = installed.metadata
+        name, version = metadata.get("Name"), metadata.get("Version")
+        if name is None or not name.strip() or version is None or not version.strip():
+            msg = "Installed distribution identity metadata is incomplete."
+            raise ValueError(msg)
         licenses = metadata.get_all("License-Expression") or []
         declared = metadata.get("License")
         if (
@@ -51,8 +55,8 @@ def observe() -> dict[str, object]:
             ]
         distributions.append(
             {
-                "name": re.sub(r"[-_.]+", "-", metadata["Name"]).lower(),
-                "version": installed.version,
+                "name": re.sub(r"[-_.]+", "-", name).lower(),
+                "version": version,
                 "requires": list(installed.requires or []),
                 "licenses": licenses,
             }
