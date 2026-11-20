@@ -55,3 +55,29 @@ The exact core-plus-configuration mappings, pinned closure and research-only pos
 ## Research revision intake dependencies
 
 The four-field required core MUST remain unchanged under DEC-044. [Canonical schema](architecture.md#canonical-record-schema) and [assessment/projection assurance](architecture-assurance.md) MUST distinguish valid intake, inventory completeness, target readiness and publication authority. Missing publication authority MUST fail closed for public projection without invalidating minimum intake. Prior detailed proposals MUST be retrieved through Git history rather than treated as competing current architecture.
+
+## Optional guided example template
+
+### INTAKE-024
+
+This is a proposed extension of [FR-001](requirements.md#fr-001), with current authority and outstanding readiness in [planning gates](planning-gates.md#example-template-planning). The goal is to reduce the effort of starting a workbook through a small worked example and plain-language explanations of its value. This section owns the proposed behavior and acceptance checks; it does not describe an available CLI option.
+
+Proposed command: `dscat template --output example-intake.xlsx --examples`. The flag name and example breadth are agent proposals. The recommended scope is two synthetic datasets: one containing only the four required core values, and another with a small, coherent set of optional field-schema and detail/quality entries. A comprehensive showcase of every supported field is excluded from this proposal. These choices remain subject to the requested preference clarification and later design disposition; they are not recorded human interview decisions.
+
+Under this proposal:
+
+- The generator MUST seed actual editable input cells on Datasets, Fields and Details_Quality, using internally consistent dataset IDs and grouped detail references. The minimal dataset MUST demonstrate that optional sections can remain blank.
+- Instructions MUST identify the workbook as a synthetic example, suggest starting with the minimal dataset, explain the links between sheets, and give concrete guidance for replacing or removing all example rows before submitting real metadata. Seed records MUST have visibly synthetic names and IDs. Instructions MUST explain that examples are ordinary records during validation and import; the parser MUST NOT silently discard them.
+- Instructions MUST explain why the illustrated values help: core metadata supports discovery and contact, field descriptions support interpretation, and selected quality or ownership details support evaluating suitability and responsibility. Guidance MUST distinguish valid intake from standards-export readiness and publication authority; it MUST NOT promise that example metadata alone authorizes publication or satisfies every export target.
+- Examples MUST use only bundled, fixed synthetic values, with no source-workbook import, private metadata, network retrieval, macros, external connections or formulas in input cells. They MUST preserve the supported schema, worksheet layout, validation controls, feedback and input formatting. Existing output replacement and failure-preservation rules MUST apply in both modes.
+- Generation without the flag MUST leave dataset and optional-detail input cells blank. Example mode MUST NOT supply defaults to later real submissions, infer publication authority or expand the four-field required core. Repeating generation with the same mode and inputs MUST preserve the existing deterministic generation contract.
+
+Planned acceptance checks:
+
+1. Generate without the flag and verify blank data-entry rows; generate with the flag and verify the expected minimal and detailed records, cross-sheet references, synthetic labels and explanatory instructions.
+2. Validate the seeded workbook through the ordinary CLI and parser, confirming two valid datasets and the expected optional details, without relaxed checks. Missing export-specific facts MUST remain separately reported by ordinary target-readiness assessment.
+3. Replace example values and remove example records, including their dependent rows, then validate the resulting minimal real-entry shape using synthetic test values. Confirm the instructions cover that editing path and no example entries remain in the parsed result.
+4. Confirm existing-file refusal without `--replace`, explicit replacement behavior, failure preservation, package safety, schema compatibility and deterministic output in both modes. Confirm malformed edits still produce ordinary validation diagnostics.
+5. Open the generated example in the selected completion application and follow Instructions to locate the minimal example, understand one cross-sheet optional entry, explain its practical benefit and replace/remove the examples. Record the observation and limitations; planning alone MUST NOT claim reduced user burden was demonstrated.
+
+Detailed fixture selection, command/API wiring, compatibility assessment and implementation sequencing remain PENDING architecture and fresh implementation-plan readiness. No new export target, lineage capture, new completion interface or release commitment is included.
