@@ -26,6 +26,7 @@ Only the listed initial schema versions are supported. Unsupported versions and 
 | 1 | Intake or target/publication eligibility did not satisfy the requested operation; an internal build can still contain canonical facts and ready requested targets |
 | 2 | Invalid invocation, configuration or unsupported version |
 | 3 | Operational failure, including refused replacement, unavailable resource protection or unsafe output paths |
+| 4 | Unexpected internal failure |
 | 130 | Interrupted operation |
 
 Use `--format json` for a single structured result on validation, build and export. Check its exit code, diagnostics and receipt together. A separate private report does not establish publication success. `--no-color` keeps terminal output plain. Generated output replacement requires the command's explicit `--replace` option; validation reports instead need a new destination.
