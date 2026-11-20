@@ -1,0 +1,17 @@
+{
+  "files": {
+    "approved-public.toml": "257576c70fd0e3afc6a8b2908ab5a672e32c4e915bfc299cd5bf88f82d1ccddb",
+    "conflict.xlsx": "82b3dd31183f94e75b2b8193a79dccff4d4e78ffeea2ffcf125e10ecb97f88df",
+    "detailed-canonical.json": "54d2e5f185083c53d9cdf50513d5aa09d24781eaee09d0f6f4fbeb3050e83fd1",
+    "detailed.xlsx": "948ea37989b58def00c6c486bfe133c90940670748b0a2152748764d8e1408f9",
+    "formula.xlsx": "9c21e7e9ea74ea4da9965e3dedb8765656d3d7bf59f301c8b5f1d4c372e782de",
+    "future.xlsx": "8e01bb4019f794e271e838c14f2660de9382fa88ed10e7a4c9fd8756fd18df75",
+    "invalid.xlsx": "c26cc38389a46faddafc15bf7348d19bcfed96f6a9b75f3e30e18de38a632d26",
+    "minimum.xlsx": "70b9f7b70937ceea6715cb29048d6e922fbf3aba6f2cb4458582cac2bfbcf36a",
+    "shared.toml": "89ab8b7400e8c06972fd8c1496cbcac6fd17a65bbb4d003f7c77167f5b0eb1ae",
+    "unsafe.xlsx": "9de2779cd3450f76844603cc30603e5d6c08c52684ab04e0a3809020a708ad39"
+  },
+  "schema_version": "1.0",
+  "source_template_sha256": "61bd85a8d59a3632138c86fbc2cab8df679608eb5765cdf5fbe0943e9e3a3f58",
+  "source_wheel_sha256": "e3aecab5767efec843ce4a8dbbbdd0de37e72681f5eba4ed0c3c1b49d62d0025"
+}

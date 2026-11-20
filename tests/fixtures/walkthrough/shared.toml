@@ -1,0 +1,20 @@
+schema_version = "1.0"
+
+[identity]
+dataset_namespace = "https://example.org/datasets/"
+contract_namespace = "https://example.org/contracts/"
+contract_identity_rule = "namespace-plus-dataset-id"
+
+[identity.parties."Metadata support"]
+role_email = "metadata@example.org"
+contact_association = true
+
+[dcat_us_3]
+catalog_id = "https://example.org/catalog"
+
+[odcs_3_2]
+contract_version = "2.7.0"
+
+[assessment]
+completeness = []
+rules = []
