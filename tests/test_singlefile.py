@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from dscat.intake.limits import IntakeError
+from dscat.intake.limits import IntakeError, fail
 from dscat.storage import singlefile
 
 if TYPE_CHECKING:
@@ -96,3 +96,21 @@ def test_disjoint_refuses_equal_and_ancestor_paths(tmp_path: Path) -> None:
         with pytest.raises(IntakeError, match="UNSAFE_INPUT"):
             singlefile.check_disjoint(paths)
     singlefile.check_disjoint([tmp_path / "one", tmp_path / "two"])
+
+
+def test_nonlocal_single_file_refusal_preserves_existing_destination(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Unknown/network filesystem refusal happens before any stage or replacement."""
+    output = tmp_path / "output"
+    output.write_bytes(b"accepted")
+
+    def unsupported(path: Path) -> None:
+        assert path == tmp_path
+        raise fail(code="PUBLICATION_FAILURE")
+
+    monkeypatch.setattr(singlefile, "require_local", unsupported)
+    with pytest.raises(IntakeError, match="PUBLICATION_FAILURE"):
+        singlefile.publish_file(output, b"new", replace=True)
+    assert output.read_bytes() == b"accepted"
+    assert list(tmp_path.iterdir()) == [output]

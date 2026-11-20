@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from dscat.intake.discovery import reject_links
 from dscat.intake.limits import fail
+from dscat.storage.filesystems import require_local
 from dscat.storage.io import directory, flush_directory, write_file
 
 if TYPE_CHECKING:
@@ -32,6 +33,7 @@ def check_file_destination(path: Path, *, replace: bool) -> None:
     """Reject links, nonregular destinations and unauthorized replacement."""
     reject_links(path)
     directory(path.parent)
+    require_local(path.parent)
     try:
         observed = path.lstat()
     except FileNotFoundError:
