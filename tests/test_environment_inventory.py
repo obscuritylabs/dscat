@@ -3,6 +3,7 @@
 
 import importlib.metadata
 import json
+import runpy
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, NamedTuple
 
@@ -72,7 +73,7 @@ def test_metadata_license_precedence_unknowns_and_no_imports(
     monkeypatch.setattr(
         environment_inventory.importlib.metadata, "distributions", distributions
     )
-    environment_inventory.main()
+    runpy.run_path(environment_inventory.__file__, run_name="__main__")
     output = capsys.readouterr()
     assert not output.err
     observed = json.loads(output.out)

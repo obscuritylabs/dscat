@@ -30,6 +30,8 @@ def test_gate_scope_and_release_status(
         calls.append(label)
         if label == "uv-version":
             (output / "logs/uv-version.stdout").write_text("uv 0.13.6\n")
+        if label == "release-evidence":
+            assert argv[argv.index("--claims") + 1] == str(tmp_path / "claims.json")
         code = outcome if label == "release-evidence" else 0
         accepted = options["accepted"]
         assert isinstance(accepted, frozenset)
@@ -38,8 +40,9 @@ def test_gate_scope_and_release_status(
         return Execution(label, code, "a" * 64, "b" * 64, 0.1)
 
     monkeypatch.setattr(verify, "run_tool", run)
+    claims = tmp_path / "claims.json" if mode == "full" else None
     result = verify.verify(
-        argparse.Namespace(ci=mode == "ci", uv="uv", claims=None), output
+        argparse.Namespace(ci=mode == "ci", uv="uv", claims=claims), output
     )
     message = capsys.readouterr().out
     if mode == "ci":

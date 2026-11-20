@@ -2,7 +2,14 @@
 """Select dependencies using recorded target markers and transitive extras."""
 
 import pytest
-from scripts.dependency_graph import locked_graph, read_lock, reconcile_inventory
+from scripts.dependency_graph import (
+    array_value,
+    locked_graph,
+    object_value,
+    read_lock,
+    reconcile_inventory,
+    text_value,
+)
 from scripts.environment_inventory import marker_environment
 from scripts.evidence_models import Inventory
 
@@ -162,3 +169,29 @@ def test_installed_extra_requests_must_match_each_lock_edge(requirement: str) ->
     with pytest.raises(ValueError, match="relationships do not match"):
         reconcile_inventory(changed, graph)
     reconcile_inventory(installed, graph)
+
+
+def test_shared_dependency_cycle_reaches_a_stable_extra_set() -> None:
+    """A back edge cannot loop forever or erase extras requested by another edge."""
+    cyclic = LOCK.replace(
+        b'name = "baz"\nversion = "1"\nsource = {registry = "https://pypi.org/simple"}',
+        b'name = "baz"\nversion = "1"\nsource = {registry = "https://pypi.org/simple"}\n'
+        b'dependencies = [{name = "foo"}]',
+    )
+    graph = locked_graph(cyclic, environment())
+    assert graph.edges["baz"] == {"foo"}
+    assert graph.extras["foo"] == {"detail"}
+
+
+@pytest.mark.parametrize("kind", ["object", "array", "text"])
+def test_wrong_json_shapes_do_not_coerce_to_evidence(kind: str) -> None:
+    """Missing values cannot silently become empty containers or identity strings."""
+    boundary = {"object": object_value, "array": array_value, "text": text_value}[kind]
+    with pytest.raises((ValueError, TypeError), match="Expected"):
+        boundary(None)
+
+
+def test_lock_requires_an_application_package() -> None:
+    """An empty valid TOML lock cannot certify the application dependency inventory."""
+    with pytest.raises(ValueError, match="does not identify the application"):
+        read_lock(b"package=[]")
