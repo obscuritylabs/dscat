@@ -38,7 +38,7 @@ Directly inspected [uv 0.13.6 schema](https://raw.githubusercontent.com/astral-s
 
 Directly inspected [ty 0.0.95 configuration](https://raw.githubusercontent.com/astral-sh/ty/0.0.95/docs/reference/configuration.md), SHA-256 `ad28834d6631604fefeb019159adb833c77b034dd403efce4433cdeee0328050`, supports `[tool.ty.rules] all = "error"`. I01 MUST verify actual diagnostic inventory/help, set this without baselines and make warnings/errors fail. Ruff MUST select `ALL` plus formatter checks; I01 MUST verify the pinned rule/formatter conflict documentation and record only actual mutually exclusive or formatter-conflicting narrow ignores with reason and compensation. Planned command flags MUST be validated against installed pinned help; a spelling correction MUST NOT weaken all-rule requirements.
 
-No dependency metadata query establishes vulnerability safety. I10/R MUST execute the [delivery security gate](delivery-plan.md#release-security-sbom-and-support-evidence), including advisory freshness and known exploitation independent of severity. No product runtime MUST require feeds or contact a reference URL.
+No dependency metadata query establishes vulnerability safety. I10/R MUST execute the [delivery security gate](delivery-plan.md#release-security-sbom-and-reporting-evidence), including advisory freshness and known exploitation independent of severity. No product runtime MUST require feeds or contact a reference URL.
 
 ### I10 supplementary CI action pins
 

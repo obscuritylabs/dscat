@@ -114,41 +114,13 @@ Resolution MUST occur before approval checking, then hashes MUST be recomputed f
 
 Verification MUST inject distinct synthetic sensitive sentinels at every nested field/list/unknown child and assert absence from public bytes and diagnostics. Cases MUST include valid/unreviewed minimum intake, target-blocked valid intake, reviewed/publication-unknown, unauthorized nested child, stale value approval, malformed authority, target-required withholding and new-schema-field exclusion. Target schema/semantic validity MUST be checked after projection; it MUST NOT imply authority to publish. Arbitrary secret detection is not guaranteed; protection depends on explicit approval and allowlists.
 
-## SSDF and reporting/support design
+## Security reporting design
 
-Final NIST SP 800-218 SSDF 1.1 is the selected baseline in [research](research.md#research-additions-source-evidence); no certification is claimed. The implementation plan MUST assign owners and exact evidence to every practice; task-level nonapplicability MUST have rationale and revisit conditions.
-
-| SSDF practice | Concrete control/evidence |
-| --- | --- |
-| PO.1 | Approved security requirements, threat model and acceptance mappings |
-| PO.2 | Phase ownership, independent verification/review and triage owner |
-| PO.3 | Pinned toolchain and reproducible local commands |
-| PO.4 | Parser/privacy/security acceptance and release-block criteria |
-| PO.5 | Isolated build environments, source/release access and secret exclusion |
-| PS.1 | Protected repository workflow, least publication authority, review |
-| PS.2 | Source/wheel/sdist bindings, checksums and authenticated retrieval |
-| PS.3 | Retained release source/artifacts/SBOM/provenance/advisory dispositions |
-| PW.1 | Threat model, offline resources, closed projections |
-| PW.2 | Fresh exact-candidate design/security review and dispositions |
-| PW.4 | Approved sources, artifact age, lock and dependency advisories |
-| PW.5 | Typed boundaries, safe ZIP/XML/path handling, no untrusted evaluation |
-| PW.6 | Pinned build configuration, package inspection, frozen verification |
-| PW.7 | Ruff/ty, independent review and scope/privacy inspection |
-| PW.8 | Hostile-boundary/business-rule/failure-preservation tests |
-| PW.9 | Offline runtime, explicit replacement, fail-closed public readiness |
-| RV.1 | Private reporting and engineering advisory/exploitation checks |
-| RV.2 | Artifact applicability, remediation, severity/exploitation gates, disclosure |
-| RV.3 | Root-cause analysis, regression and systemic-control corrections |
-
-The confidential reporting route MUST use GitHub Private Vulnerability Reporting on the public repository, reached through Security/Advisories and “Report a vulnerability.” Public issues MUST NOT receive sensitive reports. Before reporting instructions are implemented as an available route, an authorized repository owner, administrator or security manager MUST enable the feature through supported controls; execution evidence MUST confirm enablement and the reporting form. The maintainer/triage role (M) MUST be assigned to an actual executor with access to incoming reports, configured notifications and responsibility for monitoring the published acknowledgment and triage targets. Report access MUST account for repository owners, administrators, security managers, the reporter and authorized advisory collaborators; the route MUST NOT be described as anonymous or exclusive to M. Submissions MUST use minimized reproduction details, affected versions and impact, without credentials, real catalog payloads or unnecessary personal information. A synthetic incoming report MUST demonstrate private receipt, actual notification, reporter-visible acknowledgment and documented triage before the route is described as verified. SECURITY.md and CLI/docs pointers MUST identify the verified route, maintainer role, access limits, support policy and coordinated disclosure process. Missing enablement, ownership, access or exercise evidence MUST block dependent reporting readiness and release; unrelated work MAY proceed. Public-safe rehearsal alone MUST NOT establish confidential receipt. Reports and rehearsal advisories MUST remain unpublished until a separately justified coordinated disclosure decision; a synthetic exercise MUST NOT publish an advisory or request a CVE.
-
-Proposed support policy: only the latest published version is supported until its successor releases. Released policy/release notes MUST communicate current support and end of support; the first release MUST state no earlier supported version. This is not a long-term support commitment. Acknowledgment target is five business days; initial triage target is ten business days. Assessment MUST record affected artifacts/versions, severity, known exploitation, reproduction, remediation owner and disclosure constraints; missed targets MUST remain explicit. Disclosure MUST be coordinated with reporter and affected upstream maintainers after a fix or recorded risk-based decision; this design does not authorize automatic public disclosure.
-
-A synthetic incoming GitHub private vulnerability report MUST exercise private receipt, actual notification, reporter-visible acknowledgment, applicability/severity/exploitation assessment, remediation plan, regression evidence, root cause, release assessment and disclosure decision using synthetic information only; its advisory MUST remain unpublished, MUST NOT request a CVE and MUST close explicitly as a rehearsal. Evidence MUST distinguish rehearsal from real reports. Released-source verification MUST confirm reporting/support instructions and artifact/version identity. SBOM/tool pins, advisory sources/freshness and exact release commands belong in later plans; unknown advisory status MUST NOT appear clean.
+[SECURITY.md](../SECURITY.md) documents GitHub Private Vulnerability Reporting as the security reporting route and briefly describes report assessment, addressing confirmed issues as appropriate and coordinating disclosure with reporters. Before release, verification MUST confirm feature enablement and the correctness of the documented reporting link under [NFR-022](requirements.md#nfr-022). The [delivery plan](delivery-plan.md#release-security-sbom-and-reporting-evidence) owns that check and its existing confidential-reporting evidence gate. This design adds no new reporting automation, access audit or evidence model. Current verification status belongs to [planning gates](planning-gates.md#confidential-reporting-readiness).
 
 ## Exit evidence
 
-This candidate proposes controls, limits, state/projection rules and all SSDF practice mappings. It does not establish product behavior or human approval. The retained synthetic resource experiment supports numeric ceiling selection on the observed Linux environment; product parser verification remains PENDING. The implementation plan MUST assign publication/recovery and platform resource-adapter verification as concrete owned tasks/dependencies with acceptance/release hard blocks; it MUST NOT claim unexecuted observations. Integrated documentation MUST receive fresh semantic coverage, structural checks and reconciliation. Implementation, tests, local acceptance, remote-main integration, authorized release and downloaded-release verification remain PENDING.
+This candidate proposes controls, limits, state/projection rules and the security reporting route. It does not establish product behavior or human approval. The retained synthetic resource experiment supports numeric ceiling selection on the observed Linux environment; product parser verification remains PENDING. The implementation plan MUST assign publication/recovery and platform resource-adapter verification as concrete owned tasks/dependencies with acceptance/release hard blocks; it MUST NOT claim unexecuted observations. Integrated documentation MUST receive fresh semantic coverage, structural checks and reconciliation. Implementation, tests, local acceptance, remote-main integration, authorized release and downloaded-release verification remain PENDING.
 
 ## Resource enforcement and exact package matrix
 

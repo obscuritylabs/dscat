@@ -107,6 +107,6 @@ Select a new real local directory outside source; the displayed path is a placeh
 
 ## Record final acceptance
 
-Use the confidential reporting/triage procedure only after its actual setup and access are verified. Retain current advisory/exploitation, SBOM, licensing, privacy and independent acceptance evidence bound to the candidate. An available role label or passing CI cannot supply those observations.
+Before release, confirm GitHub Private Vulnerability Reporting is enabled and the reporting link in SECURITY.md is correct, following the [delivery check](../delivery-plan.md#release-security-sbom-and-reporting-evidence). Retain current advisory/exploitation, SBOM, licensing, privacy and independent acceptance evidence bound to the candidate. An available role label or passing CI cannot supply those observations.
 
 Inspect only the disposable workspace you created before any explicit cleanup. Retain concise neutral results and hashes. After publication, a fresh independent verifier must download the actual released assets, verify checksums/bindings, install in a clean environment and repeat representative offline/source acceptance. Pre-publication testing does not establish downloaded-artifact verification.

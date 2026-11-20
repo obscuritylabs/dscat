@@ -179,7 +179,9 @@ Metadata collection and diagnostics MUST minimize personal and sensitive informa
 
 ### NFR-022
 
-Secure development planning MUST map the selected final NIST SP 800-218 SSDF 1.1 practices to concrete project controls/evidence or justified nonapplicability, without claiming certification. The release plan MUST define a vulnerability reporting channel, triage/remediation and coordinated disclosure process, supported versions/support period, and end-of-support communication. Acceptance MUST review the practice mapping, exercise a synthetic vulnerability report through documented triage, and verify published support/reporting instructions in released artifacts. Later drafts MUST NOT silently replace the selected final baseline.
+The project MUST document GitHub Private Vulnerability Reporting as its security reporting route. Before release, verification MUST confirm that the feature is enabled and the documented reporting link is correct.
+
+The security policy MUST briefly describe assessing reports, addressing confirmed issues as appropriate, and coordinating disclosure with reporters.
 
 ## Later capability acceptance
 

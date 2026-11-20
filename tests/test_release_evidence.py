@@ -68,11 +68,7 @@ def candidate() -> tuple[ReleaseEvidence, ActualBindings]:
                 {
                     "name": name,
                     "state": "pass",
-                    "executor_role": (
-                        "operator"
-                        if name in {"confidential_reporting", "triage_rehearsal"}
-                        else "independent"
-                    ),
+                    "executor_role": "independent",
                     "source_sha": "a" * 40,
                     "wheel_sha256": WHEEL,
                     "evidence_sha256": "2" * 64,
@@ -135,7 +131,6 @@ def test_release_readiness_without_retired_accessibility_observations() -> None:
     remaining = {
         "native_macos",
         "confidential_reporting",
-        "triage_rehearsal",
         "privacy_review",
         "license_review",
         "independent_acceptance",
@@ -318,8 +313,6 @@ def test_non_applicability_requires_reviewed_exact_artifacts() -> None:
         ("privacy_review", "independent"),
         ("license_review", "independent"),
         ("independent_acceptance", "independent"),
-        ("confidential_reporting", "operator"),
-        ("triage_rehearsal", "operator"),
     ],
 )
 def test_passing_gate_requires_its_actual_executor_role(
@@ -335,6 +328,40 @@ def test_passing_gate_requires_its_actual_executor_role(
         else:
             with pytest.raises(ValidationError, match="applicable evidence"):
                 Gate.model_validate(altered)
+
+
+def test_reporting_check_needs_evidence_without_operator_or_rehearsal() -> None:
+    """An implementer can check enablement/link; no operational audit is required."""
+    evidence, actual = candidate()
+    reporting = next(
+        gate for gate in evidence.gates if gate.name == "confidential_reporting"
+    )
+    values = reporting.model_dump() | {"executor_role": "implementer"}
+    checked = Gate.model_validate(values)
+    gates = [checked if gate.name == checked.name else gate for gate in evidence.gates]
+    observed = evidence.model_copy(update={"gates": gates})
+    assert assess_release(observed, actual, now=NOW, kev_cves=set()).state == "ready"
+    for state in ("pending", "fail"):
+        incomplete = observed.model_copy(
+            update={
+                "gates": [
+                    gate.model_copy(update={"state": state})
+                    if gate.name == checked.name
+                    else gate
+                    for gate in gates
+                ]
+            }
+        )
+        result = assess_release(incomplete, actual, now=NOW, kev_cves=set())
+        assert result.state == "blocked"
+        assert "gate_incomplete" in result.issues
+    for changes in (
+        {"evidence_sha256": None},
+        {"executor_role": "unassigned"},
+        {"name": "triage_rehearsal"},
+    ):
+        with pytest.raises(ValidationError):
+            Gate.model_validate(values | changes)
 
 
 @pytest.mark.parametrize(
