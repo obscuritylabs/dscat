@@ -73,7 +73,9 @@ def inventory(*, windows: bool = False, development: bool = False) -> Inventory:
                     "name": name,
                     "version": "0.1.0" if name == "dscat" else "1",
                     "requires": dependencies,
-                    "licenses": ["MIT"],
+                    "licenses": [
+                        "LicenseRef-Proprietary" if name == "dscat" else "MIT"
+                    ],
                 }
                 for name, dependencies in requires.items()
             ],

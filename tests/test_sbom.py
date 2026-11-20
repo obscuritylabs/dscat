@@ -381,3 +381,73 @@ def test_ambiguous_or_unverified_sbom_enrichment_refuses(mutation: str) -> None:
         component["name"] = "unknown"
         with pytest.raises(ValueError, match="unknown dependency component"):
             enrich_sbom(document, installed, actual)
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["root", "dependency", "unknown", "missing-observed", "wrong-root-inventory"],
+)
+def test_substituted_or_unknown_license_declarations_refuse(mutation: str) -> None:
+    """Rehashing an SBOM cannot legitimize changed licenses or proprietary identity."""
+    raw, installed, graph, actual = payload()
+    document = json.loads(raw)
+    packages = list(installed.distributions)
+    if mutation in {"root", "wrong-root-inventory"}:
+        document["metadata"]["component"]["licenses"] = [{"license": {"id": "MIT"}}]
+        if mutation == "wrong-root-inventory":
+            packages = [
+                item.model_copy(update={"licenses": ["MIT"]})
+                if item.name == "dscat"
+                else item
+                for item in packages
+            ]
+    elif mutation == "dependency":
+        document["components"][0]["licenses"] = [{"license": {"id": "GPL-3.0-only"}}]
+    else:
+        licenses = ["UNKNOWN"] if mutation == "unknown" else []
+        packages = [
+            item.model_copy(update={"licenses": licenses})
+            if item.name == "foo"
+            else item
+            for item in packages
+        ]
+        if mutation == "unknown":
+            document["components"][0]["licenses"] = [{"license": {"name": "UNKNOWN"}}]
+    changed = json.dumps(document).encode()
+    with pytest.raises(ValueError, match=r"SBOM.*license"):
+        reconcile_sbom(
+            changed,
+            installed.model_copy(update={"distributions": packages}),
+            graph,
+            actual.model_copy(
+                update={"sbom_sha256": hashlib.sha256(changed).hexdigest()}
+            ),
+        )
+
+
+@pytest.mark.parametrize(
+    ("declared", "sbom_license"),
+    [
+        ("License :: OSI Approved :: MIT License", {"license": {"id": "MIT"}}),
+        ("ISC License", {"license": {"id": "ISC"}}),
+        ("MIT OR BSD-2-Clause", {"expression": "MIT OR BSD-2-Clause"}),
+    ],
+)
+def test_observed_license_aliases_and_expressions_reconcile(
+    declared: str, sbom_license: dict[str, object]
+) -> None:
+    """Only explicitly recognized labels or exact license expressions can agree."""
+    raw, installed, graph, actual = payload()
+    document = json.loads(raw)
+    document["components"][0]["licenses"] = [sbom_license]
+    packages = [
+        item.model_copy(update={"licenses": [declared]}) if item.name == "foo" else item
+        for item in installed.distributions
+    ]
+    changed = json.dumps(document).encode()
+    reconcile_sbom(
+        changed,
+        installed.model_copy(update={"distributions": packages}),
+        graph,
+        actual.model_copy(update={"sbom_sha256": hashlib.sha256(changed).hexdigest()}),
+    )

@@ -62,6 +62,33 @@ def properties_of(component: dict[str, JsonValue]) -> dict[str, str]:
     return properties
 
 
+def declared_license(value: str) -> str:
+    """Normalize only the observed MIT classifier and explicit ISC legacy label."""
+    value = value.strip()
+    aliases = {
+        "License :: OSI Approved :: MIT License": "MIT",
+        "ISC License": "ISC",
+    }
+    if value.casefold() in {"unknown", "noassertion", "none", ""}:
+        msg = "SBOM installed license declaration is unknown."
+        raise ValueError(msg)
+    return aliases.get(value, value)
+
+
+def component_licenses(component: dict[str, JsonValue]) -> set[str]:
+    """Compare license IDs, names and expressions without inferring an assessment."""
+    values: set[str] = set()
+    for raw in array_value(component.get("licenses", [])):
+        choice = object_value(raw)
+        if "expression" in choice:
+            value = text_value(choice["expression"])
+        else:
+            license_entry = object_value(choice.get("license"))
+            value = text_value(license_entry.get("id", license_entry.get("name")))
+        values.add(declared_license(value))
+    return values
+
+
 def component_identity(
     component: dict[str, JsonValue], inventory: dict[str, Distribution]
 ) -> tuple[str, str]:
@@ -75,8 +102,13 @@ def component_identity(
     if component.get("purl") != f"pkg:{kind}/{name}@{version}":
         msg = "SBOM package URL does not match its component identity."
         raise ValueError(msg)
-    if not array_value(component.get("licenses", [])):
-        msg = "SBOM component license metadata is missing."
+    expected_licenses = {declared_license(value) for value in inventory[name].licenses}
+    if (
+        not expected_licenses
+        or component_licenses(component) != expected_licenses
+        or (name == "dscat" and expected_licenses != {"LicenseRef-Proprietary"})
+    ):
+        msg = "SBOM component licenses do not match installed declarations."
         raise ValueError(msg)
     return name, text_value(component.get("bom-ref"))
 
