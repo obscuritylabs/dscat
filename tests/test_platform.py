@@ -9,6 +9,7 @@ import pytest
 
 import dscat.platform as guards
 from dscat.intake.limits import DEFAULT_LIMITS, IntakeError
+from dscat.platform.darwin import MapLimit
 from dscat.platform.posix import ResourceGuard as PosixGuard
 from dscat.platform.windows import (
     KILL_ON_JOB_CLOSE,
@@ -51,7 +52,7 @@ def test_posix_limit_installation_and_readback(monkeypatch: pytest.MonkeyPatch) 
         PosixGuard().install()
 
 
-@pytest.mark.parametrize("system", ["linux", "darwin", "win32"])
+@pytest.mark.parametrize("system", ["linux", "win32"])
 def test_enforcement_receipt_requires_actual_refusal(
     monkeypatch: pytest.MonkeyPatch, system: str
 ) -> None:
@@ -73,6 +74,29 @@ def test_enforcement_receipt_requires_actual_refusal(
     assert receipt.budget_bytes == 512 * 1024**2
     assert receipt.platform == system
     assert guards.install_guard() is receipt
+
+
+def test_darwin_receipt_uses_verified_growth_without_large_touched_allocation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Native growth accounting is distinct and the original selection is cached."""
+    selected = MapLimit(
+        startup_virtual_bytes=1000,
+        inherited_hard_limit=-1,
+        selected_limit_bytes=1000 + DEFAULT_LIMITS.memory,
+        remaining_headroom_bytes=DEFAULT_LIMITS.memory,
+    )
+    checked: list[MapLimit] = []
+    monkeypatch.setattr(guards, "_guard", None)
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(guards.DarwinGuard, "install", lambda _self: selected)
+    monkeypatch.setattr(guards, "verify_growth", checked.append)
+    receipt = guards.install_guard()
+    assert receipt.mechanism == "darwin_rlimit_as_growth"
+    assert receipt.map_limit == selected
+    assert checked == [selected]
+    assert guards.install_guard() is receipt
+    assert checked == [selected]
 
 
 def test_ignored_enforcement_and_unsupported_platform(
