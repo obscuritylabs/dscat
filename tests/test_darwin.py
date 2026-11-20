@@ -294,3 +294,36 @@ def test_real_native_guard_in_disposable_process() -> None:
     assert receipt["mechanism"] == "darwin_rlimit_as_growth"
     assert receipt["map_limit"]["remaining_headroom_bytes"] > 0
     assert receipt["map_limit"]["remaining_headroom_bytes"] <= DEFAULT_LIMITS.memory
+
+
+def test_terminal_native_identity_and_group_members(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Terminal processes are distinguishable from live owners and malformed IDs."""
+    api, query, _children = native(monkeypatch)
+    assert not api.process_exited(PID)
+    assert api.group_members(GROUP) == []
+    query.identity_pid = PID + 1
+    with pytest.raises(IntakeError):
+        api.process_exited(PID)
+    query.response = 0
+    query.error = errno.ESRCH
+    assert api.process_exited(PID)
+
+
+def test_zombie_identity_is_not_a_live_sample(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A terminal worker awaiting its parent's reap contributes no live sample."""
+    api, _query, _children = native(monkeypatch)
+    original = api.query
+
+    def terminal(
+        pid: int, flavor: int, buffer: darwin.BsdInfo | darwin.TaskInfo
+    ) -> bool:
+        result = original(pid, flavor, buffer)
+        if isinstance(buffer, darwin.BsdInfo):
+            buffer.status = darwin.ZOMBIE_STATE
+        return result
+
+    monkeypatch.setattr(api, "query", terminal)
+    assert api.identity(PID) is None
+    assert api.process_exited(PID)

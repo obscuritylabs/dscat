@@ -264,3 +264,59 @@ def test_unterminated_group_has_bounded_failure(
     monkeypatch.setattr(supervision.time, "monotonic", lambda: next(observations))
     with pytest.raises(IntakeError, match="IO_FAILURE"):
         owned.owner.await_quiescence()
+
+
+def test_exit_during_isolation_check_is_a_terminal_refusal(
+    owned: OwnerCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A process disappearing during startup is handled before forwarding input."""
+
+    def disappeared(_pid: int) -> int:
+        make_terminal(owned)
+        return owned.process.pid + 1
+
+    monkeypatch.setattr(supervision.os, "getpgid", disappeared)
+    assert not owned.owner.begin()
+    owned.owner.cleanup()
+
+
+def test_exit_during_observation_ends_wait(
+    owned: OwnerCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A final missing sample is accepted only after non-reaping exit proof."""
+    assert owned.owner.begin()
+
+    def exited() -> None:
+        make_terminal(owned)
+        raise fail(code="RESOURCE_GUARD_UNAVAILABLE")
+
+    monkeypatch.setattr(owned.observation, "observe", exited)
+    owned.owner.wait(time.monotonic() + 2, lambda: None)
+    owned.owner.cleanup()
+
+
+@pytest.mark.parametrize("phase", ["stop_group", "await_quiescence"])
+def test_cleanup_retains_errors_and_still_reaps(
+    owned: OwnerCase, monkeypatch: pytest.MonkeyPatch, phase: str
+) -> None:
+    """Failure to prove cleanup cannot suppress the bounded direct-child reap."""
+    assert owned.owner.begin()
+    make_terminal(owned)
+
+    def refused() -> None:
+        msg = "synthetic cleanup failure"
+        raise RuntimeError(msg)
+
+    monkeypatch.setattr(owned.owner, phase, refused)
+    with pytest.raises(IntakeError, match="INTERNAL_FAILURE"):
+        owned.owner.cleanup()
+    assert owned.process.returncode is not None
+
+
+def test_quiescence_rechecks_after_live_group(
+    owned: OwnerCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An initially live group is checked again before releasing ownership."""
+    answers = iter([False, True])
+    monkeypatch.setattr(owned.owner, "quiescent_group", lambda: next(answers))
+    owned.owner.await_quiescence()
