@@ -95,8 +95,19 @@ class NativeOwner:
             except IntakeError:
                 if self.exited():
                     return
+                if self.observer.terminal():
+                    self.await_exit(deadline)
+                    return
                 raise
             time.sleep(min(POLL_SECONDS, remaining))
+
+    def await_exit(self, invocation_deadline: float) -> None:
+        """Bound the kernel terminal-state to WNOWAIT visibility transition."""
+        deadline = min(invocation_deadline, time.monotonic() + REAP_SECONDS)
+        while not self.exited():
+            if time.monotonic() >= deadline:
+                raise fail(code="RESOURCE_GUARD_UNAVAILABLE")
+            time.sleep(POLL_SECONDS)
 
     def signal_group(self, signum: int) -> None:
         """Signal the owned anchored group, never an asynchronously sampled worker."""

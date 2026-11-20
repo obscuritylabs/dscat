@@ -250,3 +250,18 @@ def test_failed_memory_query_requires_confirmed_disappearance(
     else:
         with pytest.raises(IntakeError):
             tree.observer.sample(tree.worker)
+
+
+def test_terminal_probe_is_scoped_to_owned_identity(
+    tree: Tree, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Only the anchored coordinator may supply a terminal-state proof."""
+    queried: list[int] = []
+
+    def terminal(pid: int) -> bool:
+        queried.append(pid)
+        return True
+
+    monkeypatch.setattr(tree.kernel, "process_exited", terminal, raising=False)
+    assert tree.observer.terminal()
+    assert queried == [tree.process.pid]

@@ -25,6 +25,11 @@ class ModelObservation:
 
     samples: int = 0
     error: IntakeError | None = None
+    is_terminal: bool = False
+
+    def terminal(self) -> bool:
+        """Model a confirmed BSD zombie independently of waitid visibility."""
+        return self.is_terminal
 
     def observe(self) -> None:
         """Count independent wait-loop progress or inject a fixed safe failure."""
@@ -320,3 +325,27 @@ def test_quiescence_rechecks_after_live_group(
     answers = iter([False, True])
     monkeypatch.setattr(owned.owner, "quiescent_group", lambda: next(answers))
     owned.owner.await_quiescence()
+
+
+def test_terminal_measurement_waits_for_nonreaping_exit_visibility(
+    owned: OwnerCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """BSD terminal state may precede the waitid event; ownership stays anchored."""
+    assert owned.owner.begin()
+    make_terminal(owned)
+    answers = iter([False, False, False, True])
+    monkeypatch.setattr(owned.owner, "exited", lambda: next(answers))
+    owned.observation.error = fail(code="RESOURCE_GUARD_UNAVAILABLE")
+    owned.observation.is_terminal = True
+    owned.owner.wait(time.monotonic() + 2, lambda: None)
+    assert owned.process.returncode is None
+
+
+def test_terminal_transition_wait_is_bounded(
+    owned: OwnerCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A missing wait event still fails without releasing the ownership anchor."""
+    monkeypatch.setattr(owned.owner, "exited", lambda: False)
+    with pytest.raises(IntakeError, match="RESOURCE_GUARD_UNAVAILABLE"):
+        owned.owner.await_exit(time.monotonic() - 1)
+    assert owned.owner.has_anchor()
