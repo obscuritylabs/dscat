@@ -1,7 +1,6 @@
 # Copyright (c) 2026 Obscurity Labs. All rights reserved.
 """Serial bounded coordinator/workbook processes with closed private JSON IPC."""
 
-import json
 import os
 import signal
 import subprocess
@@ -34,11 +33,19 @@ from dscat.intake.limits import (
     fail,
 )
 from dscat.intake.normalize import LocatedRecord, normalize_batch
+from dscat.json_guard import check_json
 from dscat.models.base import StrictModel
 from dscat.models.catalog import Catalog
 from dscat.models.configuration import AssessmentConfiguration
-from dscat.models.diagnostics import Diagnostic, ExitCode, ValidationAssessment
+from dscat.models.diagnostics import (
+    Diagnostic,
+    ExitCode,
+    OutputReceipt,
+    ValidationAssessment,
+)
 from dscat.platform import install_guard
+from dscat.serialization import canonical_bytes
+from dscat.storage.flatfiles import save_snapshot
 from dscat.validation import validate_catalog
 from dscat.workbook.parse import parse_workbook
 
@@ -52,6 +59,7 @@ class CoordinatorRequest(StrictModel):
     schema_version: Literal["1.0"]
     role: Literal["coordinator"]
     discovery: DiscoveryRequest
+    replace: bool = False
     assessment: AssessmentConfiguration = Field(default_factory=AssessmentConfiguration)
 
 
@@ -99,6 +107,7 @@ class WorkerReply(StrictModel):
     failure_exit: ExitCode = 0
     selection_complete: bool
     unexamined_sources: Annotated[int, Field(ge=0)] = 0
+    receipt: OutputReceipt | None = None
     catalog: Catalog | None = None
     assessment: ValidationAssessment | None = None
 
@@ -131,6 +140,9 @@ class WorkerReply(StrictModel):
 
     def semantic_status(self) -> None:
         """Require validated catalog facts and assessment for coordinator success."""
+        if self.receipt is not None and (self.has_errors or self.catalog is None):
+            msg = "Published receipt requires a complete valid catalog."
+            raise ValueError(msg)
         present = self.catalog is not None and self.assessment is not None
         valid = self.assessment is not None and self.assessment.validity == "valid"
         if (
@@ -241,61 +253,6 @@ def inspect_archive(request: ArchiveRequest) -> WorkerReply:
         selection_complete=True,
         unexamined_sources=1 if state == "unexamined" else 0,
     )
-
-
-def reject_pairs(pairs: list[tuple[str, object]]) -> dict[str, object]:
-    """Reject duplicate object keys before Pydantic could silently overwrite one."""
-    result: dict[str, object] = {}
-    for key, value in pairs:
-        if key in result:
-            raise fail(code="INVALID_INVOCATION")
-        result[key] = value
-    return result
-
-
-def reject_constant(_value: str) -> None:
-    """Reject JSON NaN/Infinity spellings without echoing their input."""
-    raise fail(code="INVALID_INVOCATION")
-
-
-@dataclass
-class JsonNesting:
-    """Track JSON delimiters without interpreting quoted content."""
-
-    depth: int = 0
-    quoted: bool = False
-    escaped: bool = False
-
-    def feed(self, char: int) -> None:
-        """Count only unquoted container delimiters and enforce the depth ceiling."""
-        if self.quoted:
-            if self.escaped:
-                self.escaped = False
-            elif char == ord("\\"):
-                self.escaped = True
-            elif char == ord('"'):
-                self.quoted = False
-        elif char == ord('"'):
-            self.quoted = True
-        elif char in (ord("["), ord("{")):
-            self.depth += 1
-            if self.depth > DEFAULT_LIMITS.depth:
-                raise fail(code="INPUT_LIMIT", limit="depth")
-        elif char in (ord("]"), ord("}")):
-            self.depth -= 1
-
-
-def check_json(raw: bytes, maximum: int) -> None:
-    """Bound JSON bytes/depth and reject duplicate keys/nonfinite constants."""
-    if len(raw) > maximum:
-        raise fail(code="INPUT_LIMIT", limit="json_bytes")
-    nesting = JsonNesting()
-    for char in raw:
-        nesting.feed(char)
-    try:
-        json.loads(raw, object_pairs_hook=reject_pairs, parse_constant=reject_constant)
-    except ValueError, RecursionError:
-        raise fail(code="INVALID_INVOCATION") from None
 
 
 def stop_process(process: subprocess.Popen[bytes], *, coordinator: bool) -> None:
@@ -517,16 +474,7 @@ class CandidateRecords:
     ) -> bool:
         """Stop before dataset or deterministic byte limits are exceeded."""
         for item in records:
-            payload = (
-                json.dumps(
-                    item.record.model_dump(mode="json", exclude_none=True),
-                    ensure_ascii=False,
-                    sort_keys=True,
-                    indent=2,
-                    allow_nan=False,
-                ).encode("utf-8")
-                + b"\n"
-            )
+            payload = canonical_bytes(item.record)
             limit = (
                 "datasets"
                 if len(self.records) >= DEFAULT_LIMITS.datasets
@@ -626,21 +574,58 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
         or skipped > 0
         or not selection.selection_complete,
     )
-    return WorkerReply(
-        schema_version="1.0",
-        role="coordinator",
-        outcomes=outcomes,
-        diagnostics=validation.diagnostics,
-        failure_exit=collector.exit_status(),
-        **({"catalog": validation.catalog} if validation.catalog is not None else {}),
-        assessment=validation.assessment,
-        has_errors=validation.assessment.validity != "valid"
-        or collector.has_errors
-        or child_errors
-        or any(outcome_failed(outcome) for outcome in outcomes),
-        selection_complete=selection.selection_complete,
-        unexamined_sources=skipped,
+    reply = WorkerReply.model_validate(
+        dict(
+            schema_version="1.0",
+            role="coordinator",
+            outcomes=outcomes,
+            diagnostics=validation.diagnostics,
+            failure_exit=collector.exit_status(),
+            **(
+                {"catalog": validation.catalog}
+                if validation.catalog is not None
+                else {}
+            ),
+            assessment=validation.assessment,
+            has_errors=validation.assessment.validity != "valid"
+            or collector.has_errors
+            or child_errors
+            or any(outcome_failed(outcome) for outcome in outcomes),
+            selection_complete=selection.selection_complete,
+            unexamined_sources=skipped,
+        )
     )
+    return publish_selection(reply, request)
+
+
+def publish_selection(reply: WorkerReply, request: CoordinatorRequest) -> WorkerReply:
+    """Bound the acknowledgment before atomically saving a valid selected catalog."""
+    if reply.catalog is not None and request.discovery.output is not None:
+        # Reserve the bounded receipt before writing: a too-large private result must
+        # fail without publishing a snapshot that cannot be acknowledged.
+        check_json(
+            reply.model_dump_json(exclude_none=True).encode("utf-8"),
+            MAX_REPLY_BYTES - 512,
+        )
+        snapshot = save_snapshot(
+            request.discovery.output, reply.catalog, replace=request.replace
+        )
+        receipt = OutputReceipt(kind="canonical", sha256=snapshot.generation)
+        notices: list[Diagnostic] = []
+        if snapshot.orphan_count or snapshot.retained_generation_count:
+            notices.append(
+                Diagnostic(
+                    code="RETAINED_OUTPUT", severity="info", message_key="review_scope"
+                )
+            )
+        collector = DiagnosticCollector()
+        for diagnostic in [*reply.diagnostics, *notices]:
+            collector.add(diagnostic)
+        reply = WorkerReply.model_validate(
+            reply.model_dump(exclude_none=True)
+            | {"receipt": receipt, "diagnostics": collector.items}
+        )
+    return reply
 
 
 def interrupted(_signum: int, _frame: FrameType | None) -> None:
