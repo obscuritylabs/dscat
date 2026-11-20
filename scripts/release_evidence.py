@@ -15,6 +15,7 @@ from scripts.evidence_models import (
     IssueCode,
     ReleaseEvidence,
     ReleaseReadiness,
+    canonical_advisory_identifier,
 )
 from scripts.processes import ToolExecutionError
 
@@ -38,7 +39,12 @@ def finding_issues(
 ) -> list[IssueCode]:
     """Keep exploitation, severity and reviewed non-applicability independent."""
     issues: list[IssueCode] = []
-    matched = bool({finding.id, *finding.aliases} & kev_cves)
+    identities = {
+        canonical_advisory_identifier(item) for item in [finding.id, *finding.aliases]
+    }
+    matched = bool(
+        identities & {canonical_advisory_identifier(item) for item in kev_cves}
+    )
     if matched and not finding.known_exploited:
         issues.append("exploitation_conflict")
     if finding.severity == "unknown":
