@@ -34,6 +34,7 @@ from scripts.evidence_models import (
     Finding,
     Gate,
     GateName,
+    InstalledAcceptance,
     Inventory,
     ProjectIdentity,
     ReleaseEvidence,
@@ -513,7 +514,8 @@ def collect_sbom(
     )
     document = validate_sbom(read_file(output, DOCUMENT_BYTES))
     return write_json(
-        collection.assets / "sbom.json", enrich_sbom(document, inventory, provenance)
+        collection.assets / "sbom.cdx.json",
+        enrich_sbom(document, inventory, provenance),
     )
 
 
@@ -552,6 +554,9 @@ def collect_candidate(
         locked_graph(lock, development.marker_environment, development=True),
     )
     wheel, sdist = build_artifacts(collection, source)
+    write_file(
+        collection.assets / "development-inventory.json", canonical_bytes(development)
+    )
     requirements = export_requirements(collection)
     python, runtime = install_runtime(collection, wheel, lock, requirements["runtime"])
     installed_acceptance(collection, python)
@@ -663,24 +668,36 @@ def installed_acceptance(collection: Collection, python: Path) -> None:
         else python.parent.parent
         / f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages"
     )
-    hook = site / "sitecustomize.py"
+    hook = site / "_dscat_acceptance_network_guard.py"
+    startup = site / "_dscat_acceptance_network_guard.pth"
     environment["DSCAT_NETWORK_LOG"] = str(log)
     with hook.open("x") as stream:
         stream.write(guard)
     try:
-        collection.run(
-            "installed-acceptance",
-            [
-                str(python),
-                "-I",
-                str(collection.project / "scripts/installed_acceptance.py"),
-                "--materials",
-                str(materials),
-                "--workspace",
-                str(acceptance),
-            ],
-            directory=collection.work,
-            environment=environment,
-        )
+        with startup.open("x") as stream:
+            stream.write("import _dscat_acceptance_network_guard\n")
+        try:
+            collection.run(
+                "installed-acceptance",
+                [
+                    str(python),
+                    "-I",
+                    str(collection.project / "scripts/installed_acceptance.py"),
+                    "--materials",
+                    str(materials),
+                    "--workspace",
+                    str(acceptance),
+                ],
+                directory=collection.work,
+                environment=environment,
+            )
+        finally:
+            startup.unlink()
     finally:
         hook.unlink()
+    observed = InstalledAcceptance.model_validate_json(
+        collection.captured("installed-acceptance")
+    )
+    write_file(
+        collection.assets / "installed-acceptance.json", canonical_bytes(observed)
+    )
