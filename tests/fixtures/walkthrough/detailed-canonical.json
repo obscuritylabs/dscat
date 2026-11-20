@@ -1,0 +1,362 @@
+{
+  "datasets": [
+    {
+      "access_determination": {
+        "authority": "Synthetic authority",
+        "determined_on": "2026-01-02",
+        "rationale": "Synthetic restriction",
+        "reference": "urn:example:access",
+        "review_status": "in_review",
+        "state": "partially_restricted"
+      },
+      "capacity": [
+        {
+          "basis": "logical",
+          "kind": "average_ingestion",
+          "measured_on": "2026-01-03",
+          "normalized_bytes": 2000000,
+          "state": "known",
+          "unit": "MB",
+          "value": "2",
+          "window_end": "2026-01-02T00:00:00Z",
+          "window_start": "2026-01-01T00:00:00Z"
+        },
+        {
+          "basis": "logical",
+          "kind": "peak_ingestion",
+          "measured_on": "2026-01-03",
+          "normalized_bytes": 3000000,
+          "state": "known",
+          "unit": "MB",
+          "value": "3",
+          "window_end": "2026-01-02T00:00:00Z",
+          "window_start": "2026-01-01T00:00:00Z"
+        },
+        {
+          "kind": "size",
+          "state": "unknown"
+        }
+      ],
+      "capacity_retention": {
+        "state": "indefinite"
+      },
+      "commitments": [
+        {
+          "description": "Supplied assertion only.",
+          "id": "quality-001",
+          "kind": "quality",
+          "reference": "urn:example:assertion",
+          "subject": "measurements.reading",
+          "unit": "percent",
+          "value": "99"
+        }
+      ],
+      "consumer": {
+        "access_instructions": [
+          "Use the described access route."
+        ],
+        "intended_uses": [
+          "Synthetic evaluation"
+        ],
+        "limitations": [
+          "Synthetic data only"
+        ],
+        "provenance": [
+          "Synthetic fixture"
+        ],
+        "semantic_references": [
+          "urn:example:measurement"
+        ]
+      },
+      "contract_id": "contract-001",
+      "contract_version": "2.7.0",
+      "core_party": {
+        "label": "Metadata support",
+        "role": "unspecified_contact_or_owner"
+      },
+      "dataset_modified": "2026-01-03",
+      "dataset_version": "2026-Q1",
+      "description": "Synthetic metadata.",
+      "disclosure_determination": {
+        "authority": "Synthetic disclosure authority",
+        "determined_on": "2026-01-02",
+        "review_status": "approved",
+        "state": "unrestricted"
+      },
+      "distributions": [
+        {
+          "access_url": "https://example.org/access/",
+          "download_url": "https://example.org/download/",
+          "format": "CSV",
+          "id": "download",
+          "media_type": "text/csv",
+          "title": "Synthetic download"
+        }
+      ],
+      "domain": {
+        "id": "measurement",
+        "reference": "urn:example:measurement"
+      },
+      "fields": [
+        {
+          "description": "Synthetic reading field.",
+          "field_name": "reading",
+          "nullable": false,
+          "object_name": "measurements",
+          "semantic_references": [
+            "urn:example:reading"
+          ],
+          "type": "number"
+        },
+        {
+          "field_name": "unit",
+          "object_name": "measurements",
+          "type": "string"
+        }
+      ],
+      "id": "asset-001",
+      "inventory_added": "2026-01-01",
+      "metadata_review": {
+        "authority": "Synthetic review authority",
+        "reviewed_on": "2026-01-01",
+        "state": "approved"
+      },
+      "metadata_reviewed": "2026-01-02",
+      "product_reference": "urn:example:product-001",
+      "publication": {
+        "approvals": [
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "be3fdffdbc5ee3c5fcfcf434df7d62ee32b6a51619c7c65d266e3aea4cf905f0",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "contract_id",
+            "subject_kind": "canonical",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "b9ee16917afb7bb24688826eabed6df6bcb6974115222eb318e4d565cfaa291e",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "contract_version",
+            "subject_kind": "canonical",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "85725152e96cdbadd2c4d1420b0e231bf00314704bbae6fe9ee49a62464b6856",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "core_party.label",
+            "subject_kind": "canonical",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "85725152e96cdbadd2c4d1420b0e231bf00314704bbae6fe9ee49a62464b6856",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "core_party.label",
+            "subject_kind": "canonical",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "ffd4a17d6712c628a6e4922428f0e21fea3cfcd6dd9735da86172e23cac359c8",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "description",
+            "subject_kind": "canonical",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "ffd4a17d6712c628a6e4922428f0e21fea3cfcd6dd9735da86172e23cac359c8",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "description",
+            "subject_kind": "canonical",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "e77ebed4a175abbfabf1c68e363934611e906a0e76b2271ff0067c4d9e642b99",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "id",
+            "subject_kind": "canonical",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "e77ebed4a175abbfabf1c68e363934611e906a0e76b2271ff0067c4d9e642b99",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "id",
+            "subject_kind": "canonical",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "9189b9a9445494108f24be72bf9eb2c98415dd66f1c3d2e45851cb565606406f",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "title",
+            "subject_kind": "canonical",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "9189b9a9445494108f24be72bf9eb2c98415dd66f1c3d2e45851cb565606406f",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "title",
+            "subject_kind": "canonical",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "d8dfc0f14fb81fc803d824ad224a4ba6674291d724553ed0ccf944da5b65df49",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "dcat_us_3.catalog_id",
+            "subject_kind": "configuration",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "8ebf3d409818156c144a350d635998e3d8d40b5f4a3cd5a80b560f0dae9db924",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "identity.dataset_namespace",
+            "subject_kind": "configuration",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "b0594ad6201c79d6b66518dc888d09a0cb399e451ab7187087083572a3b44596",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "identity.parties.role_email",
+            "subject_kind": "configuration",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "b0594ad6201c79d6b66518dc888d09a0cb399e451ab7187087083572a3b44596",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "identity.parties.role_email",
+            "subject_kind": "configuration",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "ad4444ee6edd2ce845e402c7ce86ab2922ccef366f3a4f27b90ee60edbc41745",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "catalog_iri",
+            "subject_kind": "derived_target",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "339615c7d9ba71695a18520beed8cebeedf61e076ad63248404d15d3327dad03",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "contact_email_iri",
+            "subject_kind": "derived_target",
+            "target": "dcat-us-3"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "167d57f9e4b40a55d2f708bd8921e633f8b6d7a80f61c161cb95bbd591535eeb",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "contact_username",
+            "subject_kind": "derived_target",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "8043c47e8cdfac372a91d64871af59114a132ada0fdc7d6c68781f43b68f2ecf",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "contract_iri",
+            "subject_kind": "derived_target",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "54ea82f7f06fe09dc029c693a27543d9b84436afe9d21cecc1566cbe892bc323",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "contract_version",
+            "subject_kind": "derived_target",
+            "target": "odcs-3.2"
+          },
+          {
+            "approved_on": "2026-01-03",
+            "approved_value_sha256": "7017856d608b1356233ee7e5b7d4aed0940d1ad8b6e78b5470ad091f8ab11475",
+            "authority": "Synthetic publication authority",
+            "policy_version": "synthetic-policy-1",
+            "subject_id": "dataset_iri",
+            "subject_kind": "derived_target",
+            "target": "dcat-us-3"
+          }
+        ],
+        "state": "approved"
+      },
+      "records": {
+        "authority": "Synthetic authority",
+        "conflicts": [
+          "Synthetic competing instruction"
+        ],
+        "duration_days": 0,
+        "hold_state": "unknown",
+        "instruction": "Supplied instruction",
+        "reference": "urn:example:records",
+        "review_state": "active",
+        "trigger": "Supplied trigger"
+      },
+      "roles": [
+        {
+          "label": "Metadata stewardship",
+          "party_id": "steward",
+          "reference_kind": "local",
+          "role": "steward",
+          "uri": "https://example.org/stewards/"
+        },
+        {
+          "email": "metadata@example.org",
+          "label": "Metadata support",
+          "party_id": "support",
+          "reference_kind": "local",
+          "role": "contact"
+        }
+      ],
+      "services": [
+        {
+          "endpoint_description": "Descriptive endpoint metadata.",
+          "endpoint_url": "https://example.org/api/",
+          "id": "service-001",
+          "served_datasets": [
+            {
+              "id": "urn:example:external-001",
+              "reference_kind": "external"
+            },
+            {
+              "id": "asset-001",
+              "reference_kind": "local"
+            }
+          ],
+          "title": "Synthetic service"
+        }
+      ],
+      "title": "Synthetic measurements",
+      "update_frequency": "Weekly"
+    }
+  ],
+  "schema_version": "1.0"
+}

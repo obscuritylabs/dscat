@@ -1,0 +1,124 @@
+schema_version = "1.0"
+
+[identity]
+dataset_namespace = "https://example.org/datasets/"
+contract_namespace = "https://example.org/contracts/"
+contract_identity_rule = "namespace-plus-dataset-id"
+
+[identity.parties."Metadata support"]
+role_email = "metadata@example.org"
+contact_association = true
+
+[dcat_us_3]
+catalog_id = "https://example.org/catalog"
+
+[odcs_3_2]
+contract_version = "2.7.0"
+
+[assessment]
+completeness = []
+rules = []
+
+[publication]
+policy_version = "synthetic-policy-1"
+authority_reference = "Synthetic publication authority"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "contract_id"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "contract_version"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "core_party.label"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "core_party.label"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "description"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "description"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "id"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "id"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "title"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "canonical"
+subject_id = "title"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "configuration"
+subject_id = "dcat_us_3.catalog_id"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "configuration"
+subject_id = "identity.dataset_namespace"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "configuration"
+subject_id = "identity.parties.role_email"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "configuration"
+subject_id = "identity.parties.role_email"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "derived_target"
+subject_id = "catalog_iri"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "derived_target"
+subject_id = "contact_email_iri"
+target = "dcat-us-3"
+
+[[publication.allowed_subjects]]
+subject_kind = "derived_target"
+subject_id = "contact_username"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "derived_target"
+subject_id = "contract_iri"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "derived_target"
+subject_id = "contract_version"
+target = "odcs-3.2"
+
+[[publication.allowed_subjects]]
+subject_kind = "derived_target"
+subject_id = "dataset_iri"
+target = "dcat-us-3"
