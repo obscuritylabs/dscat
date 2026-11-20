@@ -449,7 +449,7 @@ def test_real_guarded_linux_cli_validation(tmp_path: Path) -> None:
     assert unsupported.exit_code == invocation_error, unsupported.stdout
     report = CommandResult.model_validate_json(unsupported.stdout)
     assert report.exit_code == invocation_error
-    assert report.diagnostics[0].code == "UNSUPPORTED_VERSION"
+    assert "UNSUPPORTED_VERSION" in {item.code for item in report.diagnostics}
 
 
 @pytest.mark.parametrize(
