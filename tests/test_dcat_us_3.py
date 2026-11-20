@@ -318,7 +318,7 @@ def test_actual_cli_readiness_uses_explicit_configuration(tmp_path: Path) -> Non
         payload = json.loads(result.output)
         assert payload["assessment"]["validity"] == "valid"
         assert payload["assessment"]["targets"][0]["state"] == expected
-        assert payload["assessment"]["targets"][1]["state"] == "unexamined"
+        assert payload["assessment"]["targets"][1]["state"] == "blocked"
         assert "metadata@example.org" not in result.output
         assert CORE["title"] not in result.output
 
