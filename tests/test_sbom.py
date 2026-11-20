@@ -300,3 +300,84 @@ def test_generator_incomplete_or_ambiguous_graph_cannot_be_repaired(
         document["dependencies"][0]["dependsOn"] = []
     with pytest.raises(ValueError, match="Generator"):
         active_relationships(document, installed, graph)
+
+
+@pytest.mark.parametrize("mutation", ["set", "schema-id", "missing", "invalid-schema"])
+def test_resource_semantics_cannot_be_replaced_by_matching_hashes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str
+) -> None:
+    """Check resource membership, schema identity and dialect after byte hashes."""
+    source = Path(sbom.__file__).parent / "resources/cyclonedx"
+    target = tmp_path / "resources/cyclonedx"
+    shutil.copytree(source, target)
+    manifest_path = target / "resource-manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    if mutation == "set":
+        manifest["resources"][-1] = manifest["resources"][0]
+    elif mutation == "missing":
+        (target / "bom-1.6.schema.json").unlink()
+    else:
+        path = target / "bom-1.6.schema.json"
+        schema = json.loads(path.read_bytes())
+        if mutation == "schema-id":
+            schema["$id"] = "https://example.org/synthetic-schema"
+        else:
+            schema["type"] = "synthetic-invalid-type"
+        content = json.dumps(schema).encode()
+        path.write_bytes(content)
+        for entry in manifest["resources"]:
+            if entry["path"] == path.name:
+                entry["sha256"] = hashlib.sha256(content).hexdigest()
+    raw = json.dumps(manifest).encode()
+    manifest_path.write_bytes(raw)
+    monkeypatch.setattr(sbom, "__file__", str(tmp_path / "sbom.py"))
+    # Simulate a newly selected immutable root to exercise semantic checks that
+    # remain mandatory even when all selected bytes have matching digests.
+    monkeypatch.setattr(sbom, "MANIFEST_SHA256", hashlib.sha256(raw).hexdigest())
+    with pytest.raises(ValueError, match=r"CycloneDX|SBOM validation failed"):
+        sbom.validate_sbom(payload()[0])
+
+
+@pytest.mark.parametrize("mutation", ["properties", "missing-pin", "unknown-component"])
+def test_ambiguous_or_unverified_sbom_enrichment_refuses(mutation: str) -> None:
+    """Provenance cannot be manufactured from duplicate or missing identity evidence."""
+    raw, installed, graph, actual = payload()
+    document = sbom.validate_sbom(raw)
+    if mutation == "properties":
+        root = document["metadata"]
+        assert isinstance(root, dict)
+        component = root["component"]
+        assert isinstance(component, dict)
+        properties = component["properties"]
+        assert isinstance(properties, list)
+        properties.append(properties[0])
+        changed = json.dumps(document).encode()
+        with pytest.raises(ValueError, match="properties must be unique"):
+            reconcile_sbom(
+                changed,
+                installed,
+                graph,
+                actual.model_copy(
+                    update={"sbom_sha256": hashlib.sha256(changed).hexdigest()}
+                ),
+            )
+    elif mutation == "missing-pin":
+        packages = [
+            item.model_copy(update={"artifact_sha256": None})
+            if item.name == "foo"
+            else item
+            for item in installed.distributions
+        ]
+        changed_inventory = installed.model_copy(update={"distributions": packages})
+        with pytest.raises(ValueError, match="provenance is unavailable"):
+            reconcile_sbom(raw, changed_inventory, graph, actual)
+        with pytest.raises(ValueError, match="without verified archive provenance"):
+            enrich_sbom(document, changed_inventory, actual)
+    else:
+        components = document["components"]
+        assert isinstance(components, list)
+        component = components[0]
+        assert isinstance(component, dict)
+        component["name"] = "unknown"
+        with pytest.raises(ValueError, match="unknown dependency component"):
+            enrich_sbom(document, installed, actual)

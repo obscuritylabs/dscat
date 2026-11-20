@@ -7,7 +7,7 @@ import urllib.error
 import urllib.request
 import urllib.response
 from email.message import Message
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, override
 
 import pytest
 from packaging.tags import Tag
@@ -170,3 +170,25 @@ def test_revalidate_model_copy_before_any_fetch(
     with pytest.raises(ValidationError):
         provenance.download_wheel(changed, tmp_path)
     assert transport.calls == []
+
+
+def test_partial_verified_archive_write_is_an_operational_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Successful retrieval cannot conceal an incomplete local archive write."""
+
+    class ShortWriter(io.BytesIO):
+        """Simulate a filesystem that accepts fewer bytes than requested."""
+
+        @override
+        def write(self, buffer: object, /) -> int:
+            """Report a short write without committing any artifact."""
+            assert isinstance(buffer, bytes)
+            return len(buffer) - 1
+
+    attach(monkeypatch, Transport())
+    monkeypatch.setattr(
+        type(tmp_path), "open", lambda *_args, **_options: ShortWriter()
+    )
+    with pytest.raises(OSError, match="written completely"):
+        provenance.download_wheel(wheel(), tmp_path)

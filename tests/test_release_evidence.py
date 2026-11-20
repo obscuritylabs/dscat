@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Obscurity Labs. All rights reserved.
 """Release readiness refuses incomplete, stale and artifact-unbound security claims."""
 
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, timedelta, timezone
 from typing import TYPE_CHECKING, get_args
 
 import pytest
@@ -310,3 +310,33 @@ def test_passing_gate_requires_its_actual_executor_role(
         else:
             with pytest.raises(ValidationError, match="applicable evidence"):
                 Gate.model_validate(altered)
+
+
+@pytest.mark.parametrize(
+    "clock",
+    [
+        NOW.replace(tzinfo=None),
+        NOW.replace(tzinfo=timezone(timedelta(hours=1))),
+    ],
+)
+def test_assessment_requires_an_explicit_utc_clock(clock: datetime) -> None:
+    """Freshness never guesses the timezone of an unqualified or offset clock."""
+    evidence, actual = candidate()
+    with pytest.raises(ValueError, match="explicit UTC clock"):
+        assess_release(evidence, actual, now=clock, kev_cves=set())
+
+
+def test_overdue_low_severity_remediation_remains_visible() -> None:
+    """A tracked nonblocking finding retains an overdue revisit warning."""
+    evidence, actual = candidate()
+    low = finding()
+    assert low.remediation is not None
+    old = low.remediation.model_copy(
+        update={"revisit_on": NOW.date() - timedelta(days=1)}
+    )
+    low = low.model_copy(update={"remediation": old})
+    result = assess_release(
+        evidence.model_copy(update={"findings": [low]}), actual, now=NOW, kev_cves=set()
+    )
+    assert result.state == "ready"
+    assert result.warnings == ["remediation_revisit_due"]
