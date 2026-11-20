@@ -3,7 +3,7 @@ import hashlib
 import re
 
 root = Path.cwd()
-files = [Path('AGENTS.md'), Path('LICENSE'), *sorted(Path('docs').rglob('*.md'))]
+files = [*sorted(Path('.').glob('*.md')), Path('LICENSE'), *sorted(Path('docs').rglob('*.md'))]
 documents = {str(p): p.read_text() for p in files}
 
 def verify(docs):
