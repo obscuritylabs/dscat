@@ -7,7 +7,13 @@ from typing import TYPE_CHECKING, get_args
 import pytest
 from packaging.markers import default_environment
 from pydantic import ValidationError
-from scripts.evidence_models import ActualBindings, Finding, GateName, ReleaseEvidence
+from scripts.evidence_models import (
+    ActualBindings,
+    Finding,
+    Gate,
+    GateName,
+    ReleaseEvidence,
+)
 from scripts.release_evidence import FEED_KEYS, assess_release
 
 if TYPE_CHECKING:
@@ -62,7 +68,11 @@ def candidate() -> tuple[ReleaseEvidence, ActualBindings]:
                 {
                     "name": name,
                     "state": "pass",
-                    "executor_role": "independent",
+                    "executor_role": (
+                        "operator"
+                        if name in {"confidential_reporting", "triage_rehearsal"}
+                        else "independent"
+                    ),
                     "source_sha": "a" * 40,
                     "wheel_sha256": WHEEL,
                     "evidence_sha256": "2" * 64,
@@ -275,3 +285,28 @@ def test_non_applicability_requires_reviewed_exact_artifacts() -> None:
             finding(
                 applicability="not_affected", non_applicability=disposition | changes
             )
+
+
+@pytest.mark.parametrize(
+    ("name", "required_role"),
+    [
+        ("privacy_review", "independent"),
+        ("license_review", "independent"),
+        ("independent_acceptance", "independent"),
+        ("confidential_reporting", "operator"),
+        ("triage_rehearsal", "operator"),
+    ],
+)
+def test_passing_gate_requires_its_actual_executor_role(
+    name: str, required_role: str
+) -> None:
+    """Implementer claims cannot stand for independent review or operator ownership."""
+    evidence, _ = candidate()
+    values = next(gate for gate in evidence.gates if gate.name == name).model_dump()
+    for role in ("implementer", "independent", "operator", "unassigned"):
+        altered = values | {"executor_role": role}
+        if role == required_role:
+            assert Gate.model_validate(altered).state == "pass"
+        else:
+            with pytest.raises(ValidationError, match="applicable evidence"):
+                Gate.model_validate(altered)
