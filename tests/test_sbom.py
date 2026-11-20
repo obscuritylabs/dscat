@@ -13,7 +13,11 @@ import pytest
 from referencing.exceptions import Unresolvable
 from scripts import sbom
 from scripts.dependency_graph import locked_graph
-from scripts.sbom_reconciliation import enrich_sbom, reconcile_sbom
+from scripts.sbom_reconciliation import (
+    active_relationships,
+    enrich_sbom,
+    reconcile_sbom,
+)
 
 from dscat.resources.registry import DOCUMENT
 from tests.test_dependency_graph import LOCK, inventory
@@ -252,3 +256,47 @@ def test_resource_corruption_stops_validation(
     monkeypatch.setattr(sbom, "__file__", str(tmp_path / "sbom.py"))
     with pytest.raises(ValueError, match="CycloneDX"):
         sbom.load_schema_bundle()
+
+
+def test_generator_optional_edges_are_disclosed_and_removed() -> None:
+    """Inactive optional relationships cannot masquerade as active runtime edges."""
+    raw, installed, graph, actual = payload()
+    original = sbom.validate_sbom(raw)
+    altered = sbom.validate_sbom(raw)
+    dependencies = altered["dependencies"]
+    assert isinstance(dependencies, list)
+    leaf = dependencies[-1]
+    assert isinstance(leaf, dict)
+    leaf["dependsOn"] = ["root"]
+    corrected, changes = active_relationships(altered, installed, graph)
+    assert [change.model_dump() for change in changes] == [
+        {"package": "baz", "generated": ["dscat"], "installed": []}
+    ]
+    assert altered != corrected
+    assert original != altered
+    result = json.dumps(corrected).encode()
+    reconcile_sbom(
+        result,
+        installed,
+        graph,
+        actual.model_copy(update={"sbom_sha256": hashlib.sha256(result).hexdigest()}),
+    )
+
+
+@pytest.mark.parametrize("mutation", ["missing", "unknown", "duplicate", "edge"])
+def test_generator_incomplete_or_ambiguous_graph_cannot_be_repaired(
+    mutation: str,
+) -> None:
+    """Normalization cannot invent missing software, edges or record identities."""
+    raw, installed, graph, _ = payload()
+    document = json.loads(raw)
+    if mutation == "missing":
+        document["dependencies"].pop()
+    elif mutation == "unknown":
+        document["components"].pop()
+    elif mutation == "duplicate":
+        document["components"].append(document["components"][0])
+    else:
+        document["dependencies"][0]["dependsOn"] = []
+    with pytest.raises(ValueError, match="Generator"):
+        active_relationships(document, installed, graph)

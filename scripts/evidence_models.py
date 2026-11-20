@@ -37,6 +37,23 @@ class InstalledAcceptance(StrictModel):
     public_generation: Sha256
 
 
+class RelationshipCorrection(StrictModel):
+    """Disclose a generator relationship corrected using verified active metadata."""
+
+    package: Text
+    generated: list[Text]
+    installed: list[Text]
+
+
+class SbomReconciliation(StrictModel):
+    """Retain generator identity and explain every active-relationship correction."""
+
+    schema_version: Literal["1.0"]
+    generator_sha256: Sha256
+    relationship_source: Literal["installed-requires-dist-and-lock"]
+    corrections: list[RelationshipCorrection]
+
+
 def utc_timestamp(value: str) -> str:
     """Require an explicit UTC instant without silently assigning a timezone."""
     try:
