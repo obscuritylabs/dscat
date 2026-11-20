@@ -181,3 +181,30 @@ def test_native_terminal_group_and_child_enumeration_are_real(
     assert not worker.invoke(request(tmp_path), 5).has_errors
     assert processes[0].returncode == 0
     assert reaps == [True]
+
+
+def test_terminal_worker_does_not_break_live_coordinator_observation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A normally exiting worker may remain a zombie until its owner reaps it."""
+    raw = worker.WorkerReply(
+        schema_version="1.0",
+        role="coordinator",
+        has_errors=False,
+        selection_complete=True,
+        catalog=worker.Catalog(schema_version="1.0", datasets=[]),
+        assessment=worker.ValidationAssessment(validity="valid"),
+    ).model_dump_json(exclude_none=True)
+    script = (
+        "import os,subprocess,sys,time;sys.stdin.buffer.read();"
+        "p=subprocess.Popen([sys.executable,'-I','-c','pass']);"
+        "os.waitid(os.P_PID,p.pid,os.WEXITED|os.WNOWAIT);"
+        "time.sleep(0.15);p.wait();"
+        f"print({raw!r})"
+    )
+    processes = launch_script(monkeypatch, script)
+    reaps = assert_quiescent_before_reap(monkeypatch)
+    result = worker.invoke(request(tmp_path), 5)
+    assert not result.has_errors
+    assert processes[0].returncode == 0
+    assert reaps == [True]

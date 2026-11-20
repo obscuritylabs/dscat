@@ -1077,3 +1077,110 @@ def test_failure_category_cannot_accompany_a_success_flag() -> None:
         workers.WorkerReply.model_validate(
             safe_reply().model_dump(exclude_none=True) | {"failure_exit": 3}
         )
+
+
+@pytest.mark.parametrize(
+    "scenario", ["valid", "timeout", "pipe", "interrupt", "thread"]
+)
+def test_archive_transport_owns_reap_on_all_exits(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, scenario: str
+) -> None:
+    """The serial archive transport preserves bounded replies and failure cleanup."""
+    path = tmp_path / "input.xlsx"
+    path.write_bytes(b"synthetic")
+    request = workers.ArchiveRequest(
+        schema_version="1.0",
+        role="archive",
+        source=source_at(path),
+        remaining_expanded=256 * 1024**2,
+    )
+    raw = safe_reply().model_dump_json(exclude_none=True)
+    script = (
+        f"import sys;sys.stdin.buffer.read();print({raw!r})"
+        if scenario == "valid"
+        else "import time;time.sleep(60)"
+    )
+    processes = launch_script(monkeypatch, script)
+    if scenario in {"pipe", "interrupt"}:
+
+        def refused(_process: subprocess.Popen[bytes], _encoded: bytes) -> None:
+            if scenario == "interrupt":
+                raise KeyboardInterrupt
+            raise OSError
+
+        monkeypatch.setattr(workers, "send_request", refused)
+    if scenario == "thread":
+
+        def no_thread(_thread: object) -> None:
+            raise fail(code="IO_FAILURE")
+
+        monkeypatch.setattr(workers, "start_reader", no_thread)
+    if scenario == "valid":
+        assert workers.invoke(request, 5) == safe_reply()
+    else:
+        with pytest.raises(
+            KeyboardInterrupt if scenario == "interrupt" else IntakeError
+        ) as caught:
+            workers.invoke(request, 0.05 if scenario == "timeout" else 5)
+        if scenario == "timeout":
+            assert isinstance(caught.value, IntakeError)
+            assert caught.value.diagnostic.limit == "workbook_time"
+    assert processes[0].returncode is not None
+
+
+def test_archive_incomplete_drain_is_not_accepted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A stalled archive reader cannot turn a completed child into accepted data."""
+    path = tmp_path / "input.xlsx"
+    path.write_bytes(b"synthetic")
+    request = workers.ArchiveRequest(
+        schema_version="1.0",
+        role="archive",
+        source=source_at(path),
+        remaining_expanded=1,
+    )
+    processes = launch_script(monkeypatch, "import sys;sys.stdin.buffer.read()")
+    release = workers.threading.Event()
+    done = workers.threading.Event()
+
+    def waiting(_reader: workers.PipeReader) -> None:
+        release.wait(timeout=10)
+        done.set()
+
+    monkeypatch.setattr(workers.PipeReader, "read", waiting)
+    try:
+        with pytest.raises(IntakeError):
+            workers.invoke(request, 5)
+    finally:
+        release.set()
+        assert done.wait(timeout=2)
+        if processes[0].stdout is not None:
+            processes[0].stdout.close()
+    workers.stop_process(processes[0], coordinator=False)
+
+
+def test_archive_missing_output_is_not_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An archive with no response pipe returns an operational failure."""
+    path = tmp_path / "input.xlsx"
+    path.write_bytes(b"synthetic")
+    request = workers.ArchiveRequest(
+        schema_version="1.0",
+        role="archive",
+        source=source_at(path),
+        remaining_expanded=1,
+    )
+    original = subprocess.Popen
+
+    def launch(*_args: object, **_options: object) -> subprocess.Popen[bytes]:
+        return original(
+            [sys.executable, "-I", "-c", "import sys;sys.stdin.buffer.read()"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+        )
+
+    monkeypatch.setattr(workers.subprocess, "Popen", launch)
+    with pytest.raises(IntakeError, match="IO_FAILURE"):
+        workers.invoke(request, 5)

@@ -229,3 +229,24 @@ def test_unexpected_process_topology_is_refused(tree: Tree, fault: str) -> None:
         tree.observer.observe()
     if fault in {"parent", "group", "multiple"}:
         assert WORKER not in tree.kernel.memory_queries
+
+
+@pytest.mark.parametrize("vanished", [False, True])
+def test_failed_memory_query_requires_confirmed_disappearance(
+    tree: Tree, monkeypatch: pytest.MonkeyPatch, *, vanished: bool
+) -> None:
+    """A query error is discarded only when a subsequent identity confirms exit."""
+    tree.kernel.identity_sequence[WORKER] = [
+        tree.worker,
+        None if vanished else tree.worker,
+    ]
+
+    def refused(_pid: int) -> None:
+        raise observation.fail(code="RESOURCE_GUARD_UNAVAILABLE")
+
+    monkeypatch.setattr(tree.kernel, "memory", refused)
+    if vanished:
+        assert tree.observer.sample(tree.worker) is None
+    else:
+        with pytest.raises(IntakeError):
+            tree.observer.sample(tree.worker)
