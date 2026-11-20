@@ -33,7 +33,7 @@ Use `--format json` for a single structured result on validation, build and expo
 
 ## Platforms and storage
 
-The implementation is OS agnostic, with macOS as the primary target. Required first-release acceptance includes native macOS installation and workflow, Excel for Mac with VoiceOver, Terminal with VoiceOver and Safari with VoiceOver. Their actual evidence and remaining dependencies are tracked in [macOS readiness](../planning-gates.md#macos-primary-readiness). Automated tests do not establish the desktop observations. Windows and Linux checks support claims only for environments actually verified; absence of Windows access does not block the macOS-first release.
+The implementation is OS agnostic, with macOS as the primary target. Required first-release acceptance includes native macOS installation and workflow. Their actual evidence and remaining dependencies are tracked in [macOS readiness](../planning-gates.md#macos-primary-readiness). Windows and Linux checks support claims only for environments actually verified; absence of Windows access does not block the macOS-first release.
 
 Publication needs a supported local filesystem and refuses unknown filesystems, network shares, linked paths and overlapping inputs/outputs. The [storage guide](storage.md#replace-a-catalog) lists filesystem support and atomic-visibility limits. Resource-limited results do not claim that unexamined inputs were valid.
 

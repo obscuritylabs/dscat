@@ -129,6 +129,31 @@ def test_complete_synthetic_readiness_and_low_severity_tracking() -> None:
     assert result.issues == []
 
 
+def test_release_readiness_without_retired_accessibility_observations() -> None:
+    """Native workflow and security evidence suffice without desktop observations."""
+    evidence, actual = candidate()
+    remaining = {
+        "native_macos",
+        "confidential_reporting",
+        "triage_rehearsal",
+        "privacy_review",
+        "license_review",
+        "independent_acceptance",
+    }
+    evidence = evidence.model_copy(
+        update={"gates": [gate for gate in evidence.gates if gate.name in remaining]}
+    )
+    assert {gate.name for gate in evidence.gates} == remaining
+    assert assess_release(evidence, actual, now=NOW, kev_cves=set()).state == "ready"
+    for name in remaining:
+        incomplete = evidence.model_copy(
+            update={"gates": [gate for gate in evidence.gates if gate.name != name]}
+        )
+        result = assess_release(incomplete, actual, now=NOW, kev_cves=set())
+        assert result.state == "blocked"
+        assert "gate_missing" in result.issues
+
+
 @pytest.mark.parametrize("severity", ["low", "unknown"])
 def test_known_exploited_findings_block_at_any_severity(severity: str) -> None:
     """Low and unscored findings cannot evade the independent exploitation gate."""

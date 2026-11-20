@@ -1,10 +1,10 @@
 # Verifying a candidate
 
-This walkthrough uses synthetic metadata. Record observations against the exact candidate; expected results below are instructions, not claims that the selected desktop checks passed. Current execution and release readiness follow the [planning gates](../planning-gates.md). Use the [installation guide](installation.md) to verify downloaded assets and install the candidate outside its source checkout.
+This walkthrough uses synthetic metadata. Record observations against the exact candidate; expected results below are instructions, not claims that the candidate passed. Current execution and release readiness follow the [planning gates](../planning-gates.md). Use the [installation guide](installation.md) to verify downloaded assets and install the candidate outside its source checkout.
 
 ## Prepare the workspace and evidence
 
-Use a fresh disposable local directory on a supported filesystem. Keep the candidate's wheel/source archive, `SHA256SUMS`, SBOM, dependency inventories and verification report. Record source revision, artifact hashes, OS/build/architecture, filesystem, Python/uv and installed package versions. For desktop checks also record Excel for Mac, Terminal, Safari and VoiceOver versions. Keep local account names, host identifiers and private paths out of retained public evidence.
+Use a fresh disposable local directory on a supported filesystem. Keep the candidate's wheel/source archive, `SHA256SUMS`, SBOM, dependency inventories and verification report. Record source revision, artifact hashes, OS/build/architecture, filesystem, Python/uv and installed package versions. Keep local account names, host identifiers and private paths out of retained public evidence.
 
 Copy the [walkthrough fixtures](../../tests/fixtures/walkthrough/fixture-manifest.json) from the exact candidate source into the disposable directory. Check their SHA-256 values against that manifest. The workbooks derive from the installed public `template` command; the manifest identifies its template and wheel bytes. All supplied review/publication authorities are explicitly synthetic test facts.
 
@@ -23,7 +23,7 @@ Copy the [walkthrough fixtures](../../tests/fixtures/walkthrough/fixture-manifes
 
 Open only the positive minimum/detailed workbooks and newly generated template in Excel. Inspect negative fixtures with DSCat and controlled tests; do not open them in Excel. Use separate directories for positive intake, deliberately conflicting intake, catalog outputs and private reports. Inputs, outputs, configuration and reports cannot overlap.
 
-## Complete the template with keyboard and VoiceOver
+## Complete the synthetic template
 
 Run `dscat --version` and `dscat --no-color --help`. Expect version `0.1.0`, the proprietary notice, plain text and usable command/option descriptions. Run:
 
@@ -31,11 +31,11 @@ Run `dscat --version` and `dscat --no-color --help`. Expect version `0.1.0`, the
 dscat template --output intake.xlsx
 ```
 
-Open this newly generated synthetic workbook in Excel for Mac. With keyboard and VoiceOver, navigate Instructions → Datasets → Fields → Details_Quality. Check worksheet names, header announcement, logical reading order, frozen panes, prompt/dropdown access and correction feedback without relying on color. Ensure markers and feedback formulas do not trap navigation.
+Use this newly generated synthetic workbook for the minimum and detailed intake examples. The Instructions, Datasets, Fields and Details_Quality sheets describe the supported entries.
 
-In Datasets row 2, enter `asset-001`, `Synthetic measurements`, `Synthetic metadata.` and `Metadata support` under the four required headers. Leave the optional role references blank. Check optional detail entry against the positive detailed fixture. Deliberately omit a required value, enter a bad unit/date and duplicate an identifier in a separate disposable copy; observe textual feedback and correction with VoiceOver. DSCat validation must still reject invalid values when spreadsheet controls are bypassed.
+In Datasets row 2, enter `asset-001`, `Synthetic measurements`, `Synthetic metadata.` and `Metadata support` under the four required headers. Leave the optional role references blank. Check optional detail entry against the positive detailed fixture. Deliberately omit a required value, enter a bad unit/date and duplicate an identifier in a separate disposable copy; observe the validation feedback and correct the values. DSCat validation must still reject invalid values when spreadsheet controls are bypassed.
 
-Repeat the template command without `--replace`: expect exit 3 and unchanged existing bytes. Repeat with `--replace`: expect success and a complete valid workbook. Record actual announcements, keyboard steps, failures and recovery. Missing observations remain pending.
+Repeat the template command without `--replace`: expect exit 3 and unchanged existing bytes. Repeat with `--replace`: expect success and a complete valid workbook. Record actual results, failures and recovery. Missing observations remain pending.
 
 ## Validate positive and negative input
 
@@ -103,11 +103,9 @@ uv run --frozen python scripts/verify.py --full --evidence-dir /new/disposable/e
 
 Select a new real local directory outside source; the displayed path is a placeholder. The command runs automated quality and package checks, installs a clean runtime, proves its network-denial hook is active, then exercises template → validation → build/reload → both internal and approved public exports. It checks deterministic repeats, refused replacement, public denial preserving CURRENT and unknown remote schema refusal. The deliberate socket probe must be denied and subsequent workflow network attempts must be zero. Raw tool logs stay in private evidence; inspect public assets separately for disclosure.
 
-`--ci` runs bounded static/document/CLI/package checks. `--full` returns 0 only for complete release readiness, 1 for unmet release gates, 2 for an automated/setup failure and 130 for interruption. Missing operator, desktop, independent or verified-main evidence stays blocked even after automated checks pass. Neither command publishes a release.
+`--ci` runs bounded static/document/CLI/package checks. `--full` returns 0 only for complete release readiness, 1 for unmet release gates, 2 for an automated/setup failure and 130 for interruption. Missing operator, independent or verified-main evidence stays blocked even after automated checks pass. Neither command publishes a release.
 
-## Record desktop and final acceptance
-
-In Terminal with VoiceOver, check plain/no-color help, errors, ordinal source/row/column correction, narrow windows, redirected output and keyboard-only invocation. In Safari with VoiceOver, render the exact candidate documentation and check heading/link navigation, logical order and recovery instructions. Record each selected criterion, actual announcements and limitations; headless tests do not establish these observations.
+## Record final acceptance
 
 Use the confidential reporting/triage procedure only after its actual setup and access are verified. Retain current advisory/exploitation, SBOM, licensing, privacy and independent acceptance evidence bound to the candidate. An available role label or passing CI cannot supply those observations.
 

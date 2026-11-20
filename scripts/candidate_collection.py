@@ -63,7 +63,7 @@ class Claims(StrictModel):
 
     schema_version: Literal["1.0"]
     findings: list[Finding] = Field(default_factory=list, max_length=10000)
-    gates: list[Gate] = Field(default_factory=list, max_length=9)
+    gates: list[Gate] = Field(default_factory=list, max_length=6)
 
 
 @dataclass
