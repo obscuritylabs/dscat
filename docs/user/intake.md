@@ -1,6 +1,6 @@
 # Completing a dataset workbook
 
-Template generation, workbook validation and [canonical catalog persistence](storage.md) are implemented in this development build. Standards exports are still in development. The [current schema 1.0 template](../../tests/fixtures/workbook-1.0/current.xlsx) is available for inspection; native macOS intake and manual accessibility acceptance remain pending while the memory guard is corrected. Implementation availability does not establish platform acceptance.
+Template generation, workbook validation and [canonical catalog persistence](storage.md) are implemented in this development build. Standards exports are still in development. The [current schema 1.0 template](../../tests/fixtures/workbook-1.0/current.xlsx) is available for inspection; native macOS intake is implemented with resource checks and bounded process cleanup. Complete export workflow and manual accessibility acceptance remain pending. Implementation availability does not establish first-release acceptance.
 
 ## Start with the required core
 
