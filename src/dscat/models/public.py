@@ -2,9 +2,9 @@
 """Initial closed public shapes admit no optional private canonical children."""
 
 from copy import deepcopy
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Self
 
-from pydantic import EmailStr, Field, JsonValue, field_validator
+from pydantic import EmailStr, Field, JsonValue, field_validator, model_validator
 
 from dscat.export.models import CONTEXT, DcatContact, DcatDocument
 from dscat.models.base import HttpsReference, Identifier, StrictModel, Text
@@ -52,6 +52,16 @@ class PublicDcatDocument(StrictModel):
     def local_context(cls, value: object) -> object:
         """Require the same complete finite context before any graph interpretation."""
         return DcatDocument.local_context(value)
+
+    @model_validator(mode="after")
+    def distinct_nodes(self) -> Self:
+        """Keep dataset names and identifiers unique and separate from the catalog."""
+        nodes = [self.id, *(dataset.id for dataset in self.datasets)]
+        identifiers = [dataset.identifier for dataset in self.datasets]
+        if len(set(nodes)) != len(nodes) or len(set(identifiers)) != len(identifiers):
+            msg = "Public catalog and dataset identities must remain distinct."
+            raise ValueError(msg)
+        return self
 
 
 class PublicDescriptionProperty(StrictModel):

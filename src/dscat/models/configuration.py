@@ -3,7 +3,7 @@
 
 from typing import Annotated, Literal, Self, get_args
 
-from pydantic import BaseModel, EmailStr, Field, model_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 from dscat.models.base import HttpsReference, Identifier, Namespace, StrictModel, Text
 from dscat.models.catalog import ApprovalSubject, DatasetRecord
@@ -132,6 +132,14 @@ class PublicationConfiguration(StrictModel):
     policy_version: Text
     allowed_subjects: list[ApprovalSubject]
     authority_reference: Text
+
+    @field_validator("allowed_subjects")
+    @classmethod
+    def order_subjects(cls, value: list[ApprovalSubject]) -> list[ApprovalSubject]:
+        """Order policy subjects by their fixed typed scope identities."""
+        return sorted(
+            value, key=lambda item: (item.subject_kind, item.subject_id, item.target)
+        )
 
     @model_validator(mode="after")
     def unique_subjects(self) -> Self:
