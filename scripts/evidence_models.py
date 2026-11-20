@@ -251,8 +251,13 @@ class Gate(StrictModel):
             self.evidence_sha256 is None
             or self.executor_role == "unassigned"
             or (
-                self.name == "independent_acceptance"
+                self.name
+                in {"privacy_review", "license_review", "independent_acceptance"}
                 and self.executor_role != "independent"
+            )
+            or (
+                self.name in {"confidential_reporting", "triage_rehearsal"}
+                and self.executor_role != "operator"
             )
         ):
             msg = "Passing gates require the applicable evidence and independence."
