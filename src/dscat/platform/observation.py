@@ -62,6 +62,10 @@ class ResidentObserver:
             raise fail(code="INPUT_LIMIT", limit="memory")
         return memory
 
+    def terminal(self) -> bool:
+        """Confirm an exited owned coordinator while waitid visibility catches up."""
+        return self.native.process_exited(self.coordinator.pid)
+
     def children(self) -> list[int]:
         """Require at most one live worker for the serial coordinator."""
         children = self.native.children(self.coordinator.pid)
