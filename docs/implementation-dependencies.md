@@ -42,7 +42,7 @@ No dependency metadata query establishes vulnerability safety. I10/R MUST execut
 
 ### I10 supplementary CI action pins
 
-TOOL_VERIFIED, 2026-11-20: the upstream latest-release APIs and tag refs select the immutable action revisions below. Their release dates precede selection by more than 14 days. These actions run only in the single supplementary Linux PR job; they are not application runtime dependencies or release artifacts. Actual hosted execution remains PENDING until a PR run completes.
+TOOL_VERIFIED, 2026-11-20: the upstream latest-release APIs and tag refs select the immutable action revisions below. Their release dates precede selection by more than 14 days. These actions run only in the single supplementary Linux PR job; they are not application runtime dependencies or release artifacts. Actual hosted execution and protection status follow [repository policy](repository-policy.md).
 
 | Action | Selected release / publication | Immutable revision and inspected interface |
 | --- | --- | --- |
