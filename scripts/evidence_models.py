@@ -1,6 +1,7 @@
 # Copyright (c) 2026 Obscurity Labs. All rights reserved.
 """Closed release decisions bind claims to actual source and artifact identities."""
 
+import re
 from datetime import UTC, datetime
 from typing import Annotated, Literal, Self
 
@@ -68,6 +69,16 @@ def utc_timestamp(value: str) -> str:
 
 
 UtcTimestamp = Annotated[str, AfterValidator(utc_timestamp)]
+
+
+def canonical_advisory_identifier(value: str) -> str:
+    """Canonicalize conventional CVE identity case without changing other namespaces."""
+    if re.fullmatch(r"(?i:CVE)-[0-9]{4}-[0-9]{4,}", value):
+        return value.upper()
+    return value
+
+
+AdvisoryIdentifier = Annotated[Text, AfterValidator(canonical_advisory_identifier)]
 
 
 class Artifact(StrictModel):
@@ -192,11 +203,11 @@ class Remediation(StrictModel):
 class Finding(StrictModel):
     """Known exploitation remains independent of advisory severity."""
 
-    id: Text
+    id: AdvisoryIdentifier
     package: Text
     version: Text
     scope: Literal["runtime", "development"]
-    aliases: list[Text]
+    aliases: list[AdvisoryIdentifier]
     severity: Literal["critical", "high", "medium", "low", "unknown"]
     severity_evidence_sha256: Sha256 | None = None
     known_exploited: bool

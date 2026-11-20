@@ -9,7 +9,11 @@ from dscat.json_guard import check_json
 from dscat.models.base import StrictModel, Text
 from dscat.resources.registry import DOCUMENT
 from scripts.dependency_graph import array_value, object_value
-from scripts.evidence_models import Finding
+from scripts.evidence_models import (
+    AdvisoryIdentifier,
+    Finding,
+    canonical_advisory_identifier,
+)
 
 if TYPE_CHECKING:
     from scripts.evidence_models import Inventory
@@ -20,9 +24,9 @@ FEED_BYTES = 32 * 1024**2
 class AuditVulnerability(StrictModel):
     """The pinned scanner's JSON shape has no severity or applicability assertion."""
 
-    id: Text
+    id: AdvisoryIdentifier
     fix_versions: list[Text]
-    aliases: list[Text]
+    aliases: list[AdvisoryIdentifier]
     description: str
 
 
@@ -56,7 +60,7 @@ class ObservedAdvisory(StrictModel):
     package: Text
     version: Text
     scope: Literal["runtime", "development"]
-    identifiers: Annotated[list[Text], Field(min_length=1)]
+    identifiers: Annotated[list[AdvisoryIdentifier], Field(min_length=1)]
 
 
 class KevCatalog(StrictModel):
@@ -129,7 +133,9 @@ def merge_advisories(advisories: list[ObservedAdvisory]) -> list[ObservedAdvisor
     """Join only alias-connected reports for the same scope, package and version."""
     merged: list[ObservedAdvisory] = []
     for advisory in advisories:
-        identifiers = set(advisory.identifiers)
+        identifiers = {
+            canonical_advisory_identifier(item) for item in advisory.identifiers
+        }
         untouched: list[ObservedAdvisory] = []
         for group in merged:
             if (
@@ -155,6 +161,7 @@ def apply_dispositions(
 ) -> list[Finding]:
     """Keep unassessed findings unknown and reject conflicting overrides."""
     result: list[Finding] = []
+    kev_cves = {canonical_advisory_identifier(item) for item in kev_cves}
     used: set[int] = set()
     for advisory in merge_advisories(advisories):
         identities = set(advisory.identifiers)
@@ -164,7 +171,7 @@ def apply_dispositions(
             if disposition.scope == advisory.scope
             and disposition.package == advisory.package
             and disposition.version == advisory.version
-            and disposition.id in identities
+            and canonical_advisory_identifier(disposition.id) in identities
         ]
         if len(matches) > 1:
             msg = "Conflicting dispositions refer to the same observed advisory."
@@ -174,7 +181,12 @@ def apply_dispositions(
         if matches:
             index = matches[0]
             disposition = dispositions[index]
-            if not set(disposition.aliases) <= identities:
+            if (
+                not {
+                    canonical_advisory_identifier(item) for item in disposition.aliases
+                }
+                <= identities
+            ):
                 msg = "Advisory disposition references an unobserved identity."
                 raise ValueError(msg)
             used.add(index)

@@ -12,6 +12,7 @@ from scripts.advisories import (
     parse_audit,
     parse_kev,
 )
+from scripts.release_evidence import finding_issues
 
 from tests.test_release_evidence import candidate, finding
 
@@ -169,3 +170,50 @@ def test_missing_severity_proof_and_unassigned_pass_are_refused() -> None:
             evidence.gates[0].model_dump(exclude_none=True)
             | {"executor_role": "unassigned"}
         )
+
+
+@pytest.mark.parametrize("alias", ["cve-2026-1234", "CvE-2026-1234"])
+@pytest.mark.parametrize("kev", ["CVE-2026-1234", "cve-2026-1234"])
+def test_cve_case_variants_cannot_evade_exploitation_after_disposition(
+    alias: str, kev: str
+) -> None:
+    """A Low assessment cannot suppress independently matched known exploitation."""
+    observed = ObservedAdvisory(
+        package="synthetic-package",
+        version="1.0",
+        scope="runtime",
+        identifiers=["PYSEC-2026-1", alias],
+    )
+    unassessed = apply_dispositions([observed], [], {kev})
+    assert unassessed[0].known_exploited
+    assert unassessed[0].severity == "unknown"
+    assessed = finding(id="PYSEC-2026-1", aliases=[alias], known_exploited=False)
+    resolved = apply_dispositions([observed], [assessed], {kev})[0]
+    assert {"known_exploited", "exploitation_conflict"} <= set(
+        finding_issues(resolved, {"b" * 64, "c" * 64}, {kev})
+    )
+    # Assessment also defends against a typed-object copy that skipped validation.
+    copied = assessed.model_copy(update={"aliases": [alias]})
+    assert "known_exploited" in finding_issues(copied, set(), {kev})
+
+
+def test_merge_normalizes_only_cve_namespaces() -> None:
+    """CVE-connected groups merge without case-folding unrelated advisory identities."""
+    base = ObservedAdvisory(
+        package="synthetic-package",
+        version="1.0",
+        scope="runtime",
+        identifiers=["UPPER-namespace", "CVE-2026-1234"],
+    )
+    lower = base.model_copy(
+        update={"identifiers": ["lower-namespace", "cve-2026-1234"]}
+    )
+    merged = merge_advisories([base, lower])
+    assert [item.identifiers for item in merged] == [
+        ["CVE-2026-1234", "UPPER-namespace", "lower-namespace"]
+    ]
+    separate = [
+        base.model_copy(update={"identifiers": [value]})
+        for value in ["OTHER-1", "other-1"]
+    ]
+    assert len(merge_advisories(separate)) == len(separate)
