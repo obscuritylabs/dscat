@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-@pytest.mark.parametrize("mode", ["ci", "full"])
+@pytest.mark.parametrize("mode", ["ci", "full", "full-with-claims"])
 @pytest.mark.parametrize("outcome", [0, 1])
 def test_gate_scope_and_release_status(
     tmp_path: Path,
@@ -31,7 +31,10 @@ def test_gate_scope_and_release_status(
         if label == "uv-version":
             (output / "logs/uv-version.stdout").write_text("uv 0.13.6\n")
         if label == "release-evidence":
-            assert argv[argv.index("--claims") + 1] == str(tmp_path / "claims.json")
+            if mode == "full-with-claims":
+                assert argv[argv.index("--claims") + 1] == str(tmp_path / "claims.json")
+            else:
+                assert "--claims" not in argv
         code = outcome if label == "release-evidence" else 0
         accepted = options["accepted"]
         assert isinstance(accepted, frozenset)
@@ -40,7 +43,7 @@ def test_gate_scope_and_release_status(
         return Execution(label, code, "a" * 64, "b" * 64, 0.1)
 
     monkeypatch.setattr(verify, "run_tool", run)
-    claims = tmp_path / "claims.json" if mode == "full" else None
+    claims = tmp_path / "claims.json" if mode == "full-with-claims" else None
     result = verify.verify(
         argparse.Namespace(ci=mode == "ci", uv="uv", claims=claims), output
     )
