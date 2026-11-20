@@ -153,7 +153,7 @@ class NonApplicability(StrictModel):
 class Remediation(StrictModel):
     """Nonblocking findings still require an assigned plan and a revisit date."""
 
-    owner_role: Text
+    owner_role: Literal["maintainer", "security-reviewer", "implementation"]
     plan: Text
     revisit_on: CalendarDate
 
@@ -167,6 +167,7 @@ class Finding(StrictModel):
     scope: Literal["runtime", "development"]
     aliases: list[Text]
     severity: Literal["critical", "high", "medium", "low", "unknown"]
+    severity_evidence_sha256: Sha256 | None = None
     known_exploited: bool
     applicability: Literal["affected", "not_affected", "under_investigation"]
     non_applicability: NonApplicability | None = None
@@ -182,6 +183,9 @@ class Finding(StrictModel):
             raise ValueError(msg)
         if len(self.aliases) != len(set(self.aliases)):
             msg = "Advisory aliases must be unique."
+            raise ValueError(msg)
+        if self.severity != "unknown" and self.severity_evidence_sha256 is None:
+            msg = "Assessed severity requires supporting evidence."
             raise ValueError(msg)
         return self
 
@@ -204,7 +208,7 @@ class Gate(StrictModel):
 
     name: GateName
     state: Literal["pass", "fail", "pending"]
-    executor_role: Literal["implementer", "independent", "operator"]
+    executor_role: Literal["implementer", "independent", "operator", "unassigned"]
     source_sha: GitSha
     wheel_sha256: Sha256
     evidence_sha256: Sha256 | None = None
@@ -214,6 +218,7 @@ class Gate(StrictModel):
         """Require observed evidence and applicable review independence."""
         if self.state == "pass" and (
             self.evidence_sha256 is None
+            or self.executor_role == "unassigned"
             or (
                 self.name == "independent_acceptance"
                 and self.executor_role != "independent"
@@ -236,6 +241,7 @@ class ReleaseEvidence(StrictModel):
     wheel: Artifact
     sdist: Artifact
     sbom_sha256: Sha256
+    tool_evidence_sha256: Sha256
     generator_version: Literal["7.6.0"]
     scanner_version: Literal["2.10.1"]
     runtime: Inventory
@@ -263,17 +269,24 @@ class ReleaseEvidence(StrictModel):
         return self
 
 
-class ActualBindings(StrictModel):
-    """Identities recomputed from actual inputs rather than copied from claims."""
+class ArtifactProvenance(StrictModel):
+    """Source and distribution identities known before generating the SBOM."""
 
     source_sha: GitSha
     source_tree: GitSha
-    verified_main: bool
     version: Text
     lock_sha256: Sha256
     wheel_sha256: Sha256
     sdist_sha256: Sha256
+
+
+class ActualBindings(ArtifactProvenance):
+    """Identities recomputed from actual inputs rather than copied from claims."""
+
+    verified_main: bool
+    source_dirty: bool
     sbom_sha256: Sha256
+    tool_evidence_sha256: Sha256
 
 
 IssueCode = Literal[

@@ -42,6 +42,7 @@ def candidate() -> tuple[ReleaseEvidence, ActualBindings]:
             "wheel": {"name": "dscat-0.1.0-py3-none-any.whl", "sha256": WHEEL},
             "sdist": {"name": "dscat-0.1.0.tar.gz", "sha256": SDIST},
             "sbom_sha256": "e" * 64,
+            "tool_evidence_sha256": "6" * 64,
             "generator_version": "7.6.0",
             "scanner_version": "2.10.1",
             "runtime": inventory,
@@ -74,11 +75,13 @@ def candidate() -> tuple[ReleaseEvidence, ActualBindings]:
         source_sha="a" * 40,
         source_tree="f" * 40,
         verified_main=True,
+        source_dirty=False,
         version="0.1.0",
         lock_sha256="d" * 64,
         wheel_sha256=WHEEL,
         sdist_sha256=SDIST,
         sbom_sha256="e" * 64,
+        tool_evidence_sha256="6" * 64,
     )
     return evidence, actual
 
@@ -93,6 +96,7 @@ def finding(**changes: object) -> Finding:
             "scope": "runtime",
             "aliases": ["CVE-2099-0001"],
             "severity": "low",
+            "severity_evidence_sha256": "4" * 64,
             "known_exploited": False,
             "applicability": "affected",
             "remediation": {
