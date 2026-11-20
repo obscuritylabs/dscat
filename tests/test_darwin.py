@@ -63,11 +63,7 @@ class NativeCall:
         assert isinstance(buffer, ctypes.Array)
         for index, value in enumerate(self.children):
             buffer[index] = value
-        return (
-            len(self.children) * ctypes.sizeof(ctypes.c_int)
-            if self.response is None
-            else self.response
-        )
+        return len(self.children) if self.response is None else self.response
 
 
 def native(
@@ -79,6 +75,9 @@ def native(
     children = NativeCall("proc_listchildpids", response, error)
     monkeypatch.setattr(library, "proc_pidinfo", query, raising=False)
     monkeypatch.setattr(library, "proc_listchildpids", children, raising=False)
+    monkeypatch.setattr(
+        library, "proc_listpgrppids", NativeCall("proc_listpgrppids"), raising=False
+    )
     monkeypatch.setattr(ctypes, "CDLL", lambda *_args, **_kwargs: library)
     return darwin.NativeProcesses(), query, children
 
@@ -109,6 +108,7 @@ def test_confirmed_process_exit_is_a_distinct_race(
     api, _query, _children = native(monkeypatch, response=0, error=error)
     assert api.identity(PID) is None
     assert api.memory(PID) is None
+    assert api.children(PID) == []
 
 
 @pytest.mark.parametrize(

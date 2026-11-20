@@ -440,15 +440,17 @@ def test_native_linux_guarded_archive_with_network_denied(tmp_path: Path) -> Non
 
 @pytest.mark.skipif(
     sys.platform != "darwin",
-    reason="Observed macOS guard refusal is platform-specific.",
+    reason="Requires native macOS map-growth guard and independent observation.",
 )
-def test_native_macos_refuses_unavailable_guard(tmp_path: Path) -> None:
-    """The observed unsupported hard limit cannot silently run unbounded intake."""
-    reply = workers.invoke(
-        request_at(tmp_path / "synthetic-sensitive-filename.xlsx"), 10.0
-    )
-    assert reply.has_errors
-    assert reply.diagnostics[0].code == "RESOURCE_GUARD_UNAVAILABLE"
+def test_native_macos_guarded_archive(tmp_path: Path) -> None:
+    """Actual native coordinator/worker intake preserves the selected workbook."""
+    path = tmp_path / "synthetic-sensitive-filename.xlsx"
+    original = FIXTURE.read_bytes()
+    path.write_bytes(original)
+    reply = workers.invoke(request_at(path), 10.0)
+    assert not reply.has_errors
+    assert reply.outcomes[0].archive_state == "safe"
+    assert path.read_bytes() == original
     assert "sensitive-filename" not in reply.model_dump_json(exclude_none=True)
 
 
@@ -853,6 +855,7 @@ def test_kill_exit_race_and_missing_child_response_pipe(
             [sys.executable, "-I", "-c", "import sys;sys.stdin.buffer.read()"],
             stdin=subprocess.PIPE,
             stdout=subprocess.DEVNULL,
+            start_new_session=bool(_options.get("start_new_session")),
         )
 
     monkeypatch.setattr(workers.subprocess, "Popen", launch)
