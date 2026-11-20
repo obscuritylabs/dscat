@@ -5,7 +5,7 @@ Agents MUST start with [AGENTS.md](../AGENTS.md), then classify the task under [
 | Read when | Document and authoritative content |
 | --- | --- |
 | Completing or inspecting a generated workbook | [Intake guide](user/intake.md): current template layout, optional detail entry, keyboard navigation and correction guidance |
-| Building or recovering a canonical bundle | [Storage guide](user/storage.md): canonical-only build, replacement, immutable generations and explicit recovery |
+| Building or recovering a canonical bundle | [Storage guide](user/storage.md): canonical build, target export, public projection, private reports and recovery |
 | Coordinating work | [Governance](governance.md#task-scope-and-proportionality): task classes and stopping conditions; [workflow](workflow.md): applicable routes, bounded handoffs and risk-based review |
 | Checking authorization | [Planning gates](planning-gates.md): exact human approval or agent authorization scope/revisions and pending deliverables |
 | Planning or changing behavior | [Requirements](requirements.md): capabilities and stable acceptance criteria; [RTM](rtm.md): artifact/evidence mappings |

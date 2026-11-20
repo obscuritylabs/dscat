@@ -10,9 +10,11 @@ from typer.testing import CliRunner
 
 from dscat import cli
 from dscat.intake import worker
+from dscat.intake.limits import IntakeError
 from dscat.models.catalog import Catalog
 from dscat.models.configuration import ExportConfiguration
 from dscat.models.diagnostics import CommandResult
+from dscat.models.requests import CommandRequest
 from dscat.reporting import PrivateReport
 from dscat.storage import singlefile
 from dscat.storage.flatfiles import load_snapshot, save_snapshot
@@ -287,3 +289,33 @@ def test_report_must_be_separate_from_all_selected_paths(
         == "UNSAFE_INPUT"
     )
     assert not output.exists()
+
+
+def test_public_build_guidance_and_template_without_report(tmp_path: Path) -> None:
+    """Give actionable public-build guidance and allow template without a report."""
+    result = RUNNER.invoke(
+        cli.app,
+        [
+            "build",
+            "synthetic.xlsx",
+            "--output",
+            str(tmp_path / "bundle"),
+            "--audience",
+            "public",
+        ],
+    )
+    assert result.exit_code == INVOCATION
+    assert "export with a saved canonical bundle" in result.output
+    assert (
+        RUNNER.invoke(
+            cli.app, ["template", "--output", str(tmp_path / "template.xlsx")]
+        ).exit_code
+        == 0
+    )
+
+
+def test_incomplete_private_request_is_refused() -> None:
+    """A malformed internal caller cannot bypass the explicit input requirement."""
+    request = CommandRequest.model_construct(command="validate", input=None)
+    with pytest.raises(IntakeError, match="INVALID_INVOCATION"):
+        cli.execute_catalog(request)

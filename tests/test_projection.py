@@ -365,3 +365,57 @@ def test_public_dcat_read_boundary_rejects_conflated_nodes(collision: str) -> No
         raw["dataset"].append(second)
     with pytest.raises(ValidationError):
         public.PublicDcatDocument.model_validate(raw)
+
+
+def string_locations(value: object) -> list[tuple[str | int, ...]]:
+    """Enumerate nested scalar locations without relying on an exclusion list."""
+    if isinstance(value, dict):
+        return [
+            (key, *path)
+            for key, child in value.items()
+            for path in string_locations(child)
+        ]
+    if isinstance(value, list):
+        return [
+            (index, *path)
+            for index, child in enumerate(value)
+            for path in string_locations(child)
+        ]
+    return [()] if isinstance(value, str) else []
+
+
+def test_recursive_private_string_mutations_never_escape_public_documents() -> None:
+    """Probe every mutable text leaf, including nested authorities and facts."""
+    record, configured = approved_fixture(detailed=True)
+    baseline = record.model_dump(mode="json", exclude_none=True)
+    locations = string_locations(baseline)
+    tested = 0
+    private_ready = 0
+    for location in locations:
+        for candidate in (
+            "synthetic-sensitive-recursive",
+            "https://example.org/synthetic-sensitive-recursive",
+            "urn:synthetic-sensitive:recursive",
+        ):
+            changed = json.loads(json.dumps(baseline))
+            parent = changed
+            for component in location[:-1]:
+                parent = parent[component]
+            parent[location[-1]] = candidate
+            try:
+                updated = DatasetRecord.model_validate(changed)
+                source = Catalog(schema_version="1.0", datasets=[updated])
+            except ValidationError:
+                continue
+            tested += 1
+            result = public.project_public(
+                source,
+                configured,
+                ["dcat-us-3", "odcs-3.2"],
+            )
+            assert b"synthetic-sensitive-recursive" not in public_bytes(result)
+            private_ready += all(item.state == "ready" for item in result.readiness)
+            break
+    minimum_mutations, minimum_private_ready = 50, 30
+    assert tested > minimum_mutations
+    assert private_ready > minimum_private_ready
