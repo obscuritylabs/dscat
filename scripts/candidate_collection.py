@@ -38,11 +38,16 @@ from scripts.evidence_models import (
     Inventory,
     ProjectIdentity,
     ReleaseEvidence,
+    SbomReconciliation,
 )
 from scripts.processes import Execution, run_tool
 from scripts.provenance import NoRedirect, download_wheel, selected_wheels
 from scripts.sbom import DOCUMENT_BYTES, validate_sbom
-from scripts.sbom_reconciliation import enrich_sbom, reconcile_sbom
+from scripts.sbom_reconciliation import (
+    active_relationships,
+    enrich_sbom,
+    reconcile_sbom,
+)
 
 if TYPE_CHECKING:
     from scripts.advisories import ObservedAdvisory
@@ -512,10 +517,31 @@ def collect_sbom(
             str(output),
         ],
     )
-    document = validate_sbom(read_file(output, DOCUMENT_BYTES))
+    raw = read_file(output, DOCUMENT_BYTES)
+    document = validate_sbom(raw)
+    enriched = enrich_sbom(document, inventory, provenance)
+    enriched, corrections = active_relationships(
+        enriched,
+        inventory,
+        locked_graph(
+            read_file(collection.project / "uv.lock", DOCUMENT_BYTES),
+            inventory.marker_environment,
+        ),
+    )
+    write_file(
+        collection.assets / "sbom-reconciliation.json",
+        canonical_bytes(
+            SbomReconciliation(
+                schema_version="1.0",
+                generator_sha256=hashlib.sha256(raw).hexdigest(),
+                relationship_source="installed-requires-dist-and-lock",
+                corrections=corrections,
+            )
+        ),
+    )
     return write_json(
         collection.assets / "sbom.cdx.json",
-        enrich_sbom(document, inventory, provenance),
+        enriched,
     )
 
 

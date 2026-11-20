@@ -7,7 +7,13 @@ from typing import TYPE_CHECKING
 
 from packaging.utils import canonicalize_name
 
-from scripts.dependency_graph import array_value, object_value, text_value
+from scripts.dependency_graph import (
+    array_value,
+    object_value,
+    reconcile_inventory,
+    text_value,
+)
+from scripts.evidence_models import RelationshipCorrection
 from scripts.sbom import validate_sbom
 
 if TYPE_CHECKING:
@@ -195,3 +201,47 @@ def enrich_sbom(
         )
         component["externalReferences"] = references
     return document
+
+
+def active_relationships(
+    document: dict[str, JsonValue], inventory: Inventory, expected: DependencyGraph
+) -> tuple[dict[str, JsonValue], list[RelationshipCorrection]]:
+    """Resolve generator over-approximations using independently verified metadata."""
+    reconcile_inventory(inventory, expected)
+    document = deepcopy(document)
+    references: dict[str, str] = {}
+    for component in component_objects(document):
+        name = canonicalize_name(text_value(component.get("name")), validate=True)
+        reference = text_value(component.get("bom-ref"))
+        if reference in references or name in references.values():
+            msg = "Generator component identities must be unique."
+            raise ValueError(msg)
+        references[reference] = name
+    if set(references.values()) != set(expected.versions):
+        msg = "Generator components do not match the verified installed environment."
+        raise ValueError(msg)
+    generated = sbom_edges(document, references)
+    if set(generated) != set(expected.edges):
+        msg = "Generator omitted a runtime relationship record."
+        raise ValueError(msg)
+    if any(not targets <= generated[name] for name, targets in expected.edges.items()):
+        msg = "Generator omitted an active runtime dependency relationship."
+        raise ValueError(msg)
+    corrections = [
+        RelationshipCorrection(
+            package=name,
+            generated=sorted(generated[name]),
+            installed=sorted(targets),
+        )
+        for name, targets in sorted(expected.edges.items())
+        if generated[name] != targets
+    ]
+    by_name = {name: reference for reference, name in references.items()}
+    document["dependencies"] = [
+        {
+            "ref": by_name[name],
+            "dependsOn": [by_name[target] for target in sorted(targets)],
+        }
+        for name, targets in sorted(expected.edges.items())
+    ]
+    return document, corrections
