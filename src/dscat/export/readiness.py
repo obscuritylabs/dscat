@@ -4,11 +4,12 @@
 from typing import TYPE_CHECKING
 
 from dscat.export.dcat_us_3 import assess_dcat
-from dscat.models.diagnostics import TargetReadiness
+from dscat.export.odcs_3_2 import assess_odcs
 
 if TYPE_CHECKING:
     from dscat.models.catalog import Catalog
     from dscat.models.configuration import ExportConfiguration
+    from dscat.models.diagnostics import TargetReadiness
 
 
 def assess_targets(
@@ -17,5 +18,5 @@ def assess_targets(
     """Evaluate implemented adapters without claiming pending target support."""
     return [
         assess_dcat(catalog, configuration),
-        TargetReadiness(target="odcs-3.2", state="unexamined"),
+        assess_odcs(catalog, configuration),
     ]

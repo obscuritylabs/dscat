@@ -435,7 +435,11 @@ def test_real_guarded_linux_cli_validation(tmp_path: Path) -> None:
         "target_unrepresentable",
     ]
     assert output.assessment.targets[1].target == "odcs-3.2"
-    assert output.assessment.targets[1].state == "unexamined"
+    assert output.assessment.targets[1].state == "blocked"
+    assert output.assessment.targets[1].reasons == [
+        "target_contract_identity_missing",
+        "target_contract_version_missing",
+    ]
     future = modify_part(
         source.read_bytes(), "xl/worksheets/sheet1.xml", b">1.0<", b">9.0<"
     )
