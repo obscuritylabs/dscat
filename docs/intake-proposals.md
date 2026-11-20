@@ -62,7 +62,7 @@ The four-field required core MUST remain unchanged under DEC-044. [Canonical sch
 
 This is a proposed extension of [FR-001](requirements.md#fr-001), with current authority and outstanding readiness in [planning gates](planning-gates.md#example-template-planning). The goal is to reduce the effort of starting a workbook through a small worked example and plain-language explanations of its value. This section owns the proposed behavior and acceptance checks; it does not describe an available CLI option.
 
-Proposed command: `dscat template --output example-intake.xlsx --examples`. The flag name and example breadth are agent proposals. The recommended scope is two synthetic datasets: one containing only the four required core values, and another with a small, coherent set of optional field-schema and detail/quality entries. A comprehensive showcase of every supported field is excluded from this proposal. These choices remain subject to the requested preference clarification and later design disposition; they are not recorded human interview decisions.
+Proposed command: `dscat template --output example-intake.xlsx --examples`. The flag name remains an agent proposal. The human-selected scope is a small guided example with two synthetic datasets: one containing only the four required core values, and another with a small, coherent set of optional field-schema and detail/quality entries. A comprehensive showcase of every supported field is excluded from this proposal. Detailed example contents remain subject to later design disposition; the selected breadth is recorded in the planning gate.
 
 Under this proposal:
 
