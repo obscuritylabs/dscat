@@ -196,6 +196,39 @@ def diagnostic_exit(diagnostic: Diagnostic) -> ExitCode:
     return 1
 
 
+Failure = IntakeError | KeyboardInterrupt
+
+
+def classify_failure(error: BaseException) -> Failure:
+    """Discard arbitrary exception text while preserving its fixed failure class."""
+    if isinstance(error, IntakeError | KeyboardInterrupt):
+        return error
+    if isinstance(error, MemoryError):
+        return fail(code="INPUT_LIMIT", limit="memory")
+    if isinstance(error, OSError):
+        return fail(code="IO_FAILURE")
+    return fail(code="INTERNAL_FAILURE")
+
+
+def failure_status(error: Failure) -> ExitCode:
+    """Keep interruption and unexpected failure precedence during cleanup."""
+    return (
+        130
+        if isinstance(error, KeyboardInterrupt)
+        else diagnostic_exit(error.diagnostic)
+    )
+
+
+def prefer_failure(current: Failure | None, error: BaseException) -> Failure:
+    """Retain a higher-priority original failure across later cleanup errors."""
+    selected = classify_failure(error)
+    if current is None or dominant_exit(
+        failure_status(current), failure_status(selected)
+    ) != failure_status(current):
+        return selected
+    return current
+
+
 @dataclass
 class DiagnosticCollector:
     """Keep error state even when diagnostics must be truncated."""

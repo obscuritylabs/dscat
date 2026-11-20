@@ -32,6 +32,7 @@ from dscat.intake.limits import (
     IntakeError,
     fail,
 )
+from dscat.intake.native import NativeExchange
 from dscat.intake.normalize import LocatedRecord, normalize_batch
 from dscat.json_guard import check_json
 from dscat.models.base import StrictModel
@@ -44,6 +45,7 @@ from dscat.models.diagnostics import (
     ValidationAssessment,
 )
 from dscat.platform import install_guard
+from dscat.platform.supervision import require_waiting
 from dscat.serialization import canonical_bytes
 from dscat.storage.flatfiles import save_snapshot
 from dscat.validation import validate_catalog
@@ -292,6 +294,31 @@ class PipeReader:
     failed: bool = False
     memory_failure: bool = False
     complete: bool = False
+    managed: bool = False
+    internal_failure: bool = False
+
+    def failure(self) -> IntakeError | None:
+        """Classify private flags without reflecting input or exception messages."""
+        if self.internal_failure:
+            return fail(code="INTERNAL_FAILURE")
+        if self.memory_failure:
+            return fail(code="INPUT_LIMIT", limit="memory")
+        if self.overflow:
+            return fail(code="INPUT_LIMIT", limit="json_bytes")
+        if self.failed:
+            return fail(code="IO_FAILURE")
+        return None
+
+    def request_stop(self) -> None:
+        """Let a native main-loop owner handle cleanup without a reader-thread reap."""
+        if self.managed:
+            return
+        try:
+            stop_process(self.process, coordinator=self.coordinator)
+        except OSError, subprocess.TimeoutExpired:
+            self.failed = True
+        except Exception:  # noqa: BLE001 -- retain a fixed private-thread failure, never a traceback.
+            self.internal_failure = True
 
     def read(self) -> None:
         """Drain stdout concurrently to avoid pipe deadlock while enforcing its cap."""
@@ -303,15 +330,18 @@ class PipeReader:
             while chunk := stream.read(CHUNK_BYTES):
                 if len(self.content) + len(chunk) > MAX_REPLY_BYTES:
                     self.overflow = True
-                    stop_process(self.process, coordinator=self.coordinator)
+                    self.request_stop()
                     return
                 self.content.extend(chunk)
         except OSError:
             self.failed = True
-            stop_process(self.process, coordinator=self.coordinator)
+            self.request_stop()
         except MemoryError:
             self.memory_failure = True
-            stop_process(self.process, coordinator=self.coordinator)
+            self.request_stop()
+        except Exception:  # noqa: BLE001 -- fixed failure at the private pipe-thread boundary.
+            self.internal_failure = True
+            self.request_stop()
 
 
 def send_request(process: subprocess.Popen[bytes], encoded: bytes) -> None:
@@ -319,12 +349,21 @@ def send_request(process: subprocess.Popen[bytes], encoded: bytes) -> None:
     if process.stdin is None:
         raise fail(code="INTERNAL_FAILURE")
     try:
-        process.stdin.write(encoded)
+        if process.stdin.write(encoded) != len(encoded):
+            raise fail(code="IO_FAILURE")
     except BrokenPipeError:
         pass
     finally:
         with suppress(BrokenPipeError):
             process.stdin.close()
+
+
+def timeout_failure(*, coordinator: bool) -> IntakeError:
+    """Keep role-specific timeout classification independent of native dispatch."""
+    return fail(
+        code="INPUT_LIMIT",
+        limit="invocation_time" if coordinator else "workbook_time",
+    )
 
 
 def invoke(request: CoordinatorRequest | ArchiveRequest, timeout: float) -> WorkerReply:
@@ -336,9 +375,29 @@ def invoke(request: CoordinatorRequest | ArchiveRequest, timeout: float) -> Work
     if len(encoded) > MAX_REQUEST_BYTES:
         raise fail(code="INPUT_LIMIT", limit="json_bytes", expanded_upper_bound=0)
     coordinator = isinstance(request, CoordinatorRequest)
+    native_owner = coordinator and sys.platform == "darwin"
+    if native_owner:
+        require_waiting()
     started = time.monotonic()
     process = launch_process(coordinator=coordinator)
     reader = PipeReader(process, coordinator)
+    if native_owner:
+        NativeExchange(
+            process=process,
+            encoded=encoded,
+            reader=reader,
+            timeout=timeout,
+            started=started,
+            sender=send_request,
+            start_thread=start_reader,
+        ).run()
+        return decode_reply(
+            reader,
+            process.returncode,
+            time.monotonic() - started,
+            timeout,
+            coordinator=True,
+        )
     thread = threading.Thread(target=reader.read, daemon=True)
     try:
         start_reader(thread)
@@ -346,10 +405,7 @@ def invoke(request: CoordinatorRequest | ArchiveRequest, timeout: float) -> Work
         process.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
         stop_process(process, coordinator=coordinator)
-        raise fail(
-            code="INPUT_LIMIT",
-            limit="invocation_time" if coordinator else "workbook_time",
-        ) from None
+        raise timeout_failure(coordinator=coordinator) from None
     except OSError:
         stop_process(process, coordinator=coordinator)
         raise fail(code="IO_FAILURE") from None
@@ -380,12 +436,9 @@ def decode_reply(
     coordinator: bool,
 ) -> WorkerReply:
     """Validate bounded response shape and retain truthful failure categories."""
-    if reader.overflow:
-        raise fail(code="INPUT_LIMIT", limit="json_bytes")
-    if reader.memory_failure:
-        raise fail(code="INPUT_LIMIT", limit="memory")
-    if reader.failed:
-        raise fail(code="IO_FAILURE")
+    failure = reader.failure()
+    if failure is not None:
+        raise failure
     if not reader.complete or elapsed > timeout:
         raise fail(
             code="INPUT_LIMIT",
