@@ -369,3 +369,18 @@ def test_pinned_contact_pattern_can_block_otherwise_valid_email() -> None:
     result = dcat.project_dcat(source, ExportConfiguration.model_validate(configured))
     assert result.document is None
     assert result.readiness.reasons == ["target_unrepresentable"]
+
+
+@pytest.mark.parametrize("collision", ["dataset", "distribution"])
+def test_catalog_cannot_conflate_generated_named_nodes(collision: str) -> None:
+    """A configured catalog must not become its own dataset or distribution."""
+    values = configuration().model_dump(exclude_none=True)
+    identity = "https://example.org/datasets/asset-001"
+    values["dcat_us_3"]["catalog_id"] = (
+        identity if collision == "dataset" else identity + "/distributions/download"
+    )
+    result = dcat.project_dcat(
+        catalog(detailed=True), ExportConfiguration.model_validate(values)
+    )
+    assert result.document is None
+    assert result.readiness.reasons == ["target_fact_conflict"]

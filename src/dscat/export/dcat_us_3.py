@@ -153,7 +153,14 @@ def project_dcat(
                 {"core_party.role"} if record.core_party.role == "contact" else set()
             )
             losses.extend(omitted_fields(record, mapped, "dcat-us-3"))
-        identities = [item.id for item in datasets]
+        identities = (
+            [configuration.dcat_us_3.catalog_id]
+            if configuration.dcat_us_3.catalog_id is not None
+            else []
+        )
+        for dataset in datasets:
+            identities.append(dataset.id)
+            identities.extend(item.id for item in dataset.distributions or [])
         if len(set(identities)) != len(identities):
             reasons.add("target_fact_conflict")
     document: DcatDocument | None = None
