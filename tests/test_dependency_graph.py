@@ -145,3 +145,20 @@ def test_duplicate_lock_versions_and_incomplete_marker_context() -> None:
         read_lock(duplicate)
     with pytest.raises(ValueError, match="complete target marker"):
         locked_graph(LOCK, {})
+
+
+@pytest.mark.parametrize("requirement", ["foo==1", "foo[other]==1"])
+def test_installed_extra_requests_must_match_each_lock_edge(requirement: str) -> None:
+    """Matching installed names and versions cannot conceal changed requested extras."""
+    installed = inventory()
+    graph = locked_graph(LOCK, installed.marker_environment)
+    packages = [
+        package.model_copy(update={"requires": [requirement]})
+        if package.name == "dscat"
+        else package
+        for package in installed.distributions
+    ]
+    changed = installed.model_copy(update={"distributions": packages})
+    with pytest.raises(ValueError, match="relationships do not match"):
+        reconcile_inventory(changed, graph)
+    reconcile_inventory(installed, graph)

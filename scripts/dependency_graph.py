@@ -26,6 +26,7 @@ class DependencyGraph:
     versions: dict[str, str]
     edges: dict[str, set[str]]
     extras: dict[str, set[str]]
+    requested_extras: dict[str, dict[str, set[str]]]
 
 
 def object_value(value: JsonValue) -> dict[str, JsonValue]:
@@ -121,6 +122,7 @@ def locked_graph(
     packages = read_lock(raw)
     extras: dict[str, set[str]] = {"dscat": set()}
     edges: dict[str, set[str]] = {}
+    requests: dict[str, dict[str, set[str]]] = {}
     pending = ["dscat"]
     while pending:
         name = pending.pop()
@@ -130,15 +132,18 @@ def locked_graph(
         selected = selected_dependencies(
             packages[name], extras[name], environment, development=development
         )
-        edges[name] = {entry.name for entry in selected}
+        relationships = selected
         if name == "dscat" and development:
             # Development-group roots select tools but are not wheel Requires-Dist.
-            edges[name] = {
-                entry.name
-                for entry in selected_dependencies(
-                    packages[name], extras[name], environment, development=False
-                )
-            }
+            relationships = selected_dependencies(
+                packages[name], extras[name], environment, development=False
+            )
+        edges[name] = {entry.name for entry in relationships}
+        requests[name] = {}
+        for entry in relationships:
+            requests[name].setdefault(entry.name, set()).update(
+                canonicalize_name(extra) for extra in entry.extra
+            )
         for dependency in selected:
             before = extras.get(dependency.name)
             requested = set(dependency.extra)
@@ -149,6 +154,7 @@ def locked_graph(
         versions={name: packages[name].version for name in edges},
         edges=edges,
         extras=extras,
+        requested_extras=requests,
     )
 
 
@@ -160,6 +166,7 @@ def reconcile_inventory(inventory: Inventory, expected: DependencyGraph) -> None
         raise ValueError(msg)
     for package in inventory.distributions:
         edges: set[str] = set()
+        requests: dict[str, set[str]] = {}
         for raw in package.requires:
             requirement = Requirement(raw)
             selected_extras = {"", *expected.extras[package.name]}
@@ -182,6 +189,12 @@ def reconcile_inventory(inventory: Inventory, expected: DependencyGraph) -> None
                 msg = "Installed dependency requirements are unsatisfied or unapproved."
                 raise ValueError(msg)
             edges.add(name)
-        if edges != expected.edges[package.name]:
+            requests.setdefault(name, set()).update(
+                canonicalize_name(extra) for extra in requirement.extras
+            )
+        if (
+            edges != expected.edges[package.name]
+            or requests != expected.requested_extras[package.name]
+        ):
             msg = "Installed dependency relationships do not match the lock."
             raise ValueError(msg)

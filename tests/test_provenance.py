@@ -49,6 +49,7 @@ def test_compatible_tags_choose_target_preference_without_resolution() -> None:
         versions={"dscat": "0.1.0", "foo": "1"},
         edges={"dscat": {"foo"}, "foo": set()},
         extras={"dscat": set(), "foo": set()},
+        requested_extras={"dscat": {"foo": set()}, "foo": {}},
     )
     selected = provenance.selected_wheels(
         raw,
