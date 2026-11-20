@@ -6,6 +6,8 @@ from typing import Literal
 
 from dscat.intake.limits import DEFAULT_LIMITS, IntakeError, fail
 from dscat.models.base import StrictModel
+from dscat.platform.darwin import MapLimit, verify_growth
+from dscat.platform.darwin import ResourceGuard as DarwinGuard
 from dscat.platform.posix import ResourceGuard as PosixGuard
 from dscat.platform.windows import ResourceGuard as WindowsGuard
 
@@ -14,9 +16,12 @@ class GuardReceipt(StrictModel):
     """Actual per-process enforcement evidence, distinct from platform acceptance."""
 
     platform: Literal["linux", "darwin", "win32"]
-    mechanism: Literal["rlimit_as", "windows_job_process_memory"]
+    mechanism: Literal[
+        "rlimit_as", "darwin_rlimit_as_growth", "windows_job_process_memory"
+    ]
     budget_bytes: int
     enforcement_verified: bool
+    map_limit: MapLimit | None = None
 
 
 _guard: GuardReceipt | None = None
@@ -43,8 +48,13 @@ def install_guard() -> GuardReceipt:
     global _guard, _windows_guard  # noqa: PLW0603 -- process-lifetime native guard ownership.
     if _guard is not None:
         return _guard
+    selected: MapLimit | None = None
     try:
-        if sys.platform in {"linux", "darwin"}:
+        if sys.platform == "darwin":
+            selected = DarwinGuard().install()
+            verify_growth(selected)
+            mechanism = "darwin_rlimit_as_growth"
+        elif sys.platform == "linux":
             PosixGuard().install()
             mechanism = "rlimit_as"
         elif sys.platform == "win32":
@@ -53,7 +63,8 @@ def install_guard() -> GuardReceipt:
             mechanism = "windows_job_process_memory"
         else:
             raise fail(code="RESOURCE_GUARD_UNAVAILABLE")
-        verify_enforcement()
+        if selected is None:
+            verify_enforcement()
     except IntakeError:
         raise
     except OSError, ValueError, MemoryError, ImportError, AttributeError:
@@ -64,6 +75,7 @@ def install_guard() -> GuardReceipt:
             "mechanism": mechanism,
             "budget_bytes": DEFAULT_LIMITS.memory,
             "enforcement_verified": True,
+            **({"map_limit": selected} if selected is not None else {}),
         }
     )
     _guard = receipt
