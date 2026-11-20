@@ -18,6 +18,7 @@ from dscat.models.diagnostics import (
     ExitCode,
     OperationSummary,
 )
+from dscat.models.requests import CommandRequest
 from dscat.validation import assess
 
 app = typer.Typer(
@@ -96,6 +97,7 @@ def validation_result(reply: WorkerReply) -> CommandResult:
             else 0,
         ),
         assessment=assessment,
+        **({"receipt": reply.receipt} if reply.receipt is not None else {}),
         exit_code=exit_code,
     )
 
@@ -107,6 +109,8 @@ def render_validation(result: CommandResult, output_format: str) -> None:
         return
     if result.assessment is not None:
         typer.echo(f"Intake validity: {result.assessment.validity}")
+    if result.receipt is not None:
+        typer.echo(f"Published {result.receipt.kind}: {result.receipt.sha256}")
     for diagnostic in result.diagnostics:
         location = ""
         if diagnostic.source_token is not None:
@@ -188,6 +192,17 @@ def render_validation(result: CommandResult, output_format: str) -> None:
             if diagnostic.expected is not None
             else actions[diagnostic.message_key]
         )
+        publication_actions = {
+            "PUBLICATION_LOCKED": (
+                "Confirm all writers have stopped before explicitly recovering "
+                "the lock; preserve existing generations."
+            ),
+            "RETAINED_OUTPUT": (
+                "Prior or uncommitted outputs are retained. Review them before "
+                "explicit cleanup; no automatic cleanup occurred."
+            ),
+        }
+        action = publication_actions.get(diagnostic.code, action)
         typer.echo(f"{diagnostic.severity}: {diagnostic.code}{location}. {action}")
 
 
@@ -213,19 +228,89 @@ def validate_command(
     ] = "text",
 ) -> None:
     """Validate intake without publishing catalog or export artifacts."""
+    run_catalog(
+        CommandRequest.model_validate(
+            dict(
+                command="validate",
+                input=source,
+                recursive=recursive,
+                **({"config": config} if config is not None else {}),
+                format="json" if output_format == "json" else "text",
+            )
+        ),
+        output_format=output_format,
+    )
+
+
+@app.command("build")
+def build_command(  # noqa: PLR0913 -- Typer exposes the approved command options.
+    source: Annotated[Path, typer.Argument(help="Workbook or directory to build.")],
+    *,
+    output: Annotated[
+        Path, typer.Option("--output", help="Canonical bundle directory.")
+    ],
+    recursive: Annotated[
+        bool, typer.Option("--recursive", help="Include nested directories.")
+    ] = False,
+    config: Annotated[
+        Path | None,
+        typer.Option("--config", help="Explicit versioned TOML configuration."),
+    ] = None,
+    replace: Annotated[
+        bool,
+        typer.Option("--replace", help="Replace CURRENT, retaining prior generations."),
+    ] = False,
+    output_format: Annotated[
+        str, typer.Option("--format", help="Result format: text or json.")
+    ] = "text",
+) -> None:
+    """Build a canonical-only snapshot from valid selected workbooks."""
+    run_catalog(
+        CommandRequest.model_validate(
+            dict(
+                command="build",
+                input=source,
+                output=output,
+                recursive=recursive,
+                replace=replace,
+                **({"config": config} if config is not None else {}),
+                format="json" if output_format == "json" else "text",
+            )
+        ),
+        output_format=output_format,
+    )
+
+
+def execute_catalog(request: CommandRequest) -> CommandResult:
+    """Require command shape and a publication receipt before claiming build success."""
+    configuration = load_explicit_configuration(request.config)
+    if request.input is None:
+        raise fail(code="INVALID_INVOCATION")
+    reply = invoke(
+        CoordinatorRequest(
+            schema_version="1.0",
+            role="coordinator",
+            discovery=DiscoveryRequest(
+                input=request.input,
+                recursive=request.recursive,
+                **({"output": request.output} if request.output is not None else {}),
+            ),
+            replace=request.replace,
+            assessment=configuration.assessment,
+        ),
+        300.0,
+    )
+    result = validation_result(reply)
+    if request.command == "build" and result.exit_code == 0 and reply.receipt is None:
+        raise fail(code="INTERNAL_FAILURE")
+    return result
+
+
+def run_catalog(request: CommandRequest, *, output_format: str) -> None:
+    """Execute the bounded coordinator and render one value-free command result."""
     try:
         check_output_format(output_format)
-        configuration = load_explicit_configuration(config)
-        reply = invoke(
-            CoordinatorRequest(
-                schema_version="1.0",
-                role="coordinator",
-                discovery=DiscoveryRequest(input=source, recursive=recursive),
-                assessment=configuration.assessment,
-            ),
-            300.0,
-        )
-        result = validation_result(reply)
+        result = execute_catalog(request)
     except IntakeError as error:
         result = CommandResult(
             schema_version="1.0",
@@ -265,5 +350,6 @@ def validate_command(
             exit_code=4,
             assessment=assess(None, AssessmentConfiguration()),
         )
-    render_validation(result, output_format)
+    result = result.model_copy(update={"command": request.command})
+    render_validation(result, request.format)
     raise typer.Exit(result.exit_code)

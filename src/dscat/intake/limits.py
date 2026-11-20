@@ -29,6 +29,8 @@ MESSAGE_KEYS = {
     "RESOURCE_GUARD_UNAVAILABLE": "retry_operation",
     "IO_FAILURE": "retry_operation",
     "PUBLICATION_FAILURE": "retry_operation",
+    "PUBLICATION_LOCKED": "retry_operation",
+    "RETAINED_OUTPUT": "review_scope",
     "INTERNAL_FAILURE": "retry_operation",
     "INTERRUPTED": "retry_operation",
 }
@@ -182,6 +184,7 @@ def diagnostic_exit(diagnostic: Diagnostic) -> ExitCode:
         "RESOURCE_GUARD_UNAVAILABLE",
         "IO_FAILURE",
         "PUBLICATION_FAILURE",
+        "PUBLICATION_LOCKED",
     }:
         return 3
     if diagnostic.code in {
