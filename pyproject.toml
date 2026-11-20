@@ -71,11 +71,11 @@ runtime-evaluated-base-classes = [
 all = "error"
 
 [tool.ty.src]
-include = ["src", "tests"]
+include = ["src", "tests", "scripts"]
 
 [tool.coverage.run]
 branch = true
-source = ["dscat"]
+source = ["dscat", "scripts"]
 
 [tool.coverage.report]
 fail_under = 100
