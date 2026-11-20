@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import Field, TypeAdapter, ValidationError, model_validator
 
+from dscat.export.readiness import assess_targets
 from dscat.intake.archive import read_archive
 from dscat.intake.discovery import (
     DiscoveryRequest,
@@ -37,7 +38,7 @@ from dscat.intake.normalize import LocatedRecord, normalize_batch
 from dscat.json_guard import check_json
 from dscat.models.base import StrictModel
 from dscat.models.catalog import Catalog
-from dscat.models.configuration import AssessmentConfiguration
+from dscat.models.configuration import AssessmentConfiguration, ExportConfiguration
 from dscat.models.diagnostics import (
     Diagnostic,
     ExitCode,
@@ -63,6 +64,9 @@ class CoordinatorRequest(StrictModel):
     discovery: DiscoveryRequest
     replace: bool = False
     assessment: AssessmentConfiguration = Field(default_factory=AssessmentConfiguration)
+    configuration: ExportConfiguration = Field(
+        default_factory=lambda: ExportConfiguration(schema_version="1.0")
+    )
 
 
 class ArchiveRequest(StrictModel):
@@ -639,7 +643,11 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
                 if validation.catalog is not None
                 else {}
             ),
-            assessment=validation.assessment,
+            assessment=validation.assessment.model_copy(
+                update={
+                    "targets": assess_targets(validation.catalog, request.configuration)
+                }
+            ),
             has_errors=validation.assessment.validity != "valid"
             or collector.has_errors
             or child_errors
