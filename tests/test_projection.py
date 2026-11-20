@@ -300,3 +300,68 @@ def test_empty_dcat_cannot_publish_catalog_identity_without_record_scopes() -> N
     )
     assert result.dcat is None
     assert result.readiness[0].reasons == ["PUBLIC_PROJECTION_DENIED"]
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "dataset_version",
+        "contact_address",
+        "odcs_field",
+        "odcs_role",
+        "odcs_purpose",
+        "odcs_identifier_extension",
+    ],
+)
+def test_closed_public_models_refuse_private_children_at_each_depth(
+    mutation: str,
+) -> None:
+    """No optional private child becomes public through a broader target model."""
+    record, configured = approved_fixture()
+    result = public.project_public(
+        Catalog(schema_version="1.0", datasets=[record]),
+        configured,
+        ["dcat-us-3", "odcs-3.2"],
+    )
+    raw = result.model_dump(mode="json", by_alias=True, exclude_none=True)
+    if mutation == "dataset_version":
+        raw["dcat"]["dataset"][0]["version"] = "synthetic-sensitive-version"
+    elif mutation == "contact_address":
+        raw["dcat"]["dataset"][0]["contactPoint"]["address"] = (
+            "synthetic-sensitive-address"
+        )
+    elif mutation == "odcs_field":
+        raw["odcs"][0]["schema"] = [{"name": "synthetic-sensitive-field"}]
+    elif mutation == "odcs_role":
+        raw["odcs"][0]["team"]["members"][0]["role"] = "synthetic-sensitive-role"
+    elif mutation == "odcs_purpose":
+        raw["odcs"][0]["description"]["purpose"] = "synthetic-sensitive-purpose"
+    else:
+        raw["odcs"][0]["customProperties"].append(
+            {"property": "datasetVersion", "value": "synthetic-sensitive-version"}
+        )
+    with pytest.raises(ValidationError):
+        public.PublicProjection.model_validate(raw)
+
+
+@pytest.mark.parametrize("collision", ["catalog", "dataset_id", "identifier"])
+def test_public_dcat_read_boundary_rejects_conflated_nodes(collision: str) -> None:
+    """Stored public artifacts cannot introduce duplicate or self-member identities."""
+    record, configured = approved_fixture()
+    result = public.project_public(
+        Catalog(schema_version="1.0", datasets=[record]), configured, ["dcat-us-3"]
+    )
+    assert result.dcat is not None
+    raw = result.dcat.model_dump(mode="json", by_alias=True, exclude_none=True)
+    if collision == "catalog":
+        raw["@id"] = raw["dataset"][0]["@id"]
+    else:
+        second = dict(raw["dataset"][0])
+        second["identifier" if collision == "dataset_id" else "@id"] = (
+            "other"
+            if collision == "dataset_id"
+            else "https://example.org/datasets/other"
+        )
+        raw["dataset"].append(second)
+    with pytest.raises(ValidationError):
+        public.PublicDcatDocument.model_validate(raw)
