@@ -14,10 +14,15 @@ if TYPE_CHECKING:
     from pydantic import JsonValue
 
     from scripts.dependency_graph import DependencyGraph
-    from scripts.evidence_models import ActualBindings, Distribution, Inventory
+    from scripts.evidence_models import (
+        ActualBindings,
+        ArtifactProvenance,
+        Distribution,
+        Inventory,
+    )
 
 
-def binding_properties(actual: ActualBindings) -> dict[str, str]:
+def binding_properties(actual: ArtifactProvenance) -> dict[str, str]:
     """Keep source, lock and both distribution identities out of mutable timestamps."""
     return {
         "dscat:source-commit": actual.source_sha,
@@ -158,7 +163,7 @@ def sbom_edges(
 
 
 def enrich_sbom(
-    document: dict[str, JsonValue], inventory: Inventory, actual: ActualBindings
+    document: dict[str, JsonValue], inventory: Inventory, actual: ArtifactProvenance
 ) -> dict[str, JsonValue]:
     """Add verified provenance to an owned generator result without private paths."""
     document = deepcopy(document)

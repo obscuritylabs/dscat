@@ -62,7 +62,7 @@ def identity_issues(
 ) -> list[IssueCode]:
     """Compare claimed provenance against independently recomputed input identities."""
     issues: list[IssueCode] = []
-    if evidence.source_dirty:
+    if evidence.source_dirty or actual.source_dirty:
         issues.append("dirty_source")
     if not actual.verified_main:
         issues.append("unverified_main")
@@ -75,6 +75,7 @@ def identity_issues(
             evidence.wheel.sha256 != actual.wheel_sha256,
             evidence.sdist.sha256 != actual.sdist_sha256,
             evidence.sbom_sha256 != actual.sbom_sha256,
+            evidence.tool_evidence_sha256 != actual.tool_evidence_sha256,
         )
     ):
         issues.append("identity_mismatch")
