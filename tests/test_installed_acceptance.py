@@ -95,7 +95,7 @@ def test_unexpected_cli_outcomes_refuse(
 
 
 def test_real_synthetic_cli_workflow_exercises_harness(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """Exercise harness logic with actual CLI processes; installed proof is separate."""
     materials = tmp_path / "materials"
@@ -123,9 +123,19 @@ def test_real_synthetic_cli_workflow_exercises_harness(
         raise RuntimeError(msg)
 
     monkeypatch.setattr(acceptance.socket, "socket", denied_socket)
-    observed = InstalledAcceptance.model_validate(
-        acceptance.exercise(materials, tmp_path / "work")
+    monkeypatch.setattr(
+        acceptance.sys,
+        "argv",
+        [
+            "installed-acceptance",
+            "--materials",
+            str(materials),
+            "--workspace",
+            str(tmp_path / "work"),
+        ],
     )
+    acceptance.main()
+    observed = InstalledAcceptance.model_validate_json(capsys.readouterr().out)
     assert observed.cli_cases == EXPECTED_CLI_CASES
     assert observed.state == "pass"
     assert observed.canonical_generation != observed.public_generation
