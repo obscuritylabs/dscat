@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Obscurity Labs. All rights reserved.
 """Canonical-only build transactions expose only a safe output identity."""
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from pydantic import ValidationError
@@ -16,6 +16,9 @@ from dscat.models.requests import CommandRequest
 from dscat.storage.flatfiles import load_snapshot, save_snapshot
 from tests.test_cli_validation import successful_reply
 from tests.test_storage import catalog
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 RUNNER = CliRunner()
 OPERATIONAL = 3
@@ -159,9 +162,9 @@ def test_prepublication_ipc_budget_refuses_before_output(
     assert not root.exists()
 
 
-def test_missing_private_input_is_not_invoked() -> None:
+def test_missing_template_output_is_not_written() -> None:
     """The execution helper still checks the optional typed shape independently."""
-    request = CommandRequest(command="template", output=Path("synthetic.xlsx"))
+    request = CommandRequest.model_construct(command="template", output=None)
     with pytest.raises(IntakeError, match="INVALID_INVOCATION"):
         cli.execute_catalog(request)
 

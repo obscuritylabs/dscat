@@ -1,12 +1,15 @@
 # Copyright (c) 2026 Obscurity Labs. All rights reserved.
 """Command-line interface for Dataset Catalog."""
 
-from pathlib import Path  # noqa: TC003 -- Typer resolves command signatures at runtime.
+import hashlib
+from pathlib import Path
 from typing import Annotated
 
 import typer
+from pydantic import ValidationError
 
 from dscat import __version__
+from dscat.cli_errors import SafeCommand, SafeGroup
 from dscat.configuration import MAX_CONFIG_BYTES, parse_configuration
 from dscat.intake.discovery import DiscoveryRequest, reject_links
 from dscat.intake.limits import IntakeError, diagnostic_exit, dominant_exit, fail
@@ -17,11 +20,21 @@ from dscat.models.diagnostics import (
     Diagnostic,
     ExitCode,
     OperationSummary,
+    OutputReceipt,
 )
 from dscat.models.requests import CommandRequest
+from dscat.reporting import PrivateReport
+from dscat.serialization import canonical_bytes
+from dscat.storage.singlefile import (
+    check_disjoint,
+    check_file_destination,
+    publish_file,
+)
 from dscat.validation import assess
+from dscat.workbook.generate import create_template
 
 app = typer.Typer(
+    cls=SafeGroup,
     help=(
         "Dataset Catalog. Copyright (c) 2026 Obscurity Labs. "
         "All rights reserved. Proprietary License."
@@ -79,6 +92,16 @@ def validation_result(reply: WorkerReply) -> CommandResult:
     diagnostics = list(reply.diagnostics)
     for outcome in reply.outcomes:
         diagnostics.extend(outcome.diagnostics)
+    diagnostics.sort(
+        key=lambda item: (
+            item.source_token or 0,
+            item.sheet or "",
+            item.row or 0,
+            item.column or 0,
+            item.target or "",
+            item.code,
+        )
+    )
     exit_code = dominant_exit(reply.failure_exit, validation_exit(diagnostics))
     if reply.has_errors and exit_code == 0:
         exit_code = 1
@@ -109,6 +132,13 @@ def render_validation(result: CommandResult, output_format: str) -> None:
         return
     if result.assessment is not None:
         typer.echo(f"Intake validity: {result.assessment.validity}")
+        for target in result.assessment.targets:
+            typer.echo(f"Target {target.target}: {target.state}")
+    typer.echo(
+        f"Examined sources: {result.summary.examined_sources}; "
+        f"unexamined sources: {result.summary.unexamined_sources}; "
+        f"valid records: {result.summary.valid_records}"
+    )
     if result.receipt is not None:
         typer.echo(f"Published {result.receipt.kind}: {result.receipt.sha256}")
     for diagnostic in result.diagnostics:
@@ -212,77 +242,173 @@ def check_output_format(value: str) -> None:
         raise fail(code="INVALID_INVOCATION")
 
 
-@app.command("validate")
-def validate_command(
-    source: Annotated[Path, typer.Argument(help="Workbook or directory to validate.")],
-    *,
-    recursive: Annotated[
-        bool, typer.Option("--recursive", help="Include nested directories.")
-    ] = False,
-    config: Annotated[
-        Path | None,
-        typer.Option("--config", help="Explicit versioned TOML configuration."),
-    ] = None,
-    output_format: Annotated[
-        str, typer.Option("--format", help="Result format: text or json.")
-    ] = "text",
+Source = Annotated[Path, typer.Argument(help="Explicit workbook or catalog input.")]
+Output = Annotated[Path, typer.Option("--output", help="Explicit output destination.")]
+Config = Annotated[
+    Path | None, typer.Option("--config", help="Explicit versioned TOML configuration.")
+]
+Report = Annotated[
+    Path | None, typer.Option("--diagnostics", help="Separate private JSON report.")
+]
+Format = Annotated[str, typer.Option("--format", help="Result format: text or json.")]
+Replace = Annotated[
+    bool,
+    typer.Option("--replace", help="Authorize replacement; retain bundle history."),
+]
+Recursive = Annotated[
+    bool, typer.Option("--recursive", help="Include nested workbook directories.")
+]
+Targets = Annotated[
+    list[str] | None,
+    typer.Option("--target", help="Repeatable target: dcat-us-3 or odcs-3.2."),
+]
+Audience = Annotated[
+    str, typer.Option("--audience", help="Output audience: internal or public.")
+]
+
+
+def run_intent(values: dict[str, object], output_format: str) -> None:
+    """Validate closed invocation fields without exposing submitted option values."""
+    try:
+        request = CommandRequest.model_validate(values)
+    except ValidationError:
+        result = CommandResult.model_validate(
+            {
+                "schema_version": "1.0",
+                "command": values["command"],
+                "diagnostics": [fail(code="INVALID_INVOCATION").diagnostic],
+                "summary": OperationSummary(),
+                "exit_code": 2,
+            }
+        )
+        render_validation(result, "json" if output_format == "json" else "text")
+        if (
+            output_format != "json"
+            and values["command"] == "build"
+            and values.get("audience") == "public"
+        ):
+            typer.echo("Use export with a saved canonical bundle for public output.")
+        raise typer.Exit(2) from None
+    run_catalog(request, output_format=output_format)
+
+
+@app.command("template", cls=SafeCommand)
+def template_command(
+    *, output: Output, replace: Replace = False, diagnostics: Report = None
 ) -> None:
-    """Validate intake without publishing catalog or export artifacts."""
-    run_catalog(
-        CommandRequest.model_validate(
-            dict(
-                command="validate",
-                input=source,
-                recursive=recursive,
-                **({"config": config} if config is not None else {}),
-                format="json" if output_format == "json" else "text",
-            )
-        ),
-        output_format=output_format,
+    """Generate a deterministic, accessible intake workbook."""
+    run_intent(
+        {
+            "command": "template",
+            "output": output,
+            "replace": replace,
+            **({"diagnostics": diagnostics} if diagnostics is not None else {}),
+        },
+        "text",
     )
 
 
-@app.command("build")
-def build_command(  # noqa: PLR0913 -- Typer exposes the approved command options.
-    source: Annotated[Path, typer.Argument(help="Workbook or directory to build.")],
+@app.command("validate", cls=SafeCommand)
+def validate_command(
+    source: Source,
     *,
-    output: Annotated[
-        Path, typer.Option("--output", help="Canonical bundle directory.")
-    ],
-    recursive: Annotated[
-        bool, typer.Option("--recursive", help="Include nested directories.")
-    ] = False,
-    config: Annotated[
-        Path | None,
-        typer.Option("--config", help="Explicit versioned TOML configuration."),
-    ] = None,
-    replace: Annotated[
-        bool,
-        typer.Option("--replace", help="Replace CURRENT, retaining prior generations."),
-    ] = False,
-    output_format: Annotated[
-        str, typer.Option("--format", help="Result format: text or json.")
-    ] = "text",
+    recursive: Recursive = False,
+    config: Config = None,
+    diagnostics: Report = None,
+    output_format: Format = "text",
 ) -> None:
-    """Build a canonical-only snapshot from valid selected workbooks."""
-    run_catalog(
-        CommandRequest.model_validate(
-            dict(
-                command="build",
-                input=source,
-                output=output,
-                recursive=recursive,
-                replace=replace,
-                **({"config": config} if config is not None else {}),
-                format="json" if output_format == "json" else "text",
-            )
-        ),
-        output_format=output_format,
+    """Validate intake and assess both targets without publishing catalog data."""
+    run_intent(
+        {
+            "command": "validate",
+            "input": source,
+            "recursive": recursive,
+            **({"config": config} if config is not None else {}),
+            **({"diagnostics": diagnostics} if diagnostics is not None else {}),
+            "format": "json" if output_format == "json" else "text",
+        },
+        output_format,
+    )
+
+
+@app.command("build", cls=SafeCommand)
+def build_command(  # noqa: PLR0913 -- Approved CLI options form one invocation.
+    source: Source,
+    *,
+    output: Output,
+    recursive: Recursive = False,
+    config: Config = None,
+    target: Targets = None,
+    audience: Audience = "internal",
+    replace: Replace = False,
+    diagnostics: Report = None,
+    output_format: Format = "text",
+) -> None:
+    """Build canonical data and any ready requested internal targets."""
+    run_intent(
+        {
+            "command": "build",
+            "input": source,
+            "output": output,
+            "recursive": recursive,
+            "replace": replace,
+            "targets": target or [],
+            "audience": audience,
+            **({"config": config} if config is not None else {}),
+            **({"diagnostics": diagnostics} if diagnostics is not None else {}),
+            "format": "json" if output_format == "json" else "text",
+        },
+        output_format,
+    )
+
+
+@app.command("export", cls=SafeCommand)
+def export_command(  # noqa: PLR0913 -- Approved CLI options form one invocation.
+    source: Source,
+    *,
+    output: Output,
+    target: Targets = None,
+    config: Config = None,
+    audience: Audience = "internal",
+    replace: Replace = False,
+    diagnostics: Report = None,
+    output_format: Format = "text",
+) -> None:
+    """Export saved canonical data to internal or approved public target bundles."""
+    run_intent(
+        {
+            "command": "export",
+            "input": source,
+            "output": output,
+            "targets": target or [],
+            "audience": audience,
+            "replace": replace,
+            **({"config": config} if config is not None else {}),
+            **({"diagnostics": diagnostics} if diagnostics is not None else {}),
+            "format": "json" if output_format == "json" else "text",
+        },
+        output_format,
     )
 
 
 def execute_catalog(request: CommandRequest) -> CommandResult:
     """Require command shape and a publication receipt before claiming build success."""
+    check_disjoint(
+        [
+            path
+            for path in (
+                request.input,
+                request.output,
+                request.config,
+                request.diagnostics,
+            )
+            if path is not None
+        ]
+    )
+    if request.diagnostics is not None:
+        check_file_destination(request.diagnostics, replace=request.replace)
+    if request.command == "template":
+        return execute_template(request)
     configuration = load_explicit_configuration(request.config)
     if request.input is None:
         raise fail(code="INVALID_INVOCATION")
@@ -295,6 +421,14 @@ def execute_catalog(request: CommandRequest) -> CommandResult:
                 recursive=request.recursive,
                 **({"output": request.output} if request.output is not None else {}),
             ),
+            operation="export" if request.command == "export" else "intake",
+            targets=request.targets,
+            audience=request.audience,
+            **(
+                {"diagnostics": request.diagnostics}
+                if request.diagnostics is not None
+                else {}
+            ),
             replace=request.replace,
             assessment=configuration.assessment,
             configuration=configuration,
@@ -302,9 +436,39 @@ def execute_catalog(request: CommandRequest) -> CommandResult:
         300.0,
     )
     result = validation_result(reply)
-    if request.command == "build" and result.exit_code == 0 and reply.receipt is None:
+    if (
+        request.command in {"build", "export"}
+        and result.exit_code == 0
+        and reply.receipt is None
+    ):
         raise fail(code="INTERNAL_FAILURE")
     return result
+
+
+def execute_template(request: CommandRequest) -> CommandResult:
+    """Finish workbook bytes and a separate report before exposing the output file."""
+    if request.output is None:
+        raise fail(code="INVALID_INVOCATION")
+    check_file_destination(request.output, replace=request.replace)
+    artifact = create_template()
+    if request.diagnostics is not None:
+        report = PrivateReport(
+            schema_version="1.0", diagnostics=[], summary=OperationSummary()
+        )
+        publish_file(
+            request.diagnostics, canonical_bytes(report), replace=request.replace
+        )
+    publish_file(request.output, artifact.content, replace=request.replace)
+    return CommandResult(
+        schema_version="1.0",
+        command="template",
+        diagnostics=[],
+        summary=OperationSummary(),
+        exit_code=0,
+        receipt=OutputReceipt(
+            kind="template", sha256=hashlib.sha256(artifact.content).hexdigest()
+        ),
+    )
 
 
 def run_catalog(request: CommandRequest, *, output_format: str) -> None:

@@ -9,10 +9,12 @@ import threading
 import time
 from contextlib import suppress
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import Field, TypeAdapter, ValidationError, model_validator
 
+from dscat.export.loss import ProjectionLoss
 from dscat.export.readiness import assess_targets
 from dscat.intake.archive import read_archive
 from dscat.intake.discovery import (
@@ -36,20 +38,26 @@ from dscat.intake.limits import (
 from dscat.intake.native import NativeExchange
 from dscat.intake.normalize import LocatedRecord, normalize_batch
 from dscat.json_guard import check_json
-from dscat.models.base import StrictModel
+from dscat.models.base import Audience, StrictModel, Target
 from dscat.models.catalog import Catalog
 from dscat.models.configuration import AssessmentConfiguration, ExportConfiguration
 from dscat.models.diagnostics import (
     Diagnostic,
     ExitCode,
+    OperationSummary,
     OutputReceipt,
     ValidationAssessment,
 )
 from dscat.platform import install_guard
 from dscat.platform.supervision import require_waiting
+from dscat.public_projection import PublicProjection, project_public
+from dscat.reporting import PrivateReport
 from dscat.serialization import canonical_bytes
-from dscat.storage.flatfiles import save_snapshot
-from dscat.validation import validate_catalog
+from dscat.storage.flatfiles import load_snapshot
+from dscat.storage.publication import publish_projection, publish_targets
+from dscat.storage.singlefile import publish_file
+from dscat.storage.targets import prepare_targets
+from dscat.validation import assess, validate_catalog
 from dscat.workbook.parse import parse_workbook
 
 if TYPE_CHECKING:
@@ -62,6 +70,10 @@ class CoordinatorRequest(StrictModel):
     schema_version: Literal["1.0"]
     role: Literal["coordinator"]
     discovery: DiscoveryRequest
+    operation: Literal["intake", "export"] = "intake"
+    targets: list[Target] = Field(default_factory=list, max_length=2)
+    audience: Audience = "internal"
+    diagnostics: Path | None = None
     replace: bool = False
     assessment: AssessmentConfiguration = Field(default_factory=AssessmentConfiguration)
     configuration: ExportConfiguration = Field(
@@ -116,6 +128,7 @@ class WorkerReply(StrictModel):
     receipt: OutputReceipt | None = None
     catalog: Catalog | None = None
     assessment: ValidationAssessment | None = None
+    losses: list[ProjectionLoss] = Field(default_factory=list, max_length=10000)
 
     @model_validator(mode="after")
     def truthful_status(self) -> Self:
@@ -146,11 +159,28 @@ class WorkerReply(StrictModel):
 
     def semantic_status(self) -> None:
         """Require validated catalog facts and assessment for coordinator success."""
-        if self.receipt is not None and (self.has_errors or self.catalog is None):
-            msg = "Published receipt requires a complete valid catalog."
-            raise ValueError(msg)
         present = self.catalog is not None and self.assessment is not None
         valid = self.assessment is not None and self.assessment.validity == "valid"
+        if self.receipt is not None and (
+            not present
+            or not valid
+            or not self.selection_complete
+            or self.unexamined_sources
+            or self.failure_exit not in {0, 1}
+            or any(outcome_failed(item) for item in self.outcomes)
+            or any(item.severity == "error" for item in self.diagnostics)
+            or (
+                self.has_errors
+                and (
+                    self.assessment is None
+                    or not any(
+                        item.state != "ready" for item in self.assessment.targets
+                    )
+                )
+            )
+        ):
+            msg = "Published receipt requires valid intake and complete publication."
+            raise ValueError(msg)
         if (
             self.role == "coordinator"
             and not self.has_errors
@@ -555,6 +585,22 @@ class CandidateRecords:
 
 def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
     """Continue independent sources serially within aggregate bytes/time budgets."""
+    if request.operation == "export":
+        snapshot = load_snapshot(request.discovery.input)
+        assessment = assess(snapshot.catalog, request.assessment).model_copy(
+            update={"targets": assess_targets(snapshot.catalog, request.configuration)}
+        )
+        return publish_selection(
+            WorkerReply(
+                schema_version="1.0",
+                role="coordinator",
+                catalog=snapshot.catalog,
+                assessment=assessment,
+                has_errors=False,
+                selection_complete=True,
+            ),
+            request,
+        )
     started = time.monotonic()
     selection = discover(request.discovery)
     collector = DiagnosticCollector()
@@ -660,18 +706,63 @@ def inspect_selection(request: CoordinatorRequest) -> WorkerReply:
 
 
 def publish_selection(reply: WorkerReply, request: CoordinatorRequest) -> WorkerReply:
-    """Bound the acknowledgment before atomically saving a valid selected catalog."""
-    if reply.catalog is not None and request.discovery.output is not None:
+    """Prepare targets and a private report before committing a complete bundle."""
+    if (
+        reply.catalog is not None
+        and reply.assessment is not None
+        and request.discovery.output is not None
+    ):
+        catalog = reply.catalog
+        prepared = (
+            project_public(catalog, request.configuration, request.targets)
+            if request.audience == "public"
+            else prepare_targets(catalog, request.configuration, request.targets)
+        )
+        readiness, losses = prepared.readiness, prepared.losses
+        blocked = any(item.state != "ready" for item in readiness)
+        reply = WorkerReply.model_validate(
+            reply.model_dump(exclude_none=True)
+            | {
+                "assessment": reply.assessment.model_copy(
+                    update={
+                        "targets": readiness
+                        if request.targets
+                        else reply.assessment.targets
+                    }
+                ),
+                "losses": losses,
+                "has_errors": blocked,
+                "failure_exit": 1 if blocked else 0,
+            }
+        )
         # Reserve the bounded receipt before writing: a too-large private result must
         # fail without publishing a snapshot that cannot be acknowledged.
         check_json(
             reply.model_dump_json(exclude_none=True).encode("utf-8"),
             MAX_REPLY_BYTES - 512,
         )
-        snapshot = save_snapshot(
-            request.discovery.output, reply.catalog, replace=request.replace
+        publish_report(reply, request)
+        if isinstance(prepared, PublicProjection) and blocked:
+            return reply
+        if isinstance(prepared, PublicProjection):
+            snapshot = publish_projection(
+                request.discovery.output, prepared, replace=request.replace
+            )
+        else:
+            snapshot = publish_targets(
+                request.discovery.output,
+                catalog,
+                request.configuration,
+                prepared,
+                replace=request.replace,
+            )
+        receipt = OutputReceipt(
+            kind="projection"
+            if isinstance(prepared, PublicProjection)
+            else "canonical",
+            sha256=snapshot.generation,
+            targets=[item.target for item in readiness if item.state == "ready"],
         )
-        receipt = OutputReceipt(kind="canonical", sha256=snapshot.generation)
         notices: list[Diagnostic] = []
         if snapshot.orphan_count or snapshot.retained_generation_count:
             notices.append(
@@ -686,7 +777,34 @@ def publish_selection(reply: WorkerReply, request: CoordinatorRequest) -> Worker
             reply.model_dump(exclude_none=True)
             | {"receipt": receipt, "diagnostics": collector.items}
         )
+    else:
+        publish_report(reply, request)
     return reply
+
+
+def publish_report(reply: WorkerReply, request: CoordinatorRequest) -> None:
+    """Write an explicitly selected assessment, excluding any success receipt."""
+    if request.diagnostics is None:
+        return
+    report = PrivateReport.model_validate(
+        {
+            "schema_version": "1.0",
+            "diagnostics": reply.diagnostics
+            + [item for outcome in reply.outcomes for item in outcome.diagnostics],
+            "summary": OperationSummary(
+                examined_sources=sum(
+                    outcome.archive_state != "unexamined" for outcome in reply.outcomes
+                ),
+                unexamined_sources=reply.unexamined_sources,
+                valid_records=len(reply.catalog.datasets) if reply.catalog else 0,
+            ),
+            "losses": reply.losses,
+        }
+        | ({"assessment": reply.assessment} if reply.assessment is not None else {})
+    )
+    raw = canonical_bytes(report)
+    check_json(raw, MAX_REPLY_BYTES)
+    publish_file(request.diagnostics, raw, replace=request.replace)
 
 
 def interrupted(_signum: int, _frame: FrameType | None) -> None:
