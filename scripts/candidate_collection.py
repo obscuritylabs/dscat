@@ -587,6 +587,10 @@ def collect_candidate(
     )
     wheel, sdist = build_artifacts(collection, source)
     write_file(
+        collection.assets / "application-requirements.txt",
+        f"./{wheel.name} --hash=sha256:{wheel.sha256}\n".encode(),
+    )
+    write_file(
         collection.assets / "development-inventory.json", canonical_bytes(development)
     )
     requirements = export_requirements(collection)
