@@ -148,7 +148,7 @@ Accepted ODCS 3.2.0 scope and validated shared configuration: [FR-004](requireme
 
 ### DEC-028
 
-Portability targets and installation: [NFR-001](requirements.md#nfr-001). These are targets, not a mandatory verified-platform matrix. Excel verification arrangements remain deferred without waiving acceptance; reports MUST identify actual verified environments.
+OS-agnostic implementation, macOS-primary acceptance, portability targets and installation: [NFR-001](requirements.md#nfr-001). Windows and Linux remain portability targets, not mandatory first-release verification environments. Verification reports MUST identify actual tested environments and limitations. Accessibility verification arrangements MUST follow [NFR-021](requirements.md#nfr-021).
 
 ### DEC-029
 
@@ -227,3 +227,7 @@ The human directly requested planning-document reconciliation and recurrence con
 ### DEC-047
 
 [AGENT READINESS; 2026-11-17] The fresh planning phase records first-release execution-plan readiness against architecture `ecfc15dfee316ece10a2d74c1a3f26fabed9d4db` under DEC-046, contingent on exact-candidate fresh documentation QA and distinct reconciliation PASS before future implementation. The [implementation plan](implementation-plan.md), [dependency selection](implementation-dependencies.md), [verification arrangements](implementation-verification.md), [delivery plan](delivery-plan.md) and [task handoff](tasks/implementation-plan.md) define eleven bounded increments, all 42 mappings, exact researched direct pins, boundary/security/manual evidence and release conditions. Later capabilities retain their ordered detailed architecture/plan gates. This is agent readiness, not human approval or observed compatibility/security/platform/accessibility evidence. Actual lock resolution, platform resource/publication demonstrations, selected desktop access/builds/walkthroughs, reporting route and release artifacts remain PENDING hard execution/acceptance/release gates. Requirements/impact and assessed technical-design bytes remain unchanged. The current work MUST stop after architecture/planning and their protected document integration; product implementation and release execution are excluded. Current status MUST follow planning gates.
+
+### DEC-048
+
+[FACT; HUMAN_DIRECTION; 2026-11-19] The user explicitly directed OS-agnostic implementation with macOS as primary target. This authorizes the concrete [NFR-001](requirements.md#nfr-001)/DEC-028 reconciliation without another requirements approval request under [governance](governance.md#required-sdlc-and-approval-gates). No native macOS deferral is approved. NFR-005 security/failure/retry and NFR-021 manual accessibility acceptance remain unchanged. [Native platform design](architecture-platform.md) selects the replacement resource topology and [assurance](architecture-assurance.md#accessibility-criteria-and-verification-arrangements) selects macOS manual arrangements; their agent risk/readiness disposition remains distinct in [architecture disposition](architecture-disposition.md#native-platform-decision). [Planning gates](planning-gates.md#macos-primary-readiness) owns affected review, plan readiness and execution status. DEC-044 retains only its original exact approved bytes; this direction does not imply human approval of a security design or a completed check.
