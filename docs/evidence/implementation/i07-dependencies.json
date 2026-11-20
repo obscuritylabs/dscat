@@ -1,0 +1,136 @@
+{
+  "observed_on": "2026-11-20",
+  "predecessor": "0b10b6a4022816bfa240f01f3cfbe935110d5c55",
+  "lock_sha256": "be934e89853c4e5a57f760d81903abf03a1d70f97ff0236c9ca6d2972641d2af",
+  "cutoff_utc": "2026-11-06T02:37:40.403805+00:00",
+  "packages": [
+    {
+      "name": "attrs",
+      "version": "26.1.0",
+      "artifact_count": 2,
+      "license_expression": "MIT",
+      "license": null,
+      "source_notices": [
+        {
+          "path": "docs/license.md",
+          "sha256": "b26415d5042a70fcc29edc17112f68311aa09935290a208218d4930d9b571a7a"
+        },
+        {
+          "path": "LICENSE",
+          "sha256": "882115c95dfc2af1eeb6714f8ec6d5cbcabf667caff8729f42420da63f714e9f"
+        }
+      ]
+    },
+    {
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "artifact_count": 2,
+      "license_expression": "MIT",
+      "license": null,
+      "source_notices": [
+        {
+          "path": "json/LICENSE",
+          "sha256": "837402bd25fad9b704265801ca3f92566a98157c1f9a7acd6f446299ba1c305a"
+        },
+        {
+          "path": "COPYING",
+          "sha256": "4f92a015a13c4d1a040bef018aa13430b4f1bc73b41b16bb846c346766de7439"
+        }
+      ]
+    },
+    {
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1",
+      "artifact_count": 2,
+      "license_expression": "MIT",
+      "license": null,
+      "source_notices": [
+        {
+          "path": "COPYING",
+          "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+        }
+      ]
+    },
+    {
+      "name": "pyparsing",
+      "version": "3.3.3",
+      "artifact_count": 2,
+      "license_expression": "MIT",
+      "license": null,
+      "source_notices": [
+        {
+          "path": "LICENSE",
+          "sha256": "a5425f9dc14ac74d4c5f0b679e941f2442e32cca7452a4418d5b1a49893ebe4e"
+        }
+      ]
+    },
+    {
+      "name": "rdflib",
+      "version": "7.6.0",
+      "artifact_count": 2,
+      "license_expression": null,
+      "license": "BSD-3-Clause",
+      "source_notices": [
+        {
+          "path": "LICENSE",
+          "sha256": "53a705e51bfd199e8c97d0442376cb4bbd4ffcf13ba4f2c4c2794211400e4012"
+        },
+        {
+          "path": "test/data/suites/w3c/dawg-data-r2/LICENSE",
+          "sha256": "306e17d250c22cc49481dbf0506f6093168e7a271e63ca922c5810f7c315c22c"
+        },
+        {
+          "path": "test/data/suites/w3c/n3/LICENSE.md",
+          "sha256": "6497df2c739db7be859711270faebbff2b85e4a5c1857e3f9de680e335ce5ca2"
+        },
+        {
+          "path": "test/data/suites/w3c/n3/TurtleTests/LICENSE",
+          "sha256": "f1975e42c55e3a3d6bbbfad0dca4d9e518ed70b41b7458196ce2000593c0e859"
+        },
+        {
+          "path": "test/data/suites/w3c/trig/LICENSE",
+          "sha256": "5ec87b7bce6d8fc398c3be6605c020acfb039ad180505af71f25b1fcfa584cb1"
+        },
+        {
+          "path": "test/data/suites/w3c/turtle/LICENSE",
+          "sha256": "f1975e42c55e3a3d6bbbfad0dca4d9e518ed70b41b7458196ce2000593c0e859"
+        },
+        {
+          "path": "test/test_deprecation_notice.py",
+          "sha256": "0f1df26e4a08a9f35e35cd263f348188b7cc7473fdf49a3683e3f96b4c35805f"
+        }
+      ]
+    },
+    {
+      "name": "referencing",
+      "version": "0.37.0",
+      "artifact_count": 2,
+      "license_expression": "MIT",
+      "license": null,
+      "source_notices": [
+        {
+          "path": "suite/LICENSE",
+          "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+        },
+        {
+          "path": "COPYING",
+          "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+        }
+      ]
+    },
+    {
+      "name": "rpds-py",
+      "version": "2026.9.1",
+      "artifact_count": 30,
+      "license_expression": "MIT",
+      "license": null,
+      "source_notices": [
+        {
+          "path": "LICENSE",
+          "sha256": "314e4e91be3baa93c0fb4bccc9e4e97cd643eb839b065af921782c2175fe9909"
+        }
+      ]
+    }
+  ],
+  "status": "Added dependency source, hash, non-yanked and artifact age checks passed; source notices inspected. Runtime compatibility, installed offline closure and independent verification remain increment checks. No vulnerability-safety or release claim."
+}
