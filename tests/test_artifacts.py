@@ -211,3 +211,67 @@ def test_archive_corruption_case_alias_and_limits(
         artifacts.sdist_members(tarred())
     with pytest.raises(ValueError, match="member type or size"):
         artifacts.wheel_members(zipped(wheel_files()))
+
+
+def test_expansion_refusal_preserves_collected_members(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Enforce per-member and aggregate expansion without partial acceptance."""
+    monkeypatch.setattr(artifacts, "MEMBER_BYTES", 3)
+    monkeypatch.setattr(artifacts, "EXPANDED_BYTES", 5)
+    accepted: dict[str, bytes] = {}
+    aliases: set[str] = set()
+    artifacts.add_member(accepted, aliases, "first", b"123")
+    artifacts.add_member(accepted, aliases, "second", b"45")
+    previous = dict(accepted)
+    for name, raw in [("overflow", b"6"), ("large", b"1234")]:
+        with pytest.raises(ValueError, match="expanded bytes"):
+            artifacts.add_member(accepted, aliases, name, raw)
+    assert accepted == previous
+    assert aliases == {"first", "second"}
+
+
+def test_archive_member_count_includes_directory_entries(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Directories are validated without extraction and cannot evade count bounds."""
+    wheel = zipped({"folder/": b"", "folder/item": b"x"}, record=False)
+    assert artifacts.wheel_members(wheel) == {"folder/item": b"x"}
+    stream = io.BytesIO()
+    with tarfile.open(fileobj=stream, mode="w:gz") as archive:
+        directory = tarfile.TarInfo("folder/")
+        directory.type = tarfile.DIRTYPE
+        archive.addfile(directory)
+        item = tarfile.TarInfo("folder/item")
+        item.size = 1
+        archive.addfile(item, io.BytesIO(b"x"))
+    source = stream.getvalue()
+    assert artifacts.sdist_members(source) == {"folder/item": b"x"}
+    monkeypatch.setattr(artifacts, "MEMBER_COUNT", 1)
+    with pytest.raises(ValueError, match="member limit"):
+        artifacts.wheel_members(wheel)
+    with pytest.raises(ValueError, match="member limit"):
+        artifacts.sdist_members(source)
+
+
+def test_source_special_members_and_missing_stream_refuse(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A source archive never follows links or accepts an unavailable regular stream."""
+    for kind in [tarfile.SYMTYPE, tarfile.LNKTYPE, tarfile.FIFOTYPE]:
+        stream = io.BytesIO()
+        with tarfile.open(fileobj=stream, mode="w:gz") as archive:
+            entry = tarfile.TarInfo("synthetic")
+            entry.type = kind
+            entry.linkname = "outside"
+            archive.addfile(entry)
+        with pytest.raises(ValueError, match="member type or size"):
+            artifacts.sdist_members(stream.getvalue())
+    source = tarred({"synthetic": b"x"})
+
+    def unavailable_stream(archive: tarfile.TarFile, member: tarfile.TarInfo) -> None:
+        del archive, member
+
+    monkeypatch.setattr(tarfile.TarFile, "extractfile", unavailable_stream)
+    with pytest.raises(ValueError, match="could not be read"):
+        artifacts.sdist_members(source)
