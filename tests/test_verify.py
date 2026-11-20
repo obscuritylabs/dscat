@@ -96,3 +96,48 @@ def test_workspace_preserves_existing_files_and_refuses_source(
     link.symlink_to(existing, target_is_directory=True)
     with pytest.raises(ValueError, match="linked"):
         verify.workspace(link / "output")
+
+
+@pytest.mark.parametrize("failure", ["python", "uv", "io", "interrupted"])
+def test_setup_and_interruption_never_report_a_success(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    failure: str,
+) -> None:
+    """Missing selected tools, failed evidence I/O and interruption stay nonzero."""
+    output = tmp_path / "owned"
+    if failure == "python":
+        monkeypatch.setattr(verify.platform, "python_version", lambda: "3.14.0")
+    elif failure == "io":
+        output.mkdir()
+    elif failure == "interrupted":
+
+        def interrupted(*_args: object) -> None:
+            raise KeyboardInterrupt
+
+        monkeypatch.setattr(verify, "verify", interrupted)
+    else:
+
+        def wrong_version(argv: list[str], **options: object) -> Execution:
+            del argv, options
+            (output / "logs/uv-version.stdout").write_text("uv 0.0.0\n")
+            return Execution("uv-version", 0, "a" * 64, "b" * 64, 0.1)
+
+        monkeypatch.setattr(verify, "run_tool", wrong_version)
+    result = verify.main(["--full", "--evidence-dir", str(output)])
+    assert result == (130 if failure == "interrupted" else verify.FAILED)
+    observed = capsys.readouterr()
+    assert not observed.out
+    assert "FAIL" in observed.err or "interrupted" in observed.err
+    assert str(tmp_path) not in observed.err
+
+
+def test_default_workspace_owns_a_fresh_private_child(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Default temporary output cannot adopt a preexisting evidence directory."""
+    monkeypatch.setattr(verify.tempfile, "mkdtemp", lambda **_options: str(tmp_path))
+    result = verify.workspace(None)
+    assert result == tmp_path / "evidence"
+    assert (result / "logs").is_dir()
