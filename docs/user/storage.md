@@ -1,14 +1,30 @@
-# Building a canonical catalog
+# Building and exporting a catalog
 
-Canonical storage is implemented in this development build. Standards exports remain in development. Native intake availability and outstanding verification follow the [current execution status](../planning-gates.md#implementation-execution).
+Canonical storage is implemented in this development build. DCAT-US 3.0 and ODCS 3.2.0 exports are implemented with separate readiness checks. Native intake availability and outstanding verification follow the [current execution status](../planning-gates.md#implementation-execution).
 
 Run `dscat build intake.xlsx --output catalog --format json` to validate a workbook and publish an internal canonical bundle. You can select a directory instead; use `--recursive` to include nested directories and `--config settings.toml` for explicitly selected configuration. An empty directory creates a valid empty catalog. Inputs and output must be separate, with neither inside the other.
 
 Without a target option, the build contains canonical facts only. It contains no standards document and grants no publication authority. The separate assessment reports readiness for implemented targets. Invalid, unreadable or resource-limited input prevents publication. The structured command result contains fixed diagnostics, counts, assessment and the generation hash; it does not print canonical values or local paths.
 
+## Select targets and reports
+
+Add `--target dcat-us-3 --target odcs-3.2 --config settings.toml` to build the requested standards outputs with canonical data. Missing export facts do not invalidate intake. A blocked target has no placeholder file; ready requested targets and canonical facts can be saved together, with exit status 1 and a receipt listing only successful targets. An I/O or serialization failure prevents the entire bundle switch.
+
+Run `dscat export catalog --output derived --target dcat-us-3 --target odcs-3.2 --config settings.toml --format json` to derive a new internal bundle from saved canonical data. Original workbooks are unnecessary. The source bundle remains unchanged. Configuration is explicitly selected, versioned TOML; no home-directory or environment configuration is discovered.
+
+An explicitly selected `--diagnostics report.json` saves a private assessment and omission report. It can contain record identifiers and known field paths, but excludes other submitted field values. Keep it outside input, output and configuration paths. Reports have independent overwrite protection; commands supporting `--replace` apply it to both selected output and report. Validation has no replacement option, so select a fresh report path. A report contains no publication receipt: it is written before a bundle switch, and only the final command result states whether publication succeeded. A failed report write prevents publication and returns operational failure. A completed report can remain when a subsequent bundle operation fails.
+
+## Public projection
+
+Use `dscat export catalog --output public-derived --target dcat-us-3 --target odcs-3.2 --audience public --config settings.toml --format json` for a local public projection. This creates local artifacts; it does not upload them. Public output requires supplied metadata review, unrestricted metadata disclosure and publication decisions, plus exact current approvals for each emitted canonical/configuration fact and derived identity. Configuration allowlists restrict eligible scopes; they do not grant approval. Hashes identify approved content and dependencies; authentic authority is verified outside this tool. Data access and reuse rights remain separate supplied facts.
+
+The initial public shape is deliberately small: approved dataset ID, title, description, selected contact facts, and target-required identities/version. Optional fields, roles, consumer details, commitments and other private children are excluded. A changed source, namespace, identity rule, contact association, mapping revision or policy version invalidates affected approvals. Missing or stale approval for any selected target withholds the entire public bundle. Build supports internal output; create public output by exporting the saved canonical bundle.
+
+Public generations contain only target JSON and a minimal manifest of target names, relative paths and byte hashes. They contain no canonical records, configuration fingerprints, authorities, assessment or loss reports. Choose a separate private report destination when needed. A public destination cannot replace a canonical bundle or retain private history. Extra root files, abandoned stages or invalid retained generations prevent public replacement until explicitly inspected and resolved.
+
 ## Read the bundle
 
-The bundle has a `CURRENT` file and a `generations` directory. `CURRENT` selects one immutable generation by its full SHA-256 hash. Each generation contains `manifest.json` and a `datasets` directory. Dataset filenames use full hashes of normalized business identifiers. The manifest maps those filenames to their identities, schema versions and content hashes.
+The bundle has a `CURRENT` file and a `generations` directory. `CURRENT` selects one immutable generation by its full SHA-256 hash. Each internal generation contains `manifest.json` and a `datasets` directory, plus `exports` for successful requested targets. Dataset filenames use full hashes of normalized business identifiers. The manifest maps those filenames to their identities, schema versions and content hashes.
 
 Canonical JSON preserves the supplied metadata, including private metadata. Keep the bundle in an appropriate local location. Hashed filenames are a portability measure, not encryption. The internal storage interface can reload the catalog without the original workbook; a public Python API is not promised for this version.
 

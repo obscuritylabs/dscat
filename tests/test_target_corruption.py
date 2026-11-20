@@ -220,3 +220,19 @@ def test_public_and_prepared_selection_duplicates() -> None:
             PreparedInternal.model_validate(
                 prepared.model_dump(exclude_none=True) | changed
             )
+
+
+def test_duplicate_canonical_ids_and_unordered_public_selection() -> None:
+    """Reject ambiguous dataset manifests and noncanonical public target ordering."""
+    manifest, _ = flatfiles.prepare(catalog())
+    values = manifest.model_dump(exclude_none=True)
+    values["datasets"] *= 2
+    with pytest.raises(ValidationError):
+        CanonicalManifest.model_validate(values)
+    public, _ = public_artifacts()
+    for changed in (
+        {"targets": list(reversed(public.targets))},
+        {"artifacts": public.artifacts * 2},
+    ):
+        with pytest.raises(ValidationError):
+            ProjectionManifest.model_validate(public.model_dump() | changed)
