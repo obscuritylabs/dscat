@@ -258,3 +258,18 @@ def test_worksheet_reference_without_relationship_part(element: str) -> None:
     parts[key] = parts[key].replace(b"</worksheet>", element.encode() + b"</worksheet>")
     with pytest.raises(IntakeError):
         read_archive(packed(parts), Budget())
+
+
+def test_unreferenced_attachment_with_valid_content_type() -> None:
+    """Reject orphan passive parts even without any worksheet reference to them."""
+    parts = package(notes=False, table=False)
+    parts["xl/tables/table1.xml"] = package()["xl/tables/table1.xml"]
+    declaration = (
+        b'<Override PartName="/xl/tables/table1.xml" '
+        b'ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml"/>'
+    )
+    parts["[Content_Types].xml"] = parts["[Content_Types].xml"].replace(
+        b"</Types>", declaration + b"</Types>"
+    )
+    with pytest.raises(IntakeError):
+        read_archive(packed(parts), Budget())
