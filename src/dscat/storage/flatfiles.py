@@ -59,11 +59,11 @@ def prepare(catalog: Catalog) -> tuple[CanonicalManifest, dict[str, bytes]]:
                 id=record.id,
                 path=path,
                 sha256=hashlib.sha256(raw).hexdigest(),
-                schema_version="1.0",
+                schema_version=catalog.schema_version,
             )
         )
     manifest = CanonicalManifest(
-        schema_version="1.0", kind="canonical", datasets=entries
+        schema_version=catalog.schema_version, kind="canonical", datasets=entries
     )
     artifacts["manifest.json"] = canonical_bytes(manifest)
     check_json(artifacts["manifest.json"], MAX_REQUEST_BYTES)
@@ -145,6 +145,7 @@ def parse_record(raw: bytes, entry: DatasetEntry) -> DatasetRecord:
     check_json(raw, MAX_REQUEST_BYTES)
     try:
         record = DatasetRecord.model_validate_json(raw)
+        Catalog(schema_version=entry.schema_version, datasets=[record])
     except ValidationError:
         raise fail(code="PUBLICATION_FAILURE") from None
     if (
@@ -240,7 +241,7 @@ def read_generation(path: Path, expected: str) -> Snapshot:
         artifacts[entry.path] = raw
         records.append(record)
     try:
-        catalog = Catalog(schema_version="1.0", datasets=records)
+        catalog = Catalog(schema_version=manifest.schema_version, datasets=records)
     except ValidationError:
         raise fail(code="PUBLICATION_FAILURE") from None
     read_exports(path, manifest, catalog, artifacts, device)

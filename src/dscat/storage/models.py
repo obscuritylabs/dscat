@@ -21,7 +21,7 @@ class DatasetEntry(StrictModel):
     id: Identifier
     path: str
     sha256: Sha256
-    schema_version: Literal["1.0"]
+    schema_version: Literal["1.0", "1.1"]
 
     @model_validator(mode="after")
     def prescribed_path(self) -> Self:
@@ -66,7 +66,7 @@ class ExportEntry(StrictModel):
 class CanonicalManifest(StrictModel):
     """Canonical facts and optional target artifacts retain only input fingerprints."""
 
-    schema_version: Literal["1.0"]
+    schema_version: Literal["1.0", "1.1"]
     kind: Literal["canonical"]
     datasets: list[DatasetEntry] = Field(max_length=100000)
     resource_fingerprints: dict[str, Sha256] = Field(default_factory=dict)
@@ -80,6 +80,9 @@ class CanonicalManifest(StrictModel):
     @model_validator(mode="after")
     def canonical_only(self) -> Self:
         """Require ordered identities and complete target dependency metadata."""
+        if any(entry.schema_version != self.schema_version for entry in self.datasets):
+            msg = "Dataset versions must match the canonical manifest."
+            raise ValueError(msg)
         ids = [entry.id for entry in self.datasets]
         if ids != sorted(set(ids)):
             msg = "Manifest dataset identities must be unique and ordered."
