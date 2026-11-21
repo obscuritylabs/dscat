@@ -1,5 +1,8 @@
 # Architecture assurance proposal
 
+
+The [collection-intake security design](collection-intake-design.md#closed-package-support) governs the bounded workbook `2.0` table/comment extension and new private metadata. Existing controls below remain mandatory; the extension MUST NOT enable general drawing, external-content or executable-part acceptance.
+
 ## Authority and scope
 
 This candidate supports CAP-01–CAP-05 under the applicable requirements originally approved in DEC-044. Source: `697a0764bbdaebd6574079720d3841a8241076a3`; authority remains [planning gates](planning-gates.md). [DEC-046](decisions.md#dec-046) records agent first-release architecture readiness and the [risk assessment](architecture-disposition.md); current implementation-plan readiness follows planning gates; implementation verification and release evidence remain PENDING under [governance](governance.md#required-sdlc-and-approval-gates); DEC-045 supplies standing release delegation. This document owns proposed assurance mechanisms; [requirements](requirements.md) owns acceptance. The [security navigation](canonical-model.md#draft-security-boundaries) points to this authoritative design; later capability details retain their milestone gates.

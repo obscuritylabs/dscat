@@ -39,9 +39,9 @@ I10 tooling MUST itself receive tests for substantive artifact/security decision
 
 I10 reporting materials MUST follow the [security reporting design](architecture-assurance.md#security-reporting-design) and [affected readiness](planning-gates.md#confidential-reporting-readiness). [SECURITY.md](../SECURITY.md) MUST document the route and brief assessment/remediation/coordinated disclosure process. Before release, the [delivery check](delivery-plan.md#release-security-sbom-and-reporting-evidence) MUST confirm GitHub Private Vulnerability Reporting is enabled and the documented link is correct, recording the result through the existing `confidential_reporting` gate. Missing enablement or an incorrect link MUST block release; unrelated I10 work MAY proceed. No new evidence model or reporting exercise is required.
 
-## Proposed example-template follow-on
+## Collection-intake supplement
 
-The requested [optional example-template feature](intake-proposals.md#intake-024) extends FR-001; its authority and readiness follow [planning gates](planning-gates.md#example-template-planning). It is a proposed follow-on to existing workbook generation, separate from historical I03 completion. Its implementation increment, scheduling and detailed fixture design remain PENDING feature-specific architecture disposition and fresh implementation-plan readiness. Future planning SHOULD assess CLI request/option wiring, template generation and Instructions, synthetic fixtures, ordinary validation, focused compatibility checks and the intake guide against INTAKE-024 acceptance. This proposal MUST NOT be treated as a ready execution assignment or as an implemented `--examples` option. Existing release and later capability sequencing remain unchanged.
+The [collection-intake plan](collection-intake-plan.md) governs the accepted replacement workbook and example-template execution under [current readiness](planning-gates.md#collection-intake-readiness). Its bounded increments supersede the prior proposed multi-sheet example follow-on. Unchanged first-release verification arrangements remain applicable; this implementation task excludes release delivery.
 
 ## Native platform supplement
 
