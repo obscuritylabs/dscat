@@ -25,6 +25,7 @@ from dscat.models.base import (
     Text,
     TextSet,
 )
+from dscat.models.collection import CollectionIntake
 from dscat.normalization import (
     normalize_identifier,
     normalize_quantity,
@@ -383,8 +384,9 @@ class DatasetRecord(StrictModel):
 
     id: Identifier
     title: Text
-    description: Text
-    core_party: PartyReference
+    description: Text | None = None
+    core_party: PartyReference | None = None
+    collection_intake: CollectionIntake | None = None
     dataset_version: Text | None = None
     contract_id: Text | None = None
     contract_version: Text | None = None
@@ -454,6 +456,16 @@ class DatasetRecord(StrictModel):
     @model_validator(mode="after")
     def check_collections(self) -> Self:
         """Reject ambiguous local keys and inconsistent comparable ingestion rates."""
+        intake = self.collection_intake
+        if intake is not None and (
+            (intake.owner_state == "unknown" and self.core_party is not None)
+            or (
+                intake.owner_state == "known"
+                and (self.core_party is None or self.core_party.role != "owner")
+            )
+        ):
+            msg = "Collection ownership must agree with supplied owner facts."
+            raise ValueError(msg)
         collections = [
             [(r.reference_kind, r.party_id, r.role) for r in self.roles or []],
             [d.id for d in self.distributions or []],
@@ -497,7 +509,7 @@ class DatasetRecord(StrictModel):
 class Catalog(StrictModel):
     """Versioned dataset aggregate without source paths or derived assessments."""
 
-    schema_version: Literal["1.0"]
+    schema_version: Literal["1.0", "1.1"]
     datasets: list[DatasetRecord] = Field(max_length=100000)
 
     @field_validator("datasets")
@@ -509,6 +521,14 @@ class Catalog(StrictModel):
     @model_validator(mode="after")
     def unique_datasets(self) -> Self:
         """Require unique normalized business identities and resolvable local links."""
+        if self.schema_version == "1.0" and any(
+            r.description is None
+            or r.core_party is None
+            or r.collection_intake is not None
+            for r in self.datasets
+        ):
+            msg = "Canonical 1.0 requires its original core and vocabulary."
+            raise ValueError(msg)
         ids = {record.id for record in self.datasets}
         if len(ids) != len(self.datasets):
             msg = "Duplicate dataset identity."
