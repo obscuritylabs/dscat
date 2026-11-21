@@ -6,6 +6,8 @@ Run `dscat build intake.xlsx --output catalog --format json` to validate a workb
 
 Without a target option, the build contains canonical facts only. It contains no standards document and grants no publication authority. The separate assessment reports readiness for implemented targets. Invalid, unreadable or resource-limited input prevents publication. The structured command result contains fixed diagnostics, counts, assessment and the generation hash; it does not print canonical values or local paths.
 
+Collection-first intake produces canonical `1.1` records, preserving missing descriptions, explicit owner uncertainty, sensitivity, submission responsibility, registration quantities, retention status and optional generation summaries. These are separate from richer measured-capacity and records-authority metadata. Existing genuine canonical `1.0` bundles retain their version and facts on load/save; they are not rewritten automatically. Old software cannot read `1.1` bundles. See [compatibility](compatibility.md) for the version boundary.
+
 ## Select targets and reports
 
 Add `--target dcat-us-3 --target odcs-3.2 --config settings.toml` to build the requested standards outputs with canonical data. Missing export facts do not invalidate intake. A blocked target has no placeholder file; ready requested targets and canonical facts can be saved together, with exit status 1 and a receipt listing only successful targets. An I/O or serialization failure prevents the entire bundle switch.

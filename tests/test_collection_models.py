@@ -159,3 +159,39 @@ def test_old_schema_rejects_new_or_missing_core() -> None:
             schema_version="1.0",
             datasets=[DatasetRecord(id="example", title="Example")],
         )
+
+
+def test_versioned_metadata_and_template_flag_shapes() -> None:
+    """Reject mismatched marker kinds and irrelevant example flags."""
+    from pathlib import Path  # noqa: PLC0415 -- invocation fixture.
+
+    from dscat.models.intake import WorkbookMetadata  # noqa: PLC0415 -- isolated request boundary.
+    from dscat.models.requests import CommandRequest  # noqa: PLC0415 -- isolated request boundary.
+
+    with pytest.raises(ValidationError):
+        WorkbookMetadata(schema_version="2.0", kind="dataset-intake")
+    with pytest.raises(ValidationError):
+        CommandRequest(command="validate", input=Path("example.xlsx"), examples=True)
+
+
+def test_mixed_entry_versions_and_old_record_substitution() -> None:
+    """Require version-matched entries and reject new shapes tagged as old records."""
+    from hashlib import sha256  # noqa: PLC0415 -- content identity fixture.
+
+    from dscat.intake.limits import IntakeError  # noqa: PLC0415 -- fixed error shape.
+    from dscat.serialization import canonical_bytes  # noqa: PLC0415 -- deterministic fixture.
+    from dscat.storage.flatfiles import parse_record  # noqa: PLC0415 -- integrity boundary.
+    from dscat.storage.models import CanonicalManifest, DatasetEntry, dataset_path  # noqa: PLC0415 -- versioned fixture.
+
+    raw = canonical_bytes(registered().datasets[0])
+    identifier = registered().datasets[0].id
+    entry = DatasetEntry(
+        id=identifier,
+        path=dataset_path(identifier),
+        sha256=sha256(raw).hexdigest(),
+        schema_version="1.0",
+    )
+    with pytest.raises(IntakeError):
+        parse_record(raw, entry)
+    with pytest.raises(ValidationError):
+        CanonicalManifest(schema_version="1.1", kind="canonical", datasets=[entry])
