@@ -22,6 +22,7 @@ from dscat.models.diagnostics import CommandResult
 from dscat.resources.registry import load_registry
 from dscat.storage.flatfiles import load_snapshot, save_snapshot
 from dscat.storage.projections import load_projection_snapshot
+from dscat.workbook.collection_generate import relative_annotations
 from dscat.workbook.generate import relative_worksheet_relationships
 
 if TYPE_CHECKING:
@@ -81,15 +82,23 @@ def invoke(work: Path, arguments: list[str], expected: int) -> CommandResult | N
 def complete_synthetic_workbook(template: bytes, destination: Path) -> None:
     """Edit a self-generated workbook fixture, never an untrusted submission."""
     workbook = load_workbook(io.BytesIO(template))
-    sheet = workbook["Datasets"]
-    headers = {cell.value: cell.column for cell in sheet[1] if cell.value is not None}
-    for key, value in {
-        "id": "asset-001",
-        "title": "Synthetic measurements",
-        "description": "Synthetic metadata.",
-        "core_party": "Metadata support",
-    }.items():
-        sheet.cell(2, headers[key], value)
+    sheet = workbook["Intake"]
+    headers = {cell.value: cell.column for cell in sheet[5] if cell.value is not None}
+    values = {
+        "Collection name *": "Synthetic measurements",
+        "Collection description": "Synthetic metadata.",
+        "Data owner / accountable team *": "Metadata support",
+        "Submitted by / accountable for entry *": "Example Contributor",
+        "Completed on *": "2026-01-01",
+    }
+    values.update(
+        dict.fromkeys(
+            ["PII *", "PHI *", "CUI *", "PCII *", "ISVI *", "Other sensitive data *"],
+            "Unknown",
+        )
+    )
+    for key, value in values.items():
+        sheet.cell(6, headers[key], value)
     stream = io.BytesIO()
     workbook.save(stream)
     with (
@@ -100,6 +109,8 @@ def complete_synthetic_workbook(template: bytes, destination: Path) -> None:
             raw = source.read(name)
             if name == "xl/_rels/workbook.xml.rels":
                 raw = relative_worksheet_relationships(raw)
+            elif name.startswith("xl/worksheets/_rels/") and name.endswith(".rels"):
+                raw = relative_annotations(raw)
             output.writestr(name, raw)
 
 

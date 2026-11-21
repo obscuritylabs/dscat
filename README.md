@@ -31,6 +31,8 @@ Generate a blank intake workbook:
 
 ```sh
 dscat template --output intake.xlsx
+# Optional worked example with invented metadata:
+dscat template --output example-intake.xlsx --examples
 ```
 
 Open it in Excel, read **Instructions**, and enter one dataset per row on

@@ -281,3 +281,127 @@ def test_cli_examples_and_overwrite(tmp_path: Path) -> None:
     assert target.read_bytes() == original
     assert runner.invoke(app, [*args, "--replace"]).exit_code == 0
     assert target.read_bytes() == original
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "hidden",
+        "moved-name",
+        "extra",
+        "table-header",
+        "numeric-overflow",
+        "numeric-nan",
+        "empty-source",
+        "other-empty",
+    ],
+)
+def test_remaining_structural_and_partial_edits(mutation: str) -> None:
+    """Reject header/control drift while allowing empty optional descriptive sources."""
+    w = minimum()
+    s = w["Intake"]
+    if mutation == "hidden":
+        s.sheet_state = "hidden"
+    elif mutation == "moved-name":
+        w.defined_names["dscat_workbook_schema"].attr_text = "'Start here'!$D$2"
+    elif mutation == "extra":
+        w.create_sheet("Extra")
+    elif mutation == "table-header":
+        s.tables["IntakeEntries"].tableColumns[0].name = "Changed header"
+    elif mutation in {"numeric-overflow", "numeric-nan"}:
+        cell = s["N6"]
+        cell.value = "1E99" if mutation == "numeric-overflow" else "NaN"
+        cell.data_type = "n"
+    elif mutation == "empty-source":
+        s["X6"] = " ; ; "
+    else:
+        s["AD6"] = "  "
+    try:
+        p = parsed(edited(w))
+    except IntakeError:
+        return
+    if mutation in {"empty-source", "other-empty"}:
+        assert not p.has_errors
+    else:
+        assert p.has_errors
+
+
+def test_raw_whitespace_does_not_supply_a_required_value() -> None:
+    """Ignore empty lexical cells before first-pass requiredness checks."""
+    from dscat.intake.limits import DiagnosticCollector  # noqa: PLC0415 -- safe error collector.
+    from dscat.models.intake import SourceLocation  # noqa: PLC0415 -- located fixture.
+    from dscat.workbook.collection_parse import parse_row  # noqa: PLC0415 -- isolated bounded row boundary.
+
+    collector = DiagnosticCollector()
+    assert (
+        parse_row(
+            {1: Cell(row=6, column=1, text=" ")},
+            {1: "name"},
+            SourceLocation(source_token=1, sheet="Intake", row=6),
+            collector,
+            date1904=False,
+        )
+        is None
+    )
+
+
+def test_generator_relationship_refusal_and_serializer_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Refuse unexpected generated parts and nonbyte serialization results."""
+    from dscat.workbook import collection_generate as generate  # noqa: PLC0415 -- generator fault injection.
+
+    with pytest.raises(ValueError, match="Unexpected generated"):
+        generate.relative_annotations(
+            b'<Relationships><Relationship Target="unexpected"/></Relationships>'
+        )
+    monkeypatch.setattr(generate.ET, "tostring", lambda *_a, **_k: "not bytes")
+    with pytest.raises(TypeError, match="serialize relationship bytes"):
+        generate.relative_annotations(b"<Relationships/>")
+
+
+def test_invalid_epoch_setting() -> None:
+    """Refuse unsupported epoch declarations rather than guessing a date system."""
+    from tests.test_collection_package import packed  # noqa: PLC0415 -- trusted mutation packaging.
+
+    raw = edited(minimum())
+    with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+        parts = {name: archive.read(name) for name in archive.namelist()}
+    assert b"<workbookPr/>" in parts["xl/workbook.xml"]
+    parts["xl/workbook.xml"] = parts["xl/workbook.xml"].replace(
+        b"<workbookPr/>", b'<workbookPr date1904="invalid"/>'
+    )
+    with pytest.raises(IntakeError):
+        parsed(packed(parts))
+
+
+def test_table_owned_by_wrong_sheet() -> None:
+    """Keep passive table ownership bound to the actual intake worksheet."""
+    workbook = minimum()
+    sheet = workbook["Intake"]
+    table = sheet.tables["IntakeEntries"]
+    del sheet.tables["IntakeEntries"]
+    other = workbook.create_sheet("Other table")
+    for column, header in enumerate(HEADERS, 1):
+        other.cell(5, column, header)
+    other.add_table(table)
+    with pytest.raises(IntakeError):
+        parsed(edited(workbook))
+
+
+def test_current_package_inventory_fixture() -> None:
+    """Protect the observed current OOXML closure without distributing old forms."""
+    import json  # noqa: PLC0415 -- fixed fixture inspection.
+    from pathlib import Path  # noqa: PLC0415 -- fixture location.
+
+    inventory = json.loads(
+        (Path(__file__).parent / "fixtures/workbook-2.0/package-parts.json").read_text()
+    )
+    content = create_template().content
+    with zipfile.ZipFile(io.BytesIO(content)) as archive:
+        assert sorted(archive.namelist()) == inventory["parts"]
+    assert list(HEADERS) == inventory["headers"]
+    assert (
+        sorted({r.kind for r in read_archive(content, Budget()).relationships})
+        == inventory["relationship_kinds"]
+    )
