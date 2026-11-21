@@ -110,7 +110,12 @@ def test_unknown_active_and_escaping_parts(parts: dict[str, bytes], name: str) -
     """Unsupported package parts cannot be silently ignored or extracted."""
     with pytest.raises(IntakeError) as caught:
         read_archive(archive_bytes(parts | {name: b"synthetic"}), Budget())
-    assert caught.value.diagnostic.code == "UNSUPPORTED_WORKBOOK_PART"
+    expected = (
+        "INVALID_WORKBOOK"
+        if name in {"xl/worksheets/_rels/sheet1.xml.rels", "xl/tables/table1.xml"}
+        else "UNSUPPORTED_WORKBOOK_PART"
+    )
+    assert caught.value.diagnostic.code == expected
 
 
 def test_missing_and_duplicate_parts(parts: dict[str, bytes]) -> None:
