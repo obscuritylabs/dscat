@@ -64,7 +64,7 @@ def test_collection_identity_and_absent_facts() -> None:
 @pytest.mark.parametrize("value", ["-1", "NaN", "1e3", "1.0000000001", "9" * 29])
 def test_registration_decimal_bounds(value: str) -> None:
     """Reject malformed, negative, scientific and excessive precision values."""
-    with pytest.raises(ValueError, match="decimal|Decimal"):
+    with pytest.raises(ValueError, match=r"decimal|Decimal"):
         decimal_text(value)
 
 

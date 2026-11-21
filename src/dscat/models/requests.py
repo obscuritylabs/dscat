@@ -19,6 +19,7 @@ class CommandRequest(StrictModel):
     diagnostics: Path | None = None
     recursive: bool = False
     replace: bool = False
+    examples: bool = False
     targets: list[Target] = Field(default_factory=list)
     audience: Audience = "internal"
     format: Literal["text", "json"] = "text"
@@ -26,6 +27,9 @@ class CommandRequest(StrictModel):
     @model_validator(mode="after")
     def command_shape(self) -> Self:
         """Require applicable paths/options before any data processing."""
+        if self.command != "template" and self.examples:
+            msg = "Examples are only supported by template generation."
+            raise ValueError(msg)
         if self.command != "template" and self.input is None:
             msg = "This command requires an explicit input."
             raise ValueError(msg)

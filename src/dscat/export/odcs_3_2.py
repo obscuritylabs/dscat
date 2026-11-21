@@ -132,7 +132,7 @@ def members_for(
     email, contact_errors = contact_for(record, configuration)
     if "target_fact_conflict" in contact_errors:
         reasons.add("target_fact_conflict")
-    if email is not None:
+    if email is not None and record.core_party is not None:
         groups[email] = MemberFacts(record.core_party.label)
     else:
         losses.extend(
@@ -264,6 +264,8 @@ def project_odcs(
             configuration.model_dump(exclude_none=True)
         )
         for record in catalog.datasets:
+            if record.description is None:
+                reasons.add("target_description_missing")
             identity, version, errors = contract_facts(record, configuration)
             reasons.update(errors)
             members, member_losses, errors = members_for(record, configuration)

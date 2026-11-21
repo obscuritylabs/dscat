@@ -145,9 +145,14 @@ def parse_record(raw: bytes, entry: DatasetEntry) -> DatasetRecord:
     check_json(raw, MAX_REQUEST_BYTES)
     try:
         record = DatasetRecord.model_validate_json(raw)
-        Catalog(schema_version=entry.schema_version, datasets=[record])
     except ValidationError:
         raise fail(code="PUBLICATION_FAILURE") from None
+    if entry.schema_version == "1.0" and (
+        record.description is None
+        or record.core_party is None
+        or record.collection_intake is not None
+    ):
+        raise fail(code="PUBLICATION_FAILURE")
     if (
         record.id != entry.id
         or hashlib.sha256(raw).hexdigest() != entry.sha256

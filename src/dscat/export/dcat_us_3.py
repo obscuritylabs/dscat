@@ -48,6 +48,8 @@ def contact_for(
 ) -> tuple[str | None, list[Code]]:
     """Resolve only explicit association/email and reject conflicting supplied facts."""
     supplied = record.core_party
+    if supplied is None:
+        return None, ["target_contact_missing"]
     configured = configuration.identity.parties.get(supplied.label)
     if (
         configured is not None
@@ -81,7 +83,12 @@ def dataset_for(record: DatasetRecord, namespace: str, email: str) -> DcatDatase
         "title": record.title,
         "description": record.description,
         "contactPoint": DcatContact.model_validate(
-            {"fn": record.core_party.label, "hasEmail": "mailto:" + email}
+            {
+                "fn": record.core_party.label
+                if record.core_party is not None
+                else None,
+                "hasEmail": "mailto:" + email,
+            }
         ),
     }
     if record.dataset_modified is not None:
@@ -142,16 +149,14 @@ def project_dcat(
         if namespace is None or configuration.dcat_us_3.catalog_id is None:
             reasons.add("target_unrepresentable")
         for record in catalog.datasets:
-            email, errors = contact_for(record, configuration)
+            email, errors = export_facts(record, configuration)
             reasons.update(errors)
             if namespace is not None and email is not None:
                 try:
                     datasets.append(dataset_for(record, namespace, email))
                 except ValidationError:
                     reasons.add("target_unrepresentable")
-            mapped = MAPPED | (
-                {"core_party.role"} if record.core_party.role == "contact" else set()
-            )
+            mapped = MAPPED | contact_mapping(record)
             losses.extend(omitted_fields(record, mapped, "dcat-us-3"))
         identities = (
             [configuration.dcat_us_3.catalog_id]
@@ -206,3 +211,22 @@ def serialize_dcat(document: DcatDocument) -> bytes:
         ).encode("utf-8")
         + b"\n"
     )
+
+
+def contact_mapping(record: DatasetRecord) -> frozenset[str]:
+    """Map an explicitly supplied contact role only when one exists."""
+    return (
+        frozenset({"core_party.role"})
+        if record.core_party is not None and record.core_party.role == "contact"
+        else frozenset[str]()
+    )
+
+
+def export_facts(
+    record: DatasetRecord, configuration: ExportConfiguration
+) -> tuple[str | None, list[Code]]:
+    """Report missing description independently of the contact association."""
+    email, reasons = contact_for(record, configuration)
+    if record.description is None:
+        reasons.append("target_description_missing")
+    return email, reasons

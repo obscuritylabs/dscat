@@ -73,6 +73,7 @@ class Cell(StrictModel):
     text: Annotated[str, Field(max_length=32767)] = ""
     formula: str | None = None
     error: bool = False
+    kind: str = "inlineStr"
 
 
 class SheetBinding(StrictModel):
@@ -112,6 +113,7 @@ class WorkbookEvents:
 
     sheets: list[SheetBinding] = field(default_factory=list)
     names: dict[str, str] = field(default_factory=dict)
+    date1904: bool = False
     active_name: str | None = None
     fragments: list[str] = field(default_factory=list)
     path: list[str] = field(default_factory=list)
@@ -121,6 +123,11 @@ class WorkbookEvents:
         self.path.append(name)
         if depth == 1 and name != MAIN + "workbook":
             raise fail(code="INVALID_WORKBOOK")
+        if name == MAIN + "workbookPr":
+            epoch = attributes.get("date1904", "0")
+            if epoch not in {"0", "1", "false", "true"}:
+                raise fail(code="INVALID_WORKBOOK")
+            self.date1904 = epoch in {"1", "true"}
         if name == MAIN + "sheet":
             if self.path != [MAIN + "workbook", MAIN + "sheets", MAIN + "sheet"]:
                 raise fail(code="INVALID_WORKBOOK")
@@ -300,7 +307,11 @@ class WorksheetEvents:
                 ):
                     raise fail(code="INVALID_WORKBOOK")
                 text = self.strings[int(text)]
-            fields = self.active | {"text": text, "error": self.kind in {"e", "b"}}
+            fields = self.active | {
+                "text": text,
+                "error": self.kind in {"e", "b"},
+                "kind": self.kind,
+            }
             if self.seen_formula:
                 fields["formula"] = "".join(self.formula_fragments)
             cell = Cell.model_validate(fields)
@@ -500,6 +511,21 @@ def parse_parts(archive: SafeArchive, source_token: int, budget: Budget) -> Inta
         item.target for item in archive.relationships if item.kind == "worksheet"
     }:
         raise fail(code="INVALID_WORKBOOK")
+    if "Intake" in sheets or any(
+        "Start here" in value for value in workbook.names.values()
+    ):
+        from dscat.workbook.collection_parse import parse_collections  # noqa: PLC0415 -- isolated current schema adapter.
+
+        return parse_collections(archive, workbook, sheets, source_token, budget)
+    return parse_legacy_tables(workbook, sheets, source_token)
+
+
+def parse_legacy_tables(
+    workbook: WorkbookEvents,
+    sheets: dict[str, dict[tuple[int, int], Cell]],
+    source_token: int,
+) -> IntakeBatch:
+    """Retain the isolated schema 1.0 regression parser independently."""
     metadata = marker_metadata(workbook, sheets)
     collector = DiagnosticCollector()
     for name, cells in sheets.items():
