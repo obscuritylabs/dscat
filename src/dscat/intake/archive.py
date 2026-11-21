@@ -13,6 +13,15 @@ from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field, field_validator
 
+from dscat.intake.annotations import (
+    ATTACHMENTS,
+    REL,
+    WORKSHEET_RELS,
+    annotation_mime,
+    attachment_kind,
+    note_refs,
+    table_headers,
+)
 from dscat.intake.limits import (
     CHUNK_BYTES,
     ArchiveStatistics,
@@ -79,6 +88,8 @@ def supported_part(name: str) -> bool:
     """Recognize only exact approved paths, without normalizing an attacker path."""
     return (
         name in REQUIRED_PARTS | OPTIONAL_PARTS
+        or attachment_kind(name) is not None
+        or re.fullmatch(WORKSHEET_RELS, name) is not None
         or re.fullmatch(r"xl/worksheets/sheet[1-9][0-9]*\.xml", name) is not None
     )
 
@@ -102,7 +113,8 @@ class XmlPart(StrictModel):
 class Relationship(StrictModel):
     """Only validated local OPC relationship identities cross this boundary."""
 
-    source: Literal["package", "workbook"]
+    source: Literal["package", "workbook", "worksheet"]
+    owner: str | None = None
     id: str
     kind: Literal[
         "officeDocument",
@@ -112,6 +124,9 @@ class Relationship(StrictModel):
         "styles",
         "sharedStrings",
         "theme",
+        "table",
+        "comments",
+        "vmlDrawing",
     ]
     target: str
 
@@ -413,6 +428,8 @@ def read_relationships(
             for name in names
             if name.startswith("xl/")
             and name not in {"xl/workbook.xml", "xl/_rels/workbook.xml.rels"}
+            and attachment_kind(name) is None
+            and re.fullmatch(WORKSHEET_RELS, name) is None
         }
     )
     if {item.target for item in reader.output} != expected:
@@ -445,6 +462,7 @@ class ContentTypeReader:
             if key in self.defaults or (key, value) not in {
                 ("xml", "application/xml"),
                 ("rels", MIME_TYPES["_rels/.rels"]),
+                ("vml", ATTACHMENTS["vmlDrawing"][1]),
             }:
                 raise fail(code="UNSUPPORTED_WORKBOOK_PART")
             self.defaults[key] = value
@@ -470,8 +488,12 @@ def check_content_types(part: XmlPart, names: set[str], budget: Budget) -> None:
     reader = ContentTypeReader(names)
     validate_xml(part.content, budget, reader.start)
     for name in names - {"[Content_Types].xml"}:
-        expected = MIME_TYPES.get(
-            name, MIME_PREFIX + "officedocument.spreadsheetml.worksheet+xml"
+        expected = annotation_mime(name) or (
+            MIME_TYPES["_rels/.rels"]
+            if re.fullmatch(WORKSHEET_RELS, name)
+            else MIME_TYPES.get(
+                name, MIME_PREFIX + "officedocument.spreadsheetml.worksheet+xml"
+            )
         )
         actual = reader.overrides.get(
             name,
@@ -612,8 +634,128 @@ def read_archive(raw: bytes, budget: Budget) -> SafeArchive:
         for name in ("_rels/.rels", "xl/_rels/workbook.xml.rels")
         for item in read_relationships(by_name[name], names, budget)
     ]
+    relationships.extend(read_annotation_relationships(by_name, budget))
     return SafeArchive(
         parts=sorted(parts, key=lambda part: part.name),
         relationships=relationships,
         statistics=budget.statistics(),
     )
+
+
+@dataclass
+class AnnotationRelationships:
+    """Collect only local table and inert-note worksheet relationships."""
+
+    owner: str
+    parts: dict[str, XmlPart]
+    owned: set[str]
+    current: dict[str, Relationship] = field(default_factory=dict)
+    identifiers: set[str] = field(default_factory=set)
+    refs: dict[str, str] = field(default_factory=dict)
+
+    def start(self, tag: str, attrs: dict[str, str], depth: int) -> None:
+        """Validate an exact owned relationship declaration."""
+        if depth == 1:
+            if tag != REL + "Relationships" or attrs:
+                raise fail(code="UNSUPPORTED_WORKBOOK_PART")
+            return
+        if (
+            depth != CHILD_DEPTH
+            or tag != REL + "Relationship"
+            or attrs.keys() - {"Id", "Type", "Target", "TargetMode"}
+            or not {"Id", "Type", "Target"} <= attrs.keys()
+        ):
+            raise fail(code="UNSUPPORTED_WORKBOOK_PART")
+        if attrs.get("TargetMode", "Internal") != "Internal":
+            raise fail(code="UNSAFE_INPUT")
+        kind = attrs["Type"].removeprefix(
+            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/"
+        )
+        target = attrs["Target"]
+        # Exactly one prescribed parent step is valid OPC syntax here.
+        resolved = "xl/" + target.removeprefix("../")
+        if (
+            kind not in ATTACHMENTS
+            or not target.startswith("../")
+            or target != "../" + resolved.removeprefix("xl/")
+            or attachment_kind(resolved) != kind
+            or resolved not in self.parts
+        ):
+            raise fail(code="UNSUPPORTED_WORKBOOK_PART")
+        identifier = attrs["Id"]
+        if (
+            re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.-]{0,127}", identifier) is None
+            or identifier in self.identifiers
+            or kind in self.current
+            or resolved in self.owned
+        ):
+            raise fail(code="INVALID_WORKBOOK")
+        self.identifiers.add(identifier)
+        self.owned.add(resolved)
+        self.current[kind] = Relationship.model_validate(
+            {
+                "source": "worksheet",
+                "owner": self.owner,
+                "id": identifier,
+                "kind": kind,
+                "target": resolved,
+            }
+        )
+
+    def sheet_reference(self, tag: str, attrs: dict[str, str], _depth: int) -> None:
+        """Match table and legacy-note references to their local bindings."""
+        for local, kind in [
+            ("legacyDrawing", "vmlDrawing"),
+            ("tablePart", "table"),
+        ]:
+            if (
+                tag
+                == "http://schemas.openxmlformats.org/spreadsheetml/2006/main}" + local
+            ):
+                if kind in self.refs:
+                    raise fail(code="INVALID_WORKBOOK")
+                self.refs[kind] = attrs.get(
+                    "http://schemas.openxmlformats.org/officeDocument/2006/relationships}id",
+                    "",
+                )
+
+
+def read_annotation_relationships(
+    parts: dict[str, XmlPart], budget: Budget
+) -> list[Relationship]:
+    """Bind each closed attachment to exactly one existing worksheet owner."""
+    result: list[Relationship] = []
+    owned: set[str] = set()
+    for name, part in parts.items():
+        if re.fullmatch(WORKSHEET_RELS, name) is None:
+            continue
+        owner = "xl/worksheets/" + name.rsplit("/", 1)[1].removesuffix(".rels")
+        if owner not in parts:
+            raise fail(code="INVALID_WORKBOOK")
+        reader = AnnotationRelationships(owner, parts, owned)
+        validate_xml(part.content, budget, reader.start)
+        validate_xml(parts[owner].content, budget, reader.sheet_reference)
+        check_annotations(reader, budget)
+        result.extend(reader.current.values())
+    if owned != {n for n in parts if attachment_kind(n) is not None}:
+        raise fail(code="INVALID_WORKBOOK")
+    return result
+
+
+def check_annotations(reader: AnnotationRelationships, budget: Budget) -> None:
+    """Check closure, note anchors and table grammar independently of cells."""
+    current, parts = reader.current, reader.parts
+    if reader.refs != {
+        k: r.id for k, r in current.items() if k in {"table", "vmlDrawing"}
+    }:
+        raise fail(code="INVALID_WORKBOOK")
+    if ("comments" in current) != ("vmlDrawing" in current):
+        raise fail(code="INVALID_WORKBOOK")
+    if "comments" in current:
+        note_refs(
+            parts[current["comments"].target].content,
+            parts[current["vmlDrawing"].target].content,
+            budget,
+        )
+    if "table" in current:
+        table_headers(parts[current["table"].target].content, budget)
