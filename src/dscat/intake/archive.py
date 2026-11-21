@@ -726,15 +726,19 @@ def read_annotation_relationships(
     """Bind each closed attachment to exactly one existing worksheet owner."""
     result: list[Relationship] = []
     owned: set[str] = set()
-    for name, part in parts.items():
-        if re.fullmatch(WORKSHEET_RELS, name) is None:
+    for name in parts:
+        if re.fullmatch(WORKSHEET_RELS, name) is not None:
+            owner = "xl/worksheets/" + name.rsplit("/", 1)[1].removesuffix(".rels")
+            if owner not in parts:
+                raise fail(code="INVALID_WORKBOOK")
+    for owner, part in parts.items():
+        if re.fullmatch(r"xl/worksheets/sheet[1-9][0-9]*\.xml", owner) is None:
             continue
-        owner = "xl/worksheets/" + name.rsplit("/", 1)[1].removesuffix(".rels")
-        if owner not in parts:
-            raise fail(code="INVALID_WORKBOOK")
+        name = "xl/worksheets/_rels/" + owner.rsplit("/", 1)[1] + ".rels"
         reader = AnnotationRelationships(owner, parts, owned)
-        validate_xml(part.content, budget, reader.start)
-        validate_xml(parts[owner].content, budget, reader.sheet_reference)
+        if name in parts:
+            validate_xml(parts[name].content, budget, reader.start)
+        validate_xml(part.content, budget, reader.sheet_reference)
         check_annotations(reader, budget)
         result.extend(reader.current.values())
     if owned != {n for n in parts if attachment_kind(n) is not None}:

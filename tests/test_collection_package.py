@@ -236,3 +236,25 @@ def test_incomplete_note_relationship_pair() -> None:
     )
     with pytest.raises(IntakeError):
         check_annotations(reader, Budget())
+
+
+@pytest.mark.parametrize(
+    "element",
+    [
+        (
+            '<tableParts count="1"><tablePart xmlns:r="http://schemas.openxmlformats.org/'
+            'officeDocument/2006/relationships" r:id="missing"/></tableParts>'
+        ),
+        (
+            '<legacyDrawing xmlns:r="http://schemas.openxmlformats.org/'
+            'officeDocument/2006/relationships" r:id="missing"/>'
+        ),
+    ],
+)
+def test_worksheet_reference_without_relationship_part(element: str) -> None:
+    """Reject dangling sheet references even when the entire .rels file is absent."""
+    parts = package(notes=False, table=False)
+    key = "xl/worksheets/sheet2.xml"
+    parts[key] = parts[key].replace(b"</worksheet>", element.encode() + b"</worksheet>")
+    with pytest.raises(IntakeError):
+        read_archive(packed(parts), Budget())

@@ -222,6 +222,9 @@ class CollectionRow(StrictModel):
     """Located lexical collection answers before independent group conversion."""
 
     location: SourceLocation
+    columns: dict[str, Annotated[int, Field(ge=1, le=16384)]] = Field(
+        default_factory=dict
+    )
     name: Text
     owner: Text
     pii: Literal["Yes", "No", "Unknown"]

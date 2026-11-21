@@ -167,7 +167,13 @@ def parse_row(
                 )
                 bad = True
     try:
-        result = CollectionRow.model_validate(values | {"location": location})
+        result = CollectionRow.model_validate(
+            values
+            | {
+                "location": location,
+                "columns": {field: column for column, field in headers.items()},
+            }
+        )
     except ValidationError as error:
         for detail in error.errors(include_input=False, include_context=False):
             key = str(detail["loc"][0]) if detail["loc"] else ""
@@ -203,7 +209,8 @@ def parse_collections(
         c: cell.text for (r, c), cell in cells.items() if r == HEADER_ROW and cell.text
     }
     if (
-        len(actual) != len(HEADERS)
+        sorted(actual) != list(range(1, len(HEADERS) + 1))
+        or len(actual) != len(HEADERS)
         or set(actual.values()) != set(HEADERS)
         or any(
             cell.formula is not None or cell.error
