@@ -147,6 +147,7 @@ def test_minimum_reordered_headers_and_inert_text() -> None:
     assert not result.has_errors
     assert result.records[0].record.description == "=1+1"
     assert result.records[0].record.roles is None
+    assert result.records[0].record.core_party is not None
     assert result.records[0].record.core_party.role == "unspecified_contact_or_owner"
 
 
@@ -159,7 +160,9 @@ def test_oldest_template_and_current_generator_parse() -> None:
     assert parsed.fields == []
     assert parsed.details == []
     current = batch_from(create_template().content)
-    assert current == parsed
+    assert current.metadata.schema_version == "2.0"
+    assert current.collections == []
+    assert not current.has_errors
 
 
 @pytest.mark.parametrize("changed", ["duplicate", "missing", "unknown", "empty"])

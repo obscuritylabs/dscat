@@ -294,7 +294,11 @@ def run_intent(values: dict[str, object], output_format: str) -> None:
 
 @app.command("template", cls=SafeCommand)
 def template_command(
-    *, output: Output, replace: Replace = False, diagnostics: Report = None
+    *,
+    output: Output,
+    replace: Replace = False,
+    diagnostics: Report = None,
+    examples: bool = False,
 ) -> None:
     """Generate a deterministic, accessible intake workbook."""
     run_intent(
@@ -302,6 +306,7 @@ def template_command(
             "command": "template",
             "output": output,
             "replace": replace,
+            "examples": examples,
             **({"diagnostics": diagnostics} if diagnostics is not None else {}),
         },
         "text",
@@ -450,7 +455,7 @@ def execute_template(request: CommandRequest) -> CommandResult:
     if request.output is None:
         raise fail(code="INVALID_INVOCATION")
     check_file_destination(request.output, replace=request.replace)
-    artifact = create_template()
+    artifact = create_template(examples=request.examples)
     if request.diagnostics is not None:
         report = PrivateReport(
             schema_version="1.0", diagnostics=[], summary=OperationSummary()

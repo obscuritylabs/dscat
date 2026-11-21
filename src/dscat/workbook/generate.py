@@ -445,7 +445,7 @@ def relative_worksheet_relationships(payload: bytes) -> bytes:
     return serialized
 
 
-def create_template() -> WorkbookArtifact:
+def _create_legacy_template() -> WorkbookArtifact:
     """Build a deterministic, macro-free workbook without reading catalog input."""
     workbook = Workbook()
     workbook.remove(workbook.active)
@@ -479,3 +479,10 @@ def create_template() -> WorkbookArtifact:
         content=content,
         sha256=hashlib.sha256(content).hexdigest(),
     )
+
+
+def create_template(*, examples: bool = False) -> WorkbookArtifact:
+    """Generate the collection-first workbook with optional synthetic examples."""
+    from dscat.workbook.collection_generate import collection_template  # noqa: PLC0415 -- separate legacy fixtures from current rendering.
+
+    return collection_template(examples=examples)

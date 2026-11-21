@@ -63,7 +63,7 @@ def resolve_contact(
 ) -> list[ResolvedSubject]:
     """Resolve direct/shared contact inputs and every association dependency first."""
     email, errors = contact_for(record, configuration)
-    if email is None or errors:
+    if email is None or errors or record.core_party is None:
         return []
     label = factual_subject(
         target, "canonical", "core_party.label", record.core_party.label
@@ -124,6 +124,7 @@ def resolve_subjects(
     subjects = [
         factual_subject(target, "canonical", name, getattr(record, name))
         for name in ("id", "title", "description")
+        if getattr(record, name) is not None
     ]
     if include_contact:
         subjects.extend(resolve_contact(record, configuration, target))

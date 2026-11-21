@@ -48,6 +48,7 @@ Code = Literal[
     "INCOMPARABLE_CAPACITY",
     "RECORDS_CONFLICT",
     "target_contact_missing",
+    "target_description_missing",
     "target_contract_identity_missing",
     "target_contract_version_missing",
     "target_fact_conflict",
@@ -55,7 +56,9 @@ Code = Literal[
     "projection_omitted",
     "PUBLIC_PROJECTION_DENIED",
 ]
-Sheet = Literal["Instructions", "Datasets", "Fields", "Details_Quality"]
+Sheet = Literal[
+    "Instructions", "Datasets", "Fields", "Details_Quality", "Start here", "Intake"
+]
 Limit = Literal[
     "files",
     "compressed",

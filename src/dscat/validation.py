@@ -290,7 +290,10 @@ def validate_catalog(
     if not collector.has_errors:
         try:
             catalog = Catalog(
-                schema_version="1.0", datasets=[item.record for item in unique]
+                schema_version="1.1"
+                if any(item.record.collection_intake is not None for item in unique)
+                else "1.0",
+                datasets=[item.record for item in unique],
             )
         except ValidationError:
             # Explicit reference checks identify actionable failures before this fence.

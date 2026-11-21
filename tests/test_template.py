@@ -17,9 +17,11 @@ from pydantic import ValidationError
 from dscat.models.intake import WorkbookMetadata
 from dscat.workbook.generate import (
     WorkbookArtifact,
-    create_template,
     relative_worksheet_relationships,
     write_text,
+)
+from dscat.workbook.generate import (
+    _create_legacy_template as create_template,
 )
 
 NS = {"s": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}

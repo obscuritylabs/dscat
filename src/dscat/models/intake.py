@@ -128,8 +128,16 @@ class SourceLocation(StrictModel):
 class WorkbookMetadata(StrictModel):
     """The supported workbook schema and artifact kind are explicit constants."""
 
-    schema_version: Literal["1.0"]
-    kind: Literal["dataset-intake"]
+    schema_version: Literal["1.0", "2.0"]
+    kind: Literal["dataset-intake", "collection-intake"]
+
+    @model_validator(mode="after")
+    def matching_kind(self) -> Self:
+        """Keep schema version and artifact kind paired explicitly."""
+        if (self.schema_version == "2.0") != (self.kind == "collection-intake"):
+            msg = "Workbook schema and artifact kind disagree."
+            raise ValueError(msg)
+        return self
 
 
 class DatasetRow(StrictModel):
@@ -210,6 +218,43 @@ class DetailRow(StrictModel):
         return self
 
 
+class CollectionRow(StrictModel):
+    """Located lexical collection answers before independent group conversion."""
+
+    location: SourceLocation
+    name: Text
+    owner: Text
+    pii: Literal["Yes", "No", "Unknown"]
+    phi: Literal["Yes", "No", "Unknown"]
+    cui: Literal["Yes", "No", "Unknown"]
+    pcii: Literal["Yes", "No", "Unknown"]
+    isvi: Literal["Yes", "No", "Unknown"]
+    other: Literal["Yes", "No", "Unknown"]
+    submitted_by: Text
+    completed_on: CalendarDate
+    description: Text | None = None
+    location_label: Text | None = None
+    other_explanation: Text | None = None
+    current_value: Text | None = None
+    current_unit: Literal["KB", "MB", "GB", "TB", "PB"] | None = None
+    current_basis: Literal["Estimate", "Measured", "Unknown"] | None = None
+    consumers: Text | None = None
+    use: Text | None = None
+    access_pattern: Text | None = None
+    retention_days: Text | None = None
+    retention_status: Literal["Not yet determined", "Proposed", "Confirmed"] | None = (
+        None
+    )
+    process: Text | None = None
+    explanation: Text | None = None
+    source_names: Text | None = None
+    per_run_value: Text | None = None
+    per_run_unit: Literal["KB", "MB", "GB", "TB", "PB"] | None = None
+    per_run_basis: Literal["Estimate", "Measured", "Unknown"] | None = None
+    typical_runs: Text | None = None
+    period: Text | None = None
+
+
 class IntakeBatch(StrictModel):
     """Typed rows and fixed diagnostics from examined workbook sources."""
 
@@ -219,6 +264,7 @@ class IntakeBatch(StrictModel):
     details: list[DetailRow]
     diagnostics: list[Diagnostic] = Field(default_factory=list)
     has_errors: bool = False
+    collections: list[CollectionRow] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def unique_detail_properties(self) -> Self:

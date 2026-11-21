@@ -58,6 +58,7 @@ APPROVAL = {
 def test_minimum_does_not_infer_facts() -> None:
     """The four-field minimum is valid without dates, readiness or authority."""
     record = DatasetRecord.model_validate(MINIMUM)
+    assert record.core_party is not None
     assert record.core_party.role == "unspecified_contact_or_owner"
     assert record.capacity is None
     assert record.publication is None

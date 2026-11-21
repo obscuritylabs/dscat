@@ -499,6 +499,10 @@ def convert_fields(
 
 def normalize_batch(batch: IntakeBatch) -> NormalizedBatch:
     """Validate all independent records and report orphan/invalid detail groups."""
+    if batch.metadata.schema_version == "2.0":
+        from dscat.intake.collection_normalize import normalize_collections  # noqa: PLC0415 -- isolate replacement registration conversion.
+
+        return normalize_collections(batch)
     collector = DiagnosticCollector()
     for diagnostic in batch.diagnostics:
         collector.add(diagnostic)
