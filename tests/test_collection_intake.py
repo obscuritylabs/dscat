@@ -405,3 +405,33 @@ def test_current_package_inventory_fixture() -> None:
         sorted({r.kind for r in read_archive(content, Budget()).relationships})
         == inventory["relationship_kinds"]
     )
+
+
+def test_shifted_header_outside_native_table_range() -> None:
+    """Require actual header coordinates to match the declared table width."""
+    w = minimum()
+    s = w["Intake"]
+    s["AD5"] = s["AC5"].value
+    s["AC5"] = None
+    assert parsed(edited(w)).has_errors
+
+
+def test_reordered_quantity_errors_point_to_actual_input_column() -> None:
+    """Locate grouped errors after permitted header/column reordering."""
+    w = minimum()
+    s = w["Intake"]
+    for row in [5, 6]:
+        left, right = s.cell(row, 2).value, s.cell(row, 14).value
+        s.cell(row, 2, right)
+        s.cell(row, 14, left)
+    table = s.tables["IntakeEntries"]
+    table.tableColumns[1].name = HEADERS[13]
+    table.tableColumns[13].name = HEADERS[1]
+    s["B6"] = 1
+    result = parsed(edited(w))
+    assert result.has_errors
+    assert any(
+        d.column == HEADERS.index("Collection description") + 1
+        and d.expected == "quantity"
+        for d in result.diagnostics
+    )

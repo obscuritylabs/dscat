@@ -50,7 +50,8 @@ def optional_groups(
 ) -> dict[str, object]:
     """Accumulate independent amount, frequency and retention failures."""
     result: dict[str, object] = {}
-    for prefix, column in [("current", 14), ("per_run", 25)]:
+    for prefix, default_column in [("current", 14), ("per_run", 25)]:
+        column = row.columns.get(prefix + "_value", default_column)
         try:
             value = amount(
                 getattr(row, prefix + "_value"),
@@ -81,7 +82,10 @@ def optional_groups(
     except ValueError, IntakeError:
         collector.add(
             located_error(
-                row.location.model_copy(update={"column": 20}), expected="days"
+                row.location.model_copy(
+                    update={"column": row.columns.get("retention_days", 20)}
+                ),
+                expected="days",
             )
         )
     try:
@@ -91,7 +95,10 @@ def optional_groups(
     except ValidationError:
         collector.add(
             located_error(
-                row.location.model_copy(update={"column": 28}), expected="quantity"
+                row.location.model_copy(
+                    update={"column": row.columns.get("typical_runs", 28)}
+                ),
+                expected="quantity",
             )
         )
     return result
@@ -161,9 +168,12 @@ def collection_record(
     except ValidationError as error:
         for item in error.errors(include_input=False, include_context=False):
             field = item["loc"][0] if item["loc"] else ""
-            column = {"": 11, "access_pattern": 19, "per_run_amount": 25}.get(
-                str(field), 14
-            )
+            field_name = {
+                "": "other_explanation",
+                "per_run_amount": "per_run_value",
+                "current_amount": "current_value",
+            }.get(str(field), str(field))
+            column = row.columns.get(field_name, 14)
             collector.add(
                 located_error(
                     row.location.model_copy(update={"column": column}), expected="text"
