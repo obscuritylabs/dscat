@@ -11,7 +11,7 @@ dscat template --output example.xlsx --examples
 
 Open the blank workbook in Excel. Confirm Start here precedes Intake, the visible markers are `2.1` / `collection-intake`, headers are on row 5, data starts on row 6, and collection name remains visible while scrolling. Inspect header notes, topic bands, the retention authorizer column and the size-only dropdowns. Move complete table columns, including headers and values, into a different order and confirm validation/build preserves the same facts. No process information is required to register a collection.
 
-The worked example contains seven synthetic collection rows with FTK Imager, Plaso, MISP and Timesketch process summaries. Every quantity and responsible party is invented. Source names describe the derivation and indicator-reference input; they are not a formally resolved lineage graph or automatic tool integration. All retention durations are Proposed examples rather than recommendations or disposal authority.
+The worked example contains seven synthetic collection rows with FTK Imager, Plaso, MISP and Timesketch process summaries. Every quantity and responsible party is invented. Source names describe the derivation and indicator-reference input; they are not a formally resolved lineage graph or automatic tool integration. The first retention duration is a fictional Confirmed example with a fictional authorizer; the others are Proposed examples rather than recommendations or disposal authority.
 
 ## Complete and validate
 

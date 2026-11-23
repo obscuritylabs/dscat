@@ -120,6 +120,13 @@ def test_legacy_headers_reordered_without_authorizer() -> None:
     """Old 2.0 forms remain readable with their original names and no attribution."""
     workbook = legacy(minimum())
     assert tuple(c.value for c in workbook["Intake"][5]) == LEGACY_HEADERS
+    import json  # noqa: PLC0415 -- retained compatibility inventory.
+    from pathlib import Path  # noqa: PLC0415 -- retained compatibility inventory.
+
+    inventory = json.loads(
+        (Path(__file__).parent / "fixtures/workbook-2.0/package-parts.json").read_text()
+    )
+    assert list(LEGACY_HEADERS) == inventory["headers"]
     reorder(workbook, list(range(29, 0, -1)))
     result = parsed(edited(workbook))
     assert not result.has_errors
