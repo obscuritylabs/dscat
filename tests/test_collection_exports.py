@@ -9,6 +9,7 @@ from dscat.models.catalog import Catalog, DatasetRecord
 from dscat.models.configuration import AssessmentConfiguration
 from dscat.projection import approve_subject, resolve_subjects
 from dscat.public_projection import project_public
+from dscat.serialization import canonical_bytes
 from dscat.storage.flatfiles import load_snapshot, save_snapshot
 from dscat.validation import validate_catalog
 from tests.test_collection_intake import edited, minimum, parsed
@@ -51,10 +52,11 @@ def test_sufficient_facts_and_detailed_old_metadata_survive(tmp_path: Path) -> N
     values["collection_intake"] = intake().model_dump(exclude_none=True) | {
         "owner_state": "known",
         "location": "Synthetic location sentinel",
+        "retention": {"authorized_by": "PRIVATE-AUTHORIZER-SENTINEL"},
         "submitted_by": "Synthetic submitter sentinel",
     }
     source = Catalog(
-        schema_version="1.1", datasets=[DatasetRecord.model_validate(values)]
+        schema_version="1.2", datasets=[DatasetRecord.model_validate(values)]
     )
     for result in [
         project_dcat(source, configuration()),
@@ -64,6 +66,11 @@ def test_sufficient_facts_and_detailed_old_metadata_survive(tmp_path: Path) -> N
         assert any(
             item.field == "collection_intake.submitted_by" for item in result.losses
         )
+        assert any(
+            item.field == "collection_intake.retention.authorized_by"
+            for item in result.losses
+        )
+        assert b"PRIVATE-AUTHORIZER" not in canonical_bytes(result)
     save_snapshot(tmp_path / "catalog", source)
     assert load_snapshot(tmp_path / "catalog").catalog == source
 
@@ -77,6 +84,7 @@ def test_registration_private_fields_omitted_with_valid_public_approvals() -> No
         "owner_state": "known",
         "submitted_by": "PRIVATE-SUBMITTER-SENTINEL",
         "location": "PRIVATE-LOCATION-SENTINEL",
+        "retention": {"authorized_by": "PRIVATE-AUTHORIZER-SENTINEL"},
         "generation": {
             "process": "PRIVATE-PROCESS-SENTINEL",
             "source_names": ["PRIVATE-SOURCE-SENTINEL"],
@@ -95,7 +103,7 @@ def test_registration_private_fields_omitted_with_valid_public_approvals() -> No
         for subject in resolve_subjects(changed, configured, target)
     ]
     catalog = Catalog(
-        schema_version="1.1", datasets=[DatasetRecord.model_validate(values)]
+        schema_version="1.2", datasets=[DatasetRecord.model_validate(values)]
     )
     projection = project_public(catalog, configured, list(targets))
     assert all(r.state == "ready" for r in projection.readiness)

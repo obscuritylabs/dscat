@@ -7,15 +7,15 @@ DSCat 0.1.0 is a command-line application for workbook intake, canonical catalog
 | Surface | Initial version or behavior |
 | --- | --- |
 | Application | 0.1.0, proprietary license |
-| Workbook schema and kind markers | Schema `2.0`, kind `collection-intake` |
+| Workbook schema and kind markers | Generated schema `2.1`, kind `collection-intake`; supported `2.0` and `2.1-form` input |
 | Explicit TOML configuration | `schema_version = "1.0"` |
-| Canonical catalog, canonical manifests and dataset entries | `1.1` for new collection registrations; genuine `1.0` retained on load/save |
+| Canonical catalog, canonical manifests and dataset entries | `1.2` with retention attribution, otherwise `1.1`; loaded `1.0`/`1.1`/`1.2` retained |
 | Configuration, structured command reports and public projection manifests | Schema `1.0` |
 | DCAT-US export | 3.0, JSON-LD with bundled offline context and schema closure |
 | ODCS export | 3.2.0 JSON with bundled offline schema closure |
 | Public Python API | None |
 
-Unsupported versions and populated unknown fields are refused. Existing canonical `1.0` bundles retain their original required description/contact facts and closed vocabulary. Loading does not rewrite source generations or upgrade their version. Canonical `1.1` permits absent descriptions/contacts and preserves the new typed registration answers; old software cannot read it. Adding registration fields to an old catalog requires an explicit in-memory version change before saving to a separately selected destination. The undistributed workbook `1.0` is not a compatibility obligation; any retained parser fixtures are regression materials rather than the current template. Keep complete canonical bundles and original intake files when upgrading. Application version, workbook schema, dataset version and contract version are distinct; one does not supply another.
+Unsupported versions and populated unknown fields are refused. Existing canonical `1.0` bundles retain their original required description/contact facts and closed vocabulary. Loading does not rewrite source generations or upgrade their version. Canonical `1.1` permits absent descriptions/contacts and preserves the new typed registration answers; old software cannot read it. Canonical `1.2` adds optional private retention attribution; `1.1` refuses that field. Software limited to `1.1` cannot read `1.2`. Workbook `2.0` requires its original 29 headers; `2.1` and the bounded `2.1-form` alias require 30, including Retention decision authorized by. All supported collection revisions match exact column names in any order; unknown, duplicate and missing headers are rejected. Adding registration fields to an old catalog requires an explicit in-memory version change before saving to a separately selected destination. The undistributed workbook `1.0` is not a compatibility obligation; any retained parser fixtures are regression materials rather than the current template. Keep complete canonical bundles and original intake files when upgrading. Application version, workbook schema, dataset version and contract version are distinct; one does not supply another.
 
 ## Command behavior
 

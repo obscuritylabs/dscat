@@ -509,7 +509,7 @@ class DatasetRecord(StrictModel):
 class Catalog(StrictModel):
     """Versioned dataset aggregate without source paths or derived assessments."""
 
-    schema_version: Literal["1.0", "1.1"]
+    schema_version: Literal["1.0", "1.1", "1.2"]
     datasets: list[DatasetRecord] = Field(max_length=100000)
 
     @field_validator("datasets")
@@ -528,6 +528,14 @@ class Catalog(StrictModel):
             for r in self.datasets
         ):
             msg = "Canonical 1.0 requires its original core and vocabulary."
+            raise ValueError(msg)
+        if self.schema_version != "1.2" and any(
+            r.collection_intake is not None
+            and r.collection_intake.retention is not None
+            and r.collection_intake.retention.authorized_by is not None
+            for r in self.datasets
+        ):
+            msg = "Retention attribution requires canonical 1.2."
             raise ValueError(msg)
         ids = {record.id for record in self.datasets}
         if len(ids) != len(self.datasets):

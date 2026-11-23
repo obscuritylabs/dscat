@@ -34,8 +34,9 @@ WORKSHEET_RELS = r"xl/worksheets/_rels/sheet[1-9][0-9]*\.xml\.rels"
 FIRST_INPUT_ROW = 6
 LAST_EXCEL_ROW = 1048576
 NOTE_ROW = 4
-COLUMN_COUNT = 29
-HEADER_REF = r"(?:[A-Z]|A[ABC])5"
+COLUMN_COUNT = 30
+TABLE_WIDTHS = {"AC": 29, "AD": 30}
+HEADER_REF = r"(?:[A-Z]|A[ABCD])5"
 
 
 def attachment_kind(name: str) -> str | None:
@@ -63,6 +64,7 @@ class TableReader:
     headers: list[str] = field(default_factory=list)
     identifiers: set[str] = field(default_factory=set)
     ref: str = ""
+    width: int = 0
     path: list[str] = field(default_factory=list)
 
     def start(self, name: str, attrs: dict[str, str], _depth: int) -> None:
@@ -105,16 +107,18 @@ class TableReader:
             raise fail(code="UNSUPPORTED_WORKBOOK_PART")
         if local == "table":
             self.ref = attrs.get("ref", "")
+            match = re.fullmatch(r"A5:(AC|AD)([1-9][0-9]{0,6})", self.ref)
             if (
                 attrs.get("name") != "IntakeEntries"
                 or attrs.get("displayName") != "IntakeEntries"
-                or re.fullmatch(r"A5:AC[1-9][0-9]{0,6}", self.ref) is None
-                or not FIRST_INPUT_ROW <= int(self.ref.split("AC")[1]) <= LAST_EXCEL_ROW
+                or match is None
+                or not FIRST_INPUT_ROW <= int(match[2]) <= LAST_EXCEL_ROW
                 or attrs.get("headerRowCount", "1") != "1"
             ):
                 raise fail(code="INVALID_WORKBOOK")
+            self.width = TABLE_WIDTHS[match[1]]
         elif (local == "autoFilter" and attrs.get("ref") != self.ref) or (
-            local == "tableColumns" and attrs.get("count") != "29"
+            local == "tableColumns" and attrs.get("count") != str(self.width)
         ):
             raise fail(code="INVALID_WORKBOOK")
         elif local == "tableColumn":
@@ -137,7 +141,7 @@ def table_headers(content: bytes, budget: Budget) -> list[str]:
     """Validate table grammar and return the exact declared header order."""
     reader = TableReader()
     validate_xml(content, budget, reader.start, on_end=reader.end)
-    if len(reader.headers) != 29 or len(set(reader.headers)) != 29:  # noqa: PLR2004 -- accepted input width.
+    if len(reader.headers) != reader.width or len(set(reader.headers)) != reader.width:
         raise fail(code="INVALID_WORKBOOK")
     return reader.headers
 

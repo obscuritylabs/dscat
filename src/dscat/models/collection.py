@@ -95,6 +95,7 @@ class CollectionSensitivity(StrictModel):
 class RegistrationRetention(StrictModel):
     """A duration from batch arrival, without disposal authority or enforcement."""
 
+    authorized_by: Text | None = None
     trigger: Literal["batch_arrival"] = "batch_arrival"
     days: Annotated[int, Field(ge=0, le=2**31 - 1)] | None = None
     status: Literal["not_yet_determined", "proposed", "confirmed"] | None = None

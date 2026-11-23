@@ -9,7 +9,7 @@ dscat template --output blank.xlsx
 dscat template --output example.xlsx --examples
 ```
 
-Open the blank workbook in Excel. Confirm Start here precedes Intake, the visible markers are `2.0` / `collection-intake`, headers are on row 5, data starts on row 6, and collection name remains visible while scrolling. Inspect header notes, topic bands and the size-only dropdowns. No process information is required to register a collection.
+Open the blank workbook in Excel. Confirm Start here precedes Intake, the visible markers are `2.1` / `collection-intake`, headers are on row 5, data starts on row 6, and collection name remains visible while scrolling. Inspect header notes, topic bands, the retention authorizer column and the size-only dropdowns. Move complete table columns, including headers and values, into a different order and confirm validation/build preserves the same facts. No process information is required to register a collection.
 
 The worked example contains seven synthetic collection rows with FTK Imager, Plaso, MISP and Timesketch process summaries. Every quantity and responsible party is invented. Source names describe the derivation and indicator-reference input; they are not a formally resolved lineage graph or automatic tool integration. All retention durations are Proposed examples rather than recommendations or disposal authority.
 
@@ -38,4 +38,4 @@ Inspect the internal canonical `1.1` registration: absent description/contact st
 
 After supplying target-required metadata through supported canonical fields and explicit configuration, export DCAT-US 3.0 and ODCS 3.2.0 from the saved bundle after moving the original workbook away. Both targets should validate against their bundled schemas. Missing target facts should affect their own readiness, not fabricate catalog values. Public projection needs separate exact supplied approvals; sensitivity answers and successful intake do not grant them.
 
-The installed acceptance harness performs a synthetic target-ready `2.0` round trip and public-output preservation under a runtime network guard. Legacy workbook fixtures remain isolated security/regression inputs; they are not current user forms. Canonical `1.0` preservation and richer-field regressions are verified separately. Application observations should record the actual Excel version and limits; automated layout assertions do not substitute for an observed open/edit/save trial.
+The installed acceptance harness performs a synthetic target-ready `2.1` round trip and public-output preservation under a runtime network guard. Legacy workbook fixtures remain isolated security/regression inputs; they are not current user forms. Canonical `1.0` preservation and richer-field regressions are verified separately. Application observations should record the actual Excel version and limits; automated layout assertions do not substitute for an observed open/edit/save trial.

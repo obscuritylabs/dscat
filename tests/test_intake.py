@@ -160,7 +160,7 @@ def test_oldest_template_and_current_generator_parse() -> None:
     assert parsed.fields == []
     assert parsed.details == []
     current = batch_from(create_template().content)
-    assert current.metadata.schema_version == "2.0"
+    assert current.metadata.schema_version == "2.1"
     assert current.collections == []
     assert not current.has_errors
 

@@ -111,7 +111,7 @@ def instructions(workbook: Workbook, *, examples: bool) -> None:
     sheet.column_dimensions["D"].width = 25
     for cell, value in [
         ("C1", "Workbook schema"),
-        ("D1", "2.0"),
+        ("D1", "2.1"),
         ("C2", "Workbook kind"),
         ("D2", "collection-intake"),
     ]:
@@ -185,7 +185,10 @@ def intake_sheet(workbook: Workbook, *, examples: bool) -> None:
     sheet.sheet_view.showGridLines = False
     sheet.sheet_view.zoomScale = 85
     sheet.sheet_properties.tabColor = TEAL
-    table = Table(displayName="IntakeEntries", ref=f"A5:AC{TEMPLATE_ROWS + 5}")
+    table = Table(
+        displayName="IntakeEntries",
+        ref=f"A5:{get_column_letter(len(HEADERS))}{TEMPLATE_ROWS + 5}",
+    )
     table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium2", showRowStripes=True)
     sheet.add_table(table)
     sheet_controls(sheet)
@@ -287,7 +290,7 @@ def collection_template(*, examples: bool = False) -> WorkbookArtifact:
             dest.writestr(info, payload)
     content = output.getvalue()
     return WorkbookArtifact(
-        metadata=WorkbookMetadata(schema_version="2.0", kind="collection-intake"),
+        metadata=WorkbookMetadata(schema_version="2.1", kind="collection-intake"),
         content=content,
         sha256=hashlib.sha256(content).hexdigest(),
     )

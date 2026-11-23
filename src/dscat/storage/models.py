@@ -21,7 +21,7 @@ class DatasetEntry(StrictModel):
     id: Identifier
     path: str
     sha256: Sha256
-    schema_version: Literal["1.0", "1.1"]
+    schema_version: Literal["1.0", "1.1", "1.2"]
 
     @model_validator(mode="after")
     def prescribed_path(self) -> Self:
@@ -66,7 +66,7 @@ class ExportEntry(StrictModel):
 class CanonicalManifest(StrictModel):
     """Canonical facts and optional target artifacts retain only input fingerprints."""
 
-    schema_version: Literal["1.0", "1.1"]
+    schema_version: Literal["1.0", "1.1", "1.2"]
     kind: Literal["canonical"]
     datasets: list[DatasetEntry] = Field(max_length=100000)
     resource_fingerprints: dict[str, Sha256] = Field(default_factory=dict)

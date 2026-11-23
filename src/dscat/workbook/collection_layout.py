@@ -186,6 +186,16 @@ COLUMN_SPECS: tuple[tuple[str, int, str], ...] = (
         ),
     ),
     (
+        "Retention decision authorized by",
+        34,
+        (
+            "Person who authorized the stated retention duration, or an accountable "
+            "role with a named holder. Separate from owner and submitter. Leave "
+            "blank if unknown, or record Unknown / Not yet authorized as appropriate. "
+            "Reported attribution is not verified approval or permission to delete."
+        ),
+    ),
+    (
         "Generating process",
         28,
         (
@@ -280,6 +290,7 @@ FIELD_NAMES: tuple[str, ...] = (
     "access_pattern",
     "retention_days",
     "retention_status",
+    "retention_authorized_by",
     "process",
     "explanation",
     "source_names",
@@ -291,14 +302,16 @@ FIELD_NAMES: tuple[str, ...] = (
 )
 
 HEADERS = tuple(c[0] for c in COLUMN_SPECS)
+LEGACY_HEADERS = tuple(h for h in HEADERS if h != "Retention decision authorized by")
+HEADER_FIELDS = dict(zip(HEADERS, FIELD_NAMES, strict=True))
 GROUPS: tuple[tuple[int, int, str, str], ...] = (
     (1, 3, "COLLECTION", "17354A"),
     (4, 11, "AUTHORITY & SENSITIVITY · FIRST PASS", "8A5822"),
     (12, 13, "ENTRY RESPONSIBILITY", "635480"),
     (14, 16, "CURRENT VOLUME", "147D80"),
     (17, 19, "COLLECTION USE", "315B84"),
-    (20, 21, "RETENTION · FOLLOW-UP", "687563"),
-    (22, 29, "HOW IT IS GENERATED · OPTIONAL", "526575"),
+    (20, 22, "RETENTION · FOLLOW-UP", "687563"),
+    (23, 30, "HOW IT IS GENERATED · OPTIONAL", "526575"),
 )
 
 GUIDANCE: tuple[tuple[str, str], ...] = (
@@ -316,7 +329,8 @@ GUIDANCE: tuple[tuple[str, str], ...] = (
     (
         "Example retention and sensitivity",
         (
-            "Every example duration is Proposed. Durations illustrate "
+            "The first example duration is fictionally Confirmed; the others are "
+            "Proposed. Durations illustrate "
             "independent rules, not forensic retention recommendations or "
             "deletion authority. Sensitivity responses describe fictional "
             "scenarios; never infer them from a tool or file type."
@@ -509,6 +523,15 @@ GUIDANCE: tuple[tuple[str, str], ...] = (
         ),
     ),
     (
+        "Retention authorizer",
+        (
+            "Retention decision authorized by identifies who authorized the duration, "
+            "not a calendar expiry date. Do not infer the authorizer from the owner "
+            "or submitter. Unknown and Not yet authorized are descriptive answers. "
+            "All authorizer names in the worked example are fictional."
+        ),
+    ),
+    (
         "Identity",
         (
             "Collection identity is derived from its case-sensitive normalized "
@@ -523,13 +546,6 @@ GUIDANCE: tuple[tuple[str, str], ...] = (
             "other metadata. Example rows are ordinary records, never silently "
             "discarded. Date and submitter describe this entry, not data "
             "ownership or batch arrival."
-        ),
-    ),
-    (
-        "License",
-        (
-            "Copyright (c) 2026 Obscurity Labs. All rights reserved. "
-            "Proprietary License."
         ),
     ),
 )
