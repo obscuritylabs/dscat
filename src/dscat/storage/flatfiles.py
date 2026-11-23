@@ -154,6 +154,13 @@ def parse_record(raw: bytes, entry: DatasetEntry) -> DatasetRecord:
     ):
         raise fail(code="PUBLICATION_FAILURE")
     if (
+        entry.schema_version != "1.2"
+        and record.collection_intake is not None
+        and record.collection_intake.retention is not None
+        and record.collection_intake.retention.authorized_by is not None
+    ):
+        raise fail(code="PUBLICATION_FAILURE")
+    if (
         record.id != entry.id
         or hashlib.sha256(raw).hexdigest() != entry.sha256
         or canonical_bytes(record) != raw

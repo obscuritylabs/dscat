@@ -8,8 +8,9 @@ from typing import TYPE_CHECKING
 
 from pydantic import ValidationError
 
-from dscat.intake.annotations import table_headers
+from dscat.intake.annotations import CommentReader, table_headers
 from dscat.intake.limits import DiagnosticCollector, fail
+from dscat.intake.xml import validate_xml
 from dscat.models.intake import (
     CollectionRow,
     IntakeBatch,
@@ -17,7 +18,7 @@ from dscat.models.intake import (
     WorkbookMetadata,
 )
 from dscat.normalization import normalize_text, parse_date
-from dscat.workbook.collection_layout import FIELD_NAMES, HEADERS
+from dscat.workbook.collection_layout import HEADER_FIELDS, HEADERS, LEGACY_HEADERS
 
 if TYPE_CHECKING:
     from dscat.intake.archive import SafeArchive
@@ -32,6 +33,7 @@ MAX_SERIAL = 3652059
 LEAP_DAY = 60
 MAX_DIGITS = 28
 MIN_EXPONENT = -9
+ALPHABET_WIDTH = 26
 HEADER_ROW = 5
 FIRST_ROW = 6
 NUMERIC = {"current_value", "per_run_value", "typical_runs", "retention_days"}
@@ -109,9 +111,14 @@ def metadata(
         if cell is None or cell.formula is not None or cell.error:
             raise fail(code="INVALID_WORKBOOK")
         values.append(cell.text)
-    if values[0] != "2.0":
+    if values[0] not in {"2.0", "2.1", "2.1-form"}:
         raise fail(code="UNSUPPORTED_VERSION")
-    return WorkbookMetadata.model_validate({"schema_version": "2.0", "kind": values[1]})
+    return WorkbookMetadata.model_validate(
+        {
+            "schema_version": "2.1" if values[0] == "2.1-form" else values[0],
+            "kind": values[1],
+        }
+    )
 
 
 def parse_row(
@@ -205,13 +212,14 @@ def parse_collections(
     version = metadata(workbook, sheets)
     collector = DiagnosticCollector()
     cells = sheets["Intake"]
+    expected = LEGACY_HEADERS if version.schema_version == "2.0" else HEADERS
     actual = {
         c: cell.text for (r, c), cell in cells.items() if r == HEADER_ROW and cell.text
     }
     if (
-        sorted(actual) != list(range(1, len(HEADERS) + 1))
-        or len(actual) != len(HEADERS)
-        or set(actual.values()) != set(HEADERS)
+        sorted(actual) != list(range(1, len(expected) + 1))
+        or len(actual) != len(expected)
+        or set(actual.values()) != set(expected)
         or any(
             cell.formula is not None or cell.error
             for (r, _), cell in cells.items()
@@ -232,7 +240,7 @@ def parse_collections(
             has_errors=True,
         )
     check_tables(archive, workbook, actual, budget)
-    headers = {c: FIELD_NAMES[HEADERS.index(h)] for c, h in actual.items()}
+    headers = {c: HEADER_FIELDS[h] for c, h in actual.items()}
     grouped: dict[int, dict[int, Cell]] = {}
     for (r, c), cell in sorted(cells.items()):
         if r >= FIRST_ROW and (
@@ -285,6 +293,25 @@ def check_tables(
         if relation.source == "worksheet":
             if relation.owner != target:
                 raise fail(code="INVALID_WORKBOOK")
+            if relation.kind == "comments":
+                notes = CommentReader()
+                validate_xml(
+                    parts[relation.target].content,
+                    budget,
+                    notes.start,
+                    on_end=notes.end,
+                )
+                allowed = {
+                    (
+                        chr(64 + c)
+                        if c <= ALPHABET_WIDTH
+                        else "A" + chr(64 + c - ALPHABET_WIDTH)
+                    )
+                    + "5"
+                    for c in actual
+                }
+                if not notes.refs <= allowed:
+                    raise fail(code="INVALID_WORKBOOK")
             if relation.kind == "table" and table_headers(
                 parts[relation.target].content, budget
             ) != [actual[c] for c in sorted(actual)]:

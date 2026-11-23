@@ -234,7 +234,7 @@ def test_headers_and_markers(mutation: str) -> None:
     elif mutation == "unknown":
         s["B5"] = "Unrecognized header"
     elif mutation == "outside":
-        s["AD6"] = "Unrecognized value"
+        s["AE6"] = "Unrecognized value"
     elif mutation == "marker":
         w["Start here"]["D1"] = None
     elif mutation == "version":
@@ -252,7 +252,7 @@ def test_descriptive_sources_and_independent_retention() -> None:
     """Keep unresolved source names valid and separate from rich capacity metadata."""
     w = minimum()
     s = w["Intake"]
-    s["X6"] = " External source ;External source; Another source; "
+    s["Y6"] = " External source ;External source; Another source; "
     s["T6"] = 0
     s["U6"] = "Proposed"
     s["J6"] = "Yes"
@@ -313,9 +313,9 @@ def test_remaining_structural_and_partial_edits(mutation: str) -> None:
         cell.value = "1E99" if mutation == "numeric-overflow" else "NaN"
         cell.data_type = "n"
     elif mutation == "empty-source":
-        s["X6"] = " ; ; "
+        s["Y6"] = " ; ; "
     else:
-        s["AD6"] = "  "
+        s["AE6"] = "  "
     try:
         p = parsed(edited(w))
     except IntakeError:
@@ -395,7 +395,7 @@ def test_current_package_inventory_fixture() -> None:
     from pathlib import Path  # noqa: PLC0415 -- fixture location.
 
     inventory = json.loads(
-        (Path(__file__).parent / "fixtures/workbook-2.0/package-parts.json").read_text()
+        (Path(__file__).parent / "fixtures/workbook-2.1/package-parts.json").read_text()
     )
     content = create_template().content
     with zipfile.ZipFile(io.BytesIO(content)) as archive:
@@ -411,8 +411,8 @@ def test_shifted_header_outside_native_table_range() -> None:
     """Require actual header coordinates to match the declared table width."""
     w = minimum()
     s = w["Intake"]
-    s["AD5"] = s["AC5"].value
-    s["AC5"] = None
+    s["AE5"] = s["AD5"].value
+    s["AD5"] = None
     assert parsed(edited(w)).has_errors
 
 

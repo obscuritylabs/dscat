@@ -67,18 +67,10 @@ def optional_groups(
                     expected="quantity",
                 )
             )
-    retention: dict[str, object] = {}
     try:
-        if row.retention_days is not None:
-            retention["days"] = integer_days(row.retention_days)
-        if row.retention_status is not None:
-            retention["status"] = {
-                "Not yet determined": "not_yet_determined",
-                "Proposed": "proposed",
-                "Confirmed": "confirmed",
-            }[row.retention_status]
-        if retention:
-            result["retention"] = RegistrationRetention.model_validate(retention)
+        retention = retention_values(row)
+        if retention is not None:
+            result["retention"] = retention
     except ValueError, IntakeError:
         collector.add(
             located_error(
@@ -102,6 +94,22 @@ def optional_groups(
             )
         )
     return result
+
+
+def retention_values(row: CollectionRow) -> RegistrationRetention | None:
+    """Preserve independent duration, status and optional reported authorizer."""
+    values: dict[str, object] = {}
+    if row.retention_days is not None:
+        values["days"] = integer_days(row.retention_days)
+    if row.retention_status is not None:
+        values["status"] = {
+            "Not yet determined": "not_yet_determined",
+            "Proposed": "proposed",
+            "Confirmed": "confirmed",
+        }[row.retention_status]
+    if row.retention_authorized_by is not None:
+        values["authorized_by"] = row.retention_authorized_by
+    return RegistrationRetention.model_validate(values) if values else None
 
 
 def generation_values(row: CollectionRow) -> CollectionGeneration | None:

@@ -128,13 +128,15 @@ class SourceLocation(StrictModel):
 class WorkbookMetadata(StrictModel):
     """The supported workbook schema and artifact kind are explicit constants."""
 
-    schema_version: Literal["1.0", "2.0"]
+    schema_version: Literal["1.0", "2.0", "2.1"]
     kind: Literal["dataset-intake", "collection-intake"]
 
     @model_validator(mode="after")
     def matching_kind(self) -> Self:
         """Keep schema version and artifact kind paired explicitly."""
-        if (self.schema_version == "2.0") != (self.kind == "collection-intake"):
+        if (self.schema_version in {"2.0", "2.1"}) != (
+            self.kind == "collection-intake"
+        ):
             msg = "Workbook schema and artifact kind disagree."
             raise ValueError(msg)
         return self
@@ -244,6 +246,7 @@ class CollectionRow(StrictModel):
     consumers: Text | None = None
     use: Text | None = None
     access_pattern: Text | None = None
+    retention_authorized_by: Text | None = None
     retention_days: Text | None = None
     retention_status: Literal["Not yet determined", "Proposed", "Confirmed"] | None = (
         None
