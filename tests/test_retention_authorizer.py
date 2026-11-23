@@ -249,7 +249,7 @@ def test_legacy_note_cannot_point_beyond_legacy_headers() -> None:
 
     workbook = legacy(minimum())
     workbook["Intake"]["AD5"].comment = Comment(
-        "Outside legacy width", "Example author"
+        "Outside legacy width", "Intake guidance"
     )
     with pytest.raises(IntakeError):
         parsed(edited(workbook))
